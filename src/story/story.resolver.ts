@@ -1,13 +1,13 @@
-import { Resolver, Query } from '@nestjs/graphql';
+import { Resolver, Query, Args } from '@nestjs/graphql';
 import { StoryService } from './story.service';
-import { Story } from './story.model';
-
+import { StoryConnection } from './story.connection';
+import { ConnectionInput } from '../pagination/pagination.dto';
 @Resolver()
 export class StoryResolver {
-  constructor(private readonly storyService: StoryService) {}
+  constructor(private storyService: StoryService) {}
 
-  @Query(() => [Story])
-  async stories() {
-    return this.storyService.findAll();
+  @Query(returns => StoryConnection)
+  async stories(@Args() args: ConnectionInput): Promise<StoryConnection> {
+    return this.storyService.paginate(args);
   }
 }
