@@ -7,11 +7,11 @@ export class PaginationInput {
   @Field({ nullable: true })
   cursor?: string;
 
-  @Field((type) => Int, { nullable: true, defaultValue: 1 })
+  @Field((type) => Int, { nullable: true })
   @Min(1)
   currentPage?: number;
 
-  @Field((type) => Int, { nullable: true, defaultValue: 10 })
+  @Field((type) => Int, { nullable: true })
   @IsPositive()
   pageSize?: number;
 }

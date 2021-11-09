@@ -16,7 +16,7 @@ export class StoryService {
     return this.storyModel.find().exec();
   }
 
-  async paginate(args: ConnectionInput = {}): Promise<StoryConnection> {
+  async paginate(args: ConnectionInput): Promise<StoryConnection> {
     return this.paginationService.paginate<Story>(this.storyModel, args);
   }
 }

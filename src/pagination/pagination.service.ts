@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { IConnection } from './pagination.entity';
-import { ConnectionInput, PaginationInput } from './pagination.dto';
+import { ConnectionInput } from './pagination.dto';
 
-class ParsedConnectionInput {
-  filter?: any = {};
-  sort?: any = { sort: { _id: 1 } };
-  pagination?: PaginationInput;
+class ParsedConnectionInput extends ConnectionInput {
+  filter?: any;
+  sort?: any;
 }
 
 const encodeCursor = (cursor: string): string => {
@@ -24,20 +23,32 @@ const decodeCursor = (cursor: string): string => {
   return Buffer.from(String(cursor), 'base64').toString('ascii');
 };
 
+const parseArgs = (args: ConnectionInput): ParsedConnectionInput => {
+  args.filter = args.filter && JSON.parse(args.filter);
+  args.sort = args.sort && JSON.parse(args.sort);
+
+  return args;
+};
+
 @Injectable()
 export class PaginationService {
   async paginate<T>(
     model: any,
-    args: ConnectionInput = {},
+    args: ConnectionInput,
   ): Promise<IConnection<T>> {
     const result: IConnection<T> = {};
 
     // prepare arguments
-    const { filter = {}, sort = { _id: 1 }, pagination } = this.parseArgs(args);
-    const { cursor, pageSize, currentPage } = pagination;
+    const { filter = {}, sort = {}, pagination = {} } = parseArgs(args);
+    const { cursor, pageSize = 10, currentPage = 1 } = pagination;
+
+    // set default sort direction
+    if (!sort._id) {
+      sort._id = 1;
+    }
 
     // validate inputs for cursor pagination
-    if (cursor && (sort.length > 1 || !sort._id)) {
+    if (cursor && (Object.keys(sort).length > 1 || !sort._id)) {
       throw new Error('Cursor pagination requires sorting only by _id');
     }
 
@@ -49,7 +60,11 @@ export class PaginationService {
     }
 
     // get nodes
-    const nodes = await model.find(filter, null, { sort, limit: pageSize, skip: pageSize * (currentPage - 1) });
+    const nodes = await model.find(filter, null, {
+      sort,
+      limit: pageSize,
+      skip: pageSize * (currentPage - 1),
+    });
 
     // build edges
     result.edges = nodes.map((node) => {
@@ -74,12 +89,5 @@ export class PaginationService {
     };
 
     return result;
-  }
-
-  parseArgs(args: ConnectionInput = {}): ParsedConnectionInput {
-    args.filter = args.filter && JSON.parse(args.filter);
-    args.sort = args.sort && JSON.parse(args.sort);
-
-    return args;
   }
 }
