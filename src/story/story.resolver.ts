@@ -6,7 +6,7 @@ import { ConnectionInput } from '../pagination/pagination.dto';
 export class StoryResolver {
   constructor(private storyService: StoryService) {}
 
-  @Query(returns => StoryConnection)
+  @Query(() => StoryConnection)
   async stories(@Args() args: ConnectionInput): Promise<StoryConnection> {
     return this.storyService.paginate(args);
   }

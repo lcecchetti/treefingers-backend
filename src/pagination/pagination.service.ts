@@ -43,9 +43,7 @@ export class PaginationService {
     const { cursor, pageSize = 10, currentPage = 1 } = pagination;
 
     // set default sort direction
-    if (!sort._id) {
-      sort._id = 1;
-    }
+    sort._id = sort._id ?? 1;
 
     // validate inputs for cursor pagination
     if (cursor && (Object.keys(sort).length > 1 || !sort._id)) {
