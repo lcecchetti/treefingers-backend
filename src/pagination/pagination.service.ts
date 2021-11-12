@@ -58,11 +58,13 @@ export class PaginationService {
     }
 
     // get nodes
-    const nodes = await model.find(filter, null, {
-      sort,
-      limit: pageSize,
-      skip: pageSize * (currentPage - 1),
-    });
+    const nodes = await model
+      .find(filter, null, {
+        sort,
+        limit: pageSize,
+        skip: pageSize * (currentPage - 1),
+      })
+      .exec();
 
     // build edges
     result.edges = nodes.map((node) => {
@@ -73,7 +75,7 @@ export class PaginationService {
     });
 
     // prepare page infos
-    const totalCount = await model.estimatedDocumentCount(filter);
+    const totalCount = await model.estimatedDocumentCount(filter).exec();
     const pagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 1;
 
     result.pageInfo = {

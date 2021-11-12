@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import { Model, FilterQuery, QueryOptions } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './user.entity';
@@ -13,8 +13,24 @@ export class UserService {
     private paginationService: PaginationService,
   ) {}
 
-  async findAll(): Promise<User[]> {
-    return this.userModel.find().exec();
+  async findAll(
+    filter?: FilterQuery<UserDocument>,
+    projection?: any | null,
+    options?: QueryOptions,
+  ): Promise<User[]> {
+    return this.userModel.find(filter, projection, options).exec();
+  }
+
+  async findById(id: string): Promise<User | undefined> {
+    return this.userModel.findById(id).exec();
+  }
+
+  async findOne(
+    filter?: FilterQuery<UserDocument>,
+    projection?: any | null,
+    options?: QueryOptions,
+  ): Promise<User | undefined> {
+    return this.userModel.findOne(filter, projection, options).exec();
   }
 
   async paginate(args: ConnectionInput): Promise<UserConnection> {

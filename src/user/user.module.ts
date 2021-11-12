@@ -11,5 +11,6 @@ import { PaginationModule } from '../pagination/pagination.module';
     PaginationModule,
   ],
   providers: [UserService, UserResolver],
+  exports: [UserService],
 })
 export class UserModule {}
