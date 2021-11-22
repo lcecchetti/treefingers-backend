@@ -1,9 +1,8 @@
-import { ContextType, UseGuards } from '@nestjs/common';
-import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
+import { UseGuards } from '@nestjs/common';
+import { Resolver, Mutation, Args } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
-import { LocalAuthGuard } from './local-auth.guard';
-import { LoginPayload } from './dto/login.payload';
-import { LoginInput } from './dto/login.input';
+import { LocalAuthGuard } from './guards/local-auth.guard';
+import { LoginPayload, LoginInput } from './auth.dto';
 import { CurrentUser } from '../user/current-user.decorator';
 import { User } from 'src/user/user.entity';
 

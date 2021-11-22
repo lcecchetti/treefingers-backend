@@ -7,7 +7,9 @@ export class StoryResolver {
   constructor(private storyService: StoryService) {}
 
   @Query(() => StoryConnection)
-  async stories(@Args() args: ConnectionInput): Promise<StoryConnection> {
-    return this.storyService.paginate(args);
+  async stories(
+    @Args('input', { nullable: true }) input: ConnectionInput,
+  ): Promise<StoryConnection> {
+    return this.storyService.paginate(input);
   }
 }

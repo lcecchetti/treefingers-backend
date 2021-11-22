@@ -33,7 +33,11 @@ export class UserService {
     return this.userModel.findOne(filter, projection, options).exec();
   }
 
-  async paginate(args: ConnectionInput): Promise<UserConnection> {
-    return this.paginationService.paginate<User>(this.userModel, args);
+  async findOneByEmail(email: string): Promise<User | undefined> {
+    return this.findOne({ email });
+  }
+
+  async paginate(input: ConnectionInput): Promise<UserConnection> {
+    return this.paginationService.paginate<User>(this.userModel, input);
   }
 }

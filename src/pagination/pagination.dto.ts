@@ -1,4 +1,4 @@
-import { Field, Int, ArgsType, InputType } from '@nestjs/graphql';
+import { Field, Int, InputType, ArgsType } from '@nestjs/graphql';
 import { Min, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -16,6 +16,7 @@ export class PaginationInput {
   pageSize?: number = 10;
 }
 
+@InputType()
 @ArgsType()
 export class ConnectionInput {
   @Field({ nullable: true })
