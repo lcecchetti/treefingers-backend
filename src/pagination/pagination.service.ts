@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { IConnection } from './pagination.entity';
-import { ConnectionInput } from './pagination.dto';
+import { ConnectionInput, PaginationInput } from './pagination.dto';
 
 class ParsedConnectionInput extends ConnectionInput {
-  filter?: any;
-  sort?: any;
+  filter?: any = {};
+  sort?: any = {};
+  pagination?: PaginationInput;
 }
 
 const encodeCursor = (cursor: string): string => {
@@ -23,11 +24,17 @@ const decodeCursor = (cursor: string): string => {
   return Buffer.from(String(cursor), 'base64').toString('ascii');
 };
 
+// @todo: implement filter/sort specific to the collection, without generic mongodb rules
 const parseArgs = (args: ConnectionInput): ParsedConnectionInput => {
-  args.filter = args.filter && JSON.parse(args.filter);
-  args.sort = args.sort && JSON.parse(args.sort);
+  const parsedArgs = new ParsedConnectionInput();
+  if (args.filter) {
+    parsedArgs.filter = JSON.parse(args.filter);
+  }
+  if (args.sort) {
+    parsedArgs.sort = JSON.parse(args.sort);
+  }
 
-  return args;
+  return parsedArgs;
 };
 
 @Injectable()
@@ -39,8 +46,8 @@ export class PaginationService {
     const result: IConnection<T> = {};
 
     // prepare arguments
-    const { filter = {}, sort = {}, pagination = {} } = parseArgs(args);
-    const { cursor, pageSize = 10, currentPage = 1 } = pagination;
+    const { filter, sort, pagination } = parseArgs(args);
+    const { cursor, pageSize, currentPage } = pagination;
 
     // set default sort direction
     sort._id = sort._id ?? 1;
@@ -64,12 +71,12 @@ export class PaginationService {
         limit: pageSize,
         skip: pageSize * (currentPage - 1),
       })
-      .lean();
+      .exec();
 
     // build edges
     result.edges = nodes.map((node) => {
       return {
-        cursor: encodeCursor(node._id),
+        cursor: encodeCursor(node.id),
         node,
       };
     });

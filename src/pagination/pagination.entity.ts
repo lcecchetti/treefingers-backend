@@ -17,16 +17,16 @@ class PageInfo {
   @Field({ nullable: true })
   endCursor?: string;
 
-  @Field((type) => Int)
+  @Field(() => Int)
   totalCount?: number;
 
-  @Field((type) => Int)
+  @Field(() => Int)
   pagesCount?: number;
 
-  @Field((type) => Int)
+  @Field(() => Int)
   pageSize?: number;
 
-  @Field((type) => Int)
+  @Field(() => Int)
   currentPage?: number;
 }
 
@@ -38,19 +38,19 @@ export interface IConnection<T> {
 export function Paginated<T>(classRef: Type<T>): Type<IConnection<T>> {
   @ObjectType(`${classRef.name}Edge`)
   abstract class EdgeType {
-    @Field((type) => String)
+    @Field(() => String)
     cursor: string;
 
-    @Field((type) => classRef)
+    @Field(() => classRef)
     node: T;
   }
 
   @ObjectType({ isAbstract: true })
   abstract class Connection implements IConnection<T> {
-    @Field((type) => [EdgeType], { nullable: true })
+    @Field(() => [EdgeType], { nullable: true })
     edges: EdgeType[];
 
-    @Field((type) => PageInfo)
+    @Field(() => PageInfo)
     pageInfo: PageInfo;
   }
 

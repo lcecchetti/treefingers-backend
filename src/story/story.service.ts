@@ -14,7 +14,7 @@ export class StoryService {
   ) {}
 
   async findAll(): Promise<Story[]> {
-    return this.storyModel.find().lean();
+    return this.storyModel.find().exec();
   }
 
   async paginate(args: ConnectionInput): Promise<StoryConnection> {

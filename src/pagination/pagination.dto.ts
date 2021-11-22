@@ -1,5 +1,5 @@
 import { Field, Int, ArgsType, InputType } from '@nestjs/graphql';
-import { IsPositive, Min, ValidateNested } from 'class-validator';
+import { Min, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
 @InputType()
@@ -7,13 +7,13 @@ export class PaginationInput {
   @Field({ nullable: true })
   cursor?: string;
 
-  @Field((type) => Int, { nullable: true })
+  @Field(() => Int, { nullable: true })
   @Min(1)
-  currentPage?: number;
+  currentPage?: number = 1;
 
-  @Field((type) => Int, { nullable: true })
-  @IsPositive()
-  pageSize?: number;
+  @Field(() => Int, { nullable: true })
+  @Min(1)
+  pageSize?: number = 10;
 }
 
 @ArgsType()
@@ -27,5 +27,5 @@ export class ConnectionInput {
   @Field({ nullable: true })
   @ValidateNested()
   @Type(() => PaginationInput)
-  pagination?: PaginationInput;
+  pagination?: PaginationInput = new PaginationInput();
 }
