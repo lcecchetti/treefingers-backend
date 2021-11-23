@@ -5,16 +5,20 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { UserModule } from '../user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './constants';
 import { AuthResolver } from './auth.resolver';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     UserModule,
     PassportModule,
-    JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
+    JwtModule.registerAsync({
+      useFactory: async (configService: ConfigService) => ({
+        //@todo swap to private/public keys
+        secret: configService.get<string>('jwt.secret'),
+        expiresIn: configService.get<string>('jwt.expiration'),
+      }),
+      inject: [ConfigService],
     }),
   ],
   providers: [AuthService, AuthResolver, LocalStrategy, JwtStrategy],
