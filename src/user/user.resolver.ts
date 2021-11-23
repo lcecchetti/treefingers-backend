@@ -1,9 +1,9 @@
 import { Resolver, Query, Args } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { UserConnection } from './user.connection';
-import { ConnectionInput } from '../pagination/pagination.dto';
 import { User } from './user.entity';
-import { UserByEmailInput } from './user.dto';
+import { ConnectionInput } from 'src/pagination/dto/connection.input';
+import { UserByEmailInput } from './dto/user-by-email.input';
 
 @Resolver()
 export class UserResolver {

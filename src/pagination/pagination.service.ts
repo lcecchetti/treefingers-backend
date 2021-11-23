@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { ConnectionInput } from './dto/connection.input';
 import { IConnection } from './pagination.entity';
-import { ConnectionInput } from './pagination.dto';
 
 class ParsedConnectionInput extends ConnectionInput {
   filter?: any = {};

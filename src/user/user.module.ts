@@ -3,7 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UserService } from './user.service';
 import { UserResolver } from './user.resolver';
 import { User, UserSchema } from './user.entity';
-import { PaginationModule } from '../pagination/pagination.module';
+import { PaginationModule } from 'src/pagination/pagination.module';
 
 @Module({
   imports: [

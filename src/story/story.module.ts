@@ -3,7 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { StoryService } from './story.service';
 import { StoryResolver } from './story.resolver';
 import { Story, StorySchema } from './story.entity';
-import { PaginationModule } from '../pagination/pagination.module';
+import { PaginationModule } from 'src/pagination/pagination.module';
 
 @Module({
   imports: [

@@ -2,9 +2,9 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Story, StoryDocument } from './story.entity';
-import { PaginationService } from '../pagination/pagination.service';
-import { ConnectionInput } from '../pagination/pagination.dto';
+import { PaginationService } from 'src/pagination/pagination.service';
 import { StoryConnection } from './story.connection';
+import { ConnectionInput } from 'src/pagination/dto/connection.input';
 
 @Injectable()
 export class StoryService {

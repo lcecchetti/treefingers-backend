@@ -2,9 +2,10 @@ import { UseGuards } from '@nestjs/common';
 import { Resolver, Mutation, Args } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { LoginPayload, LoginInput } from './auth.dto';
-import { CurrentUser } from '../user/current-user.decorator';
+import { LoginInput } from './dto/login.input';
 import { User } from 'src/user/user.entity';
+import { LoginPayload } from './dto/login.payload';
+import { CurrentUser } from 'src/user/decorators/current-user.decorator';
 
 @Resolver()
 export class AuthResolver {
