@@ -2,11 +2,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { RegisterInput } from 'src/auth/dto/register.input';
+import { IsEmail, isEmail, MinLength } from 'class-validator';
 
-const validateEmail = (email: string): boolean => {
-  const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  return re.test(email);
-};
 @Schema()
 @ObjectType()
 export class User extends RegisterInput {
@@ -15,16 +12,18 @@ export class User extends RegisterInput {
 
   @Prop({
     required: true,
-    validate: [validateEmail, 'Please fill a valid email address'],
+    validate: [isEmail, 'Please fill a valid email address'],
     index: true,
   })
   @Field()
+  @IsEmail()
   email: string;
 
   @Prop({
     required: true,
     minlength: 10,
   })
+  @MinLength(10)
   password: string;
 }
 
