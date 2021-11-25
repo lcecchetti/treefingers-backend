@@ -4,7 +4,7 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { RegisterInput } from 'src/auth/dto/register.input';
 import { IsEmail, isEmail, MinLength } from 'class-validator';
 
-@Schema()
+@Schema({ timestamps: true })
 @ObjectType()
 export class User extends RegisterInput {
   @Field(() => ID)

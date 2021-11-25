@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
-@Schema()
+@Schema({ timestamps: true })
 @ObjectType()
 export class Story {
   @Field(() => ID)
