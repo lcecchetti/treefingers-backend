@@ -27,14 +27,16 @@ const decodeCursor = (cursor: string): string => {
 const parseConnectionInput = (
   connectionInput: ConnectionInput,
 ): ParsedConnectionInput => {
-  connectionInput.filter = connectionInput.filter
+  const parsedConnectionInput: ParsedConnectionInput = connectionInput;
+
+  parsedConnectionInput.filter = connectionInput.filter
     ? JSON.parse(connectionInput.filter)
     : {};
-  connectionInput.sort = connectionInput.sort
+  parsedConnectionInput.sort = connectionInput.sort
     ? JSON.parse(connectionInput.sort)
     : {};
 
-  return connectionInput;
+  return parsedConnectionInput;
 };
 
 @Injectable()

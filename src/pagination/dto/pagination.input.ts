@@ -4,13 +4,13 @@ import { Min } from 'class-validator';
 @InputType()
 export class PaginationInput {
   @Field({ nullable: true })
-  cursor?: string;
+  readonly cursor?: string;
 
   @Field(() => Int, { nullable: true })
   @Min(1)
-  currentPage?: number = 1;
+  readonly currentPage?: number = 1;
 
   @Field(() => Int, { nullable: true })
   @Min(1)
-  pageSize?: number = 10;
+  readonly pageSize?: number = 10;
 }

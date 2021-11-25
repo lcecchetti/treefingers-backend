@@ -8,7 +8,10 @@ export class Story {
   @Field(() => ID)
   id: string;
 
-  @Prop()
+  @Prop({
+    required: true,
+    index: true,
+  })
   @Field()
   title: string;
 }

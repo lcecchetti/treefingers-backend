@@ -7,13 +7,13 @@ import { PaginationInput } from './pagination.input';
 @ArgsType()
 export class ConnectionInput {
   @Field({ nullable: true })
-  filter?: string;
+  readonly filter?: string;
 
   @Field({ nullable: true })
-  sort?: string;
+  readonly sort?: string;
 
   @Field({ nullable: true })
   @ValidateNested()
   @Type(() => PaginationInput)
-  pagination?: PaginationInput = new PaginationInput();
+  readonly pagination?: PaginationInput = new PaginationInput();
 }

@@ -5,6 +5,7 @@ import { User, UserDocument } from './user.entity';
 import { PaginationService } from 'src/pagination/pagination.service';
 import { UserConnection } from './user.connection';
 import { ConnectionInput } from 'src/pagination/dto/connection.input';
+import { RegisterInput } from 'src/auth/dto/register.input';
 
 @Injectable()
 export class UserService {
@@ -39,5 +40,9 @@ export class UserService {
 
   async paginate(input: ConnectionInput): Promise<UserConnection> {
     return this.paginationService.paginate<User>(this.userModel, input);
+  }
+
+  async create(registerInput: RegisterInput): Promise<User> {
+    return this.userModel.create(registerInput);
   }
 }
