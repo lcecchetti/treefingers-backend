@@ -1,11 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConnectionInput } from './dto/connection.input';
+import { DIRECTION, SortInput } from './dto/sort.input';
 import { IConnection } from './pagination.entity';
-
-class ParsedConnectionInput extends ConnectionInput {
-  filter?: any = {};
-  sort?: any = {};
-}
 
 const encodeCursor = (cursor: string): string => {
   if (!cursor) {
@@ -23,22 +19,6 @@ const decodeCursor = (cursor: string): string => {
   return Buffer.from(String(cursor), 'base64').toString('ascii');
 };
 
-// @todo: implement filter/sort specific to the collection, without generic mongodb rules
-const parseConnectionInput = (
-  connectionInput: ConnectionInput,
-): ParsedConnectionInput => {
-  const parsedConnectionInput: ParsedConnectionInput = connectionInput;
-
-  parsedConnectionInput.filter = connectionInput.filter
-    ? JSON.parse(connectionInput.filter)
-    : {};
-  parsedConnectionInput.sort = connectionInput.sort
-    ? JSON.parse(connectionInput.sort)
-    : {};
-
-  return parsedConnectionInput;
-};
-
 @Injectable()
 export class PaginationService {
   async paginate<T>(
@@ -48,28 +28,34 @@ export class PaginationService {
     const result: IConnection<T> = {};
 
     // prepare arguments
-    const { filter, sort, pagination } = parseConnectionInput(connectionInput);
+    const { filter, sort, pagination } = connectionInput;
     const { cursor, pageSize, currentPage } = pagination;
 
-    // set default sort direction
-    sort._id = sort._id ?? 1;
-
     // validate inputs for cursor pagination
-    if (cursor && (Object.keys(sort).length > 1 || !sort._id)) {
+    if (cursor && (Object.keys(sort).length > 1 || !sort.id)) {
       throw new Error('Cursor pagination requires sorting only by _id');
     }
 
     // prepare cursor filter
     const currentCursor = decodeCursor(cursor);
     if (currentCursor) {
-      filter._id =
-        sort._id > 0 ? { $gt: currentCursor } : { $lt: currentCursor };
+      filter.id =
+        !sort.id || sort.id === DIRECTION.ASC
+          ? { $gt: currentCursor }
+          : { $lt: currentCursor };
+    }
+
+    //@todo use id or _id?
+    const dbFilter: any = filter;
+    if (filter.id) {
+      dbFilter._id = filter.id;
+      dbFilter.id = undefined;
     }
 
     // get nodes
     const nodes = await model
-      .find(filter, null, {
-        sort,
+      .find(dbFilter, null, {
+        sort: { _id: sort.id, ...sort },
         limit: pageSize,
         skip: pageSize * (currentPage - 1),
       })
