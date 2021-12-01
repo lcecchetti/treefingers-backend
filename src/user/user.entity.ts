@@ -8,7 +8,7 @@ import { IsEmail, isEmail, MinLength } from 'class-validator';
 @ObjectType()
 export class User extends RegisterInput {
   @Field(() => ID)
-  id: string;
+  _id: string;
 
   @Prop({
     required: true,

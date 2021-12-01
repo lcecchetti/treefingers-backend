@@ -6,7 +6,7 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 @ObjectType()
 export class Story {
   @Field(() => ID)
-  id: string;
+  _id: string;
 
   @Prop({
     required: true,

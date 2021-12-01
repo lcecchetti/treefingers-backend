@@ -16,7 +16,7 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, password: string): Promise<User | null> {
-    const user = await this.userService.findOneByEmail(email);
+    const user = await this.userService.findOne({ email });
     const isPasswordMatching = await bcrypt.compare(password, user.password);
     if (isPasswordMatching) {
       // strip out password
@@ -27,7 +27,7 @@ export class AuthService {
   }
 
   async login(user: User): Promise<LoginPayload> {
-    const payload: JwtPayload = { email: user.email, sub: user.id };
+    const payload: JwtPayload = { email: user.email, sub: user._id };
     return {
       token: this.jwtService.sign(payload),
       user,

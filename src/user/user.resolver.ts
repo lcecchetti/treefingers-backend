@@ -20,8 +20,6 @@ export class UserResolver {
   async user(
     @Args('input', { nullable: true }) { filter }: UserInput = new UserInput(),
   ): Promise<User> {
-    console.log(filter.id);
-    //@todo how to convert id to _id in a nice default way?
-    return this.userService.findOne({ _id: filter.id, ...filter });
+    return this.userService.findOne(filter);
   }
 }

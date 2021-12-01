@@ -22,20 +22,12 @@ export class UserService {
     return this.userModel.find(filter, projection, options).exec();
   }
 
-  async findById(id: string): Promise<User | undefined> {
-    return this.userModel.findById(id).exec();
-  }
-
   async findOne(
     filter?: FilterQuery<UserDocument>,
     projection?: any | null,
     options?: QueryOptions,
   ): Promise<User | undefined> {
     return this.userModel.findOne(filter, projection, options).exec();
-  }
-
-  async findOneByEmail(email: string): Promise<User | undefined> {
-    return this.findOne({ email });
   }
 
   async paginate(input: UsersInput): Promise<UserConnection> {

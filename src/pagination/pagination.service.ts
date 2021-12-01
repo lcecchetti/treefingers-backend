@@ -32,29 +32,23 @@ export class PaginationService {
     const { cursor, pageSize, currentPage } = pagination;
 
     // validate inputs for cursor pagination
-    if (cursor && (Object.keys(sort).length > 1 || !sort.id)) {
+    if (cursor && (Object.keys(sort).length > 1 || !sort._id)) {
       throw new Error('Cursor pagination requires sorting only by _id');
     }
 
     // prepare cursor filter
     const currentCursor = decodeCursor(cursor);
     if (currentCursor) {
-      filter.id =
-        !sort.id || sort.id === DIRECTION.ASC
+      filter._id =
+        !sort._id || sort._id === DIRECTION.ASC
           ? { $gt: currentCursor }
           : { $lt: currentCursor };
     }
 
-    const dbFilter: any = filter;
-    if (filter.id) {
-      dbFilter._id = filter.id;
-      dbFilter.id = undefined;
-    }
-
     // get nodes
     const nodes = await model
-      .find(dbFilter, null, {
-        sort: { _id: sort.id, ...sort },
+      .find(filter, null, {
+        sort,
         limit: pageSize,
         skip: pageSize * (currentPage - 1),
       })
@@ -63,7 +57,7 @@ export class PaginationService {
     // build edges
     result.edges = nodes.map((node) => {
       return {
-        cursor: encodeCursor(node.id),
+        cursor: encodeCursor(node._id),
         node,
       };
     });
