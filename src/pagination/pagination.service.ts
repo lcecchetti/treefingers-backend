@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConnectionInput } from './dto/connection.input';
-import { DIRECTION, SortInput } from './dto/sort.input';
+import { DIRECTION } from './dto/sort.input';
 import { IConnection } from './pagination.entity';
 
 const encodeCursor = (cursor: string): string => {
@@ -45,7 +45,6 @@ export class PaginationService {
           : { $lt: currentCursor };
     }
 
-    //@todo use id or _id?
     const dbFilter: any = filter;
     if (filter.id) {
       dbFilter._id = filter.id;

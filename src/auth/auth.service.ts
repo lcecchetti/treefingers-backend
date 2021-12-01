@@ -36,9 +36,9 @@ export class AuthService {
 
   async register(registerInput: RegisterInput): Promise<RegisterPayload> {
     // check if user already exists
-    const existingUser = await this.userService.findOneByEmail(
-      registerInput.email,
-    );
+    const existingUser = await this.userService.findOne({
+      email: registerInput.email,
+    });
     if (existingUser) {
       throw new ConflictException('User already exists');
     }

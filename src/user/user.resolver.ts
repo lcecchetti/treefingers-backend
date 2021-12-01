@@ -2,8 +2,8 @@ import { Resolver, Query, Args } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { UserConnection } from './user.connection';
 import { User } from './user.entity';
-import { ConnectionInput } from 'src/pagination/dto/connection.input';
-import { UserByEmailInput } from './dto/user-by-email.input';
+import { UserInput } from './dto/user.input';
+import { UsersInput } from './dto/users.input';
 
 @Resolver()
 export class UserResolver {
@@ -11,13 +11,17 @@ export class UserResolver {
 
   @Query(() => UserConnection)
   async users(
-    @Args('input', { nullable: true }) input: ConnectionInput,
+    @Args('input', { nullable: true }) input: UsersInput,
   ): Promise<UserConnection> {
     return this.userService.paginate(input);
   }
 
-  @Query(() => User)
-  async userByEmail(@Args('input') { email }: UserByEmailInput): Promise<User> {
-    return this.userService.findOneByEmail(email);
+  @Query(() => User, { nullable: true })
+  async user(
+    @Args('input', { nullable: true }) { filter }: UserInput = new UserInput(),
+  ): Promise<User> {
+    console.log(filter.id);
+    //@todo how to convert id to _id in a nice default way?
+    return this.userService.findOne({ _id: filter.id, ...filter });
   }
 }
