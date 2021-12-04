@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, SchemaTypes } from 'mongoose';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { User } from 'src/user/user.entity';
 
 @Schema({ timestamps: true })
 @ObjectType()
@@ -14,6 +15,14 @@ export class Story {
   })
   @Field()
   title: string;
+
+  @Prop({
+    type: SchemaTypes.ObjectId,
+    ref: User.name,
+    index: true,
+  })
+  @Field(() => User)
+  author: User;
 }
 
 export type StoryDocument = Story & Document;
