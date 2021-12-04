@@ -19,7 +19,7 @@ export class UserService {
     projection?: any | null,
     options?: QueryOptions,
   ): Promise<User[]> {
-    return this.userModel.find(filter, projection, options).exec();
+    return this.userModel.find(filter, projection, options).lean();
   }
 
   async findOne(
@@ -27,7 +27,15 @@ export class UserService {
     projection?: any | null,
     options?: QueryOptions,
   ): Promise<User | undefined> {
-    return this.userModel.findOne(filter, projection, options).exec();
+    return this.userModel.findOne(filter, projection, options).lean();
+  }
+
+  async findById(
+    _id: string,
+    projection?: any | null,
+    options?: QueryOptions,
+  ): Promise<User | undefined> {
+    return this.userModel.findById(_id, projection, options).lean();
   }
 
   async paginate(input: UsersInput): Promise<UserConnection> {

@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import { FilterQuery, Model, QueryOptions } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Story, StoryDocument } from './story.entity';
@@ -13,8 +13,12 @@ export class StoryService {
     private paginationService: PaginationService,
   ) {}
 
-  async findAll(): Promise<Story[]> {
-    return this.storyModel.find().exec();
+  async findAll(
+    filter?: FilterQuery<StoryDocument>,
+    projection?: any | null,
+    options?: QueryOptions,
+  ): Promise<Story[]> {
+    return this.storyModel.find(filter, projection, options).lean();
   }
 
   async paginate(connectionInput: ConnectionInput): Promise<StoryConnection> {

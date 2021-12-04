@@ -52,7 +52,7 @@ export class PaginationService {
         limit: pageSize,
         skip: pageSize * (currentPage - 1),
       })
-      .exec();
+      .lean();
 
     // build edges
     result.edges = nodes.map((node) => {
