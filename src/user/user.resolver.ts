@@ -1,11 +1,11 @@
-import { Resolver, Query, Args } from '@nestjs/graphql';
+import { Resolver, Query, Args, ResolveField, Parent } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { UserConnection } from './user.connection';
 import { User } from './user.entity';
 import { UserInput } from './dto/user.input';
 import { UsersInput } from './dto/users.input';
 
-@Resolver()
+@Resolver(() => User)
 export class UserResolver {
   constructor(private userService: UserService) {}
 
@@ -22,4 +22,13 @@ export class UserResolver {
   ): Promise<User> {
     return this.userService.findOne(filter);
   }
+
+  /*@ResolveField()
+  async stories(
+    @Args('input', { nullable: true }) input: StoriesInput,
+    @Parent() user: User,
+  ): Promise<StoryConnection> {
+    input.filter.author = user._id;
+    return this.storyService.paginate(input);
+  }*/
 }

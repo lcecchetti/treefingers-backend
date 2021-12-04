@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { RegisterInput } from 'src/auth/dto/register.input';
 import { IsEmail, isEmail, MinLength } from 'class-validator';
 
@@ -25,6 +25,33 @@ export class User extends RegisterInput {
   })
   @MinLength(10)
   password: string;
+
+  @Prop({
+    maxlength: 32,
+  })
+  @Field()
+  pseudonym?: string;
+
+  @Prop({
+    maxlength: 255,
+  })
+  @Field()
+  bio?: string;
+
+  @Prop({
+    min: 0,
+  })
+  @Field(() => Int)
+  likesCount: number;
+
+  @Prop({
+    min: 0,
+  })
+  @Field(() => Int)
+  storiesCount: number;
+
+  /*@Field(() => StoryConnection)
+  stories: StoryConnection;*/
 }
 
 export type UserDocument = User & Document;

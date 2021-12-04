@@ -4,5 +4,5 @@ import { FilterInput } from 'src/pagination/dto/filter.input';
 @InputType()
 export class UserFilterInput extends FilterInput {
   @Field({ nullable: true })
-  readonly email?: string;
+  email?: string;
 }
