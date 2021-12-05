@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Story, StoryDocument } from './story.entity';
 import { PaginationService } from 'src/pagination/pagination.service';
-import { StoryConnection } from './story.connection';
+import { StoriesPaginated } from './stories.paginated';
 import { ConnectionInput } from 'src/pagination/dto/connection.input';
 
 @Injectable()
@@ -21,7 +21,7 @@ export class StoryService {
     return this.storyModel.find(filter, projection, options).lean();
   }
 
-  async paginate(connectionInput: ConnectionInput): Promise<StoryConnection> {
+  async paginate(connectionInput: ConnectionInput): Promise<StoriesPaginated> {
     return this.paginationService.paginate<Story>(
       this.storyModel,
       connectionInput,

@@ -49,9 +49,6 @@ export class User extends RegisterInput {
   })
   @Field(() => Int)
   storiesCount: number;
-
-  /*@Field(() => StoryConnection)
-  stories: StoryConnection;*/
 }
 
 export type UserDocument = User & Document;

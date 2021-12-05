@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { StoryService } from './story.service';
 import { StoryResolver } from './story.resolver';
@@ -10,8 +10,9 @@ import { UserModule } from 'src/user/user.module';
   imports: [
     MongooseModule.forFeature([{ name: Story.name, schema: StorySchema }]),
     PaginationModule,
-    UserModule,
+    forwardRef(() => UserModule),
   ],
   providers: [StoryService, StoryResolver],
+  exports: [StoryService],
 })
 export class StoryModule {}

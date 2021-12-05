@@ -21,7 +21,6 @@ export class Story {
     ref: User.name,
     index: true,
   })
-  @Field(() => User)
   author: User;
 }
 
