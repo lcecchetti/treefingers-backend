@@ -37,7 +37,7 @@ export class StoryService {
     );
   }
 
-  async create(createStoryInput: CreateStoryInput): Promise<Story> {
-    return this.storyModel.create(createStoryInput);
+  async create(input: CreateStoryInput): Promise<Story> {
+    return this.storyModel.create(input);
   }
 }

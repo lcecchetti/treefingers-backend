@@ -17,7 +17,7 @@ export class UserResolver {
 
   @Query(() => UsersPaginated)
   async users(
-    @Args('input', { nullable: true }) input: UsersInput,
+    @Args('input', { nullable: true }) input: UsersInput = new UsersInput(),
   ): Promise<UsersPaginated> {
     return this.userService.paginate(input);
   }

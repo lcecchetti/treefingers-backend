@@ -27,7 +27,7 @@ export class StoryResolver {
 
   @Query(() => StoriesPaginated)
   async stories(
-    @Args('input', { nullable: true }) input: StoriesInput,
+    @Args('input', { nullable: true }) input: StoriesInput = new StoriesInput(),
   ): Promise<StoriesPaginated> {
     return this.storyService.paginate(input);
   }

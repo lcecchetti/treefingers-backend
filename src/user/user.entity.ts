@@ -6,7 +6,7 @@ import { IsEmail, isEmail, MaxLength, Min, MinLength } from 'class-validator';
 
 @Schema({ timestamps: true })
 @ObjectType()
-export class User extends RegisterInput {
+export class User {
   @Field(() => ID)
   _id: string;
 
@@ -27,7 +27,7 @@ export class User extends RegisterInput {
   password: string;
 
   @Prop({
-    maxlength: 32,
+    maxlength: 31,
   })
   @Field({ nullable: true })
   pseudonym?: string;

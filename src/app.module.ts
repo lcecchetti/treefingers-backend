@@ -8,6 +8,7 @@ import { PaginationModule } from './pagination/pagination.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import configuration from './config/configuration';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import configuration from './config/configuration';
     StoryModule,
     UserModule,
     AuthModule,
+    CommentModule,
   ],
   providers: [AppService],
 })
