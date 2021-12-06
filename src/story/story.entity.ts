@@ -17,6 +17,8 @@ export class Story {
     maxlength: 255,
   })
   @Field()
+  @MinLength(1)
+  @MaxLength(255)
   title: string;
 
   @Prop({
@@ -29,13 +31,6 @@ export class Story {
   @MinLength(1)
   @MaxLength(1023)
   content: string;
-
-  @Prop({
-    minlength: 1,
-    maxlength: 255,
-  })
-  @Field({ nullable: true })
-  action?: string;
 
   @Prop({
     type: SchemaTypes.ObjectId,

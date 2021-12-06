@@ -5,6 +5,7 @@ import { Story, StoryDocument } from './story.entity';
 import { PaginationService } from 'src/pagination/pagination.service';
 import { StoriesPaginated } from './stories.paginated';
 import { ConnectionInput } from 'src/pagination/dto/connection.input';
+import { CreateStoryInput } from './dto/create-story.input';
 
 @Injectable()
 export class StoryService {
@@ -34,5 +35,9 @@ export class StoryService {
       this.storyModel,
       connectionInput,
     );
+  }
+
+  async create(createStoryInput: CreateStoryInput): Promise<Story> {
+    return this.storyModel.create(createStoryInput);
   }
 }

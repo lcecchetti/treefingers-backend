@@ -1,10 +1,23 @@
-import { Resolver, Query, Args, ResolveField, Parent } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Args,
+  ResolveField,
+  Parent,
+  Mutation,
+} from '@nestjs/graphql';
 import { StoryService } from './story.service';
 import { Story } from './story.entity';
 import { UserService } from 'src/user/user.service';
 import { User } from 'src/user/user.entity';
 import { StoriesInput } from './dto/stories.input';
 import { StoriesPaginated } from './stories.paginated';
+import { CreateStoryPayload } from './dto/create-story.payload';
+import { CreateStoryInput } from './dto/create-story.input';
+import { CurrentUser } from 'src/user/decorators/current-user.decorator';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { UseGuards } from '@nestjs/common';
+
 @Resolver(() => Story)
 export class StoryResolver {
   constructor(
@@ -17,6 +30,16 @@ export class StoryResolver {
     @Args('input', { nullable: true }) input: StoriesInput,
   ): Promise<StoriesPaginated> {
     return this.storyService.paginate(input);
+  }
+
+  @Mutation(() => CreateStoryPayload)
+  @UseGuards(JwtAuthGuard)
+  async createStory(
+    @Args('input') input: CreateStoryInput,
+    @CurrentUser() user: User,
+  ): Promise<CreateStoryPayload> {
+    input.author = user._id;
+    return { story: await this.storyService.create(input) };
   }
 
   @ResolveField(() => User)
