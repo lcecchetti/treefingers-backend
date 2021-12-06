@@ -10,5 +10,5 @@ export class CreateCommentInput {
   @Field(() => ID)
   readonly story: string;
 
-  author?: string;
+  user?: string;
 }

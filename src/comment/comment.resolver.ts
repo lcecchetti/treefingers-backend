@@ -41,13 +41,13 @@ export class CommentResolver {
     @Args('input') input: CreateCommentInput,
     @CurrentUser() user: User,
   ): Promise<CreateCommentPayload> {
-    input.author = user._id;
+    input.user = user._id;
     return { comment: await this.commentService.create(input) };
   }
 
   @ResolveField(() => User)
   async author(@Parent() comment: Comment): Promise<User> {
-    return this.userService.findById(comment.author._id);
+    return this.userService.findById(comment.user._id);
   }
 
   @ResolveField(() => Story, { nullable: true })

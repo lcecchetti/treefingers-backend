@@ -1,11 +1,15 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
-import { FilterInput } from 'src/pagination/dto/filter.input';
 
 @InputType()
-export class CommentFilterInput extends FilterInput {
+export class CreateLikeInput {
   @Field(() => ID, { nullable: true })
   readonly story?: string;
 
   @Field(() => ID, { nullable: true })
-  readonly user?: string;
+  readonly comment?: string;
+
+  @Field(() => ID, { nullable: true })
+  readonly author?: string;
+
+  user?: string;
 }

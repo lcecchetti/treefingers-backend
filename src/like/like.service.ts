@@ -1,0 +1,30 @@
+import { FilterQuery, Model, QueryOptions } from 'mongoose';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Like, LikeDocument } from './like.entity';
+import { CreateLikeInput } from './dto/create-like.input';
+
+@Injectable()
+export class LikeService {
+  constructor(@InjectModel(Like.name) private likeModel: Model<LikeDocument>) {}
+
+  async findById(
+    _id: string,
+    projection?: any | null,
+    options?: QueryOptions,
+  ): Promise<Like | null> {
+    return this.likeModel.findById(_id, projection, options).lean();
+  }
+
+  async findAll(
+    filter?: FilterQuery<LikeDocument>,
+    projection?: any | null,
+    options?: QueryOptions,
+  ): Promise<Like[]> {
+    return this.likeModel.find(filter, projection, options).lean();
+  }
+
+  async create(input: CreateLikeInput): Promise<Like> {
+    return this.likeModel.create(input);
+  }
+}
