@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { RegisterInput } from 'src/auth/dto/register.input';
-import { IsEmail, isEmail, MinLength } from 'class-validator';
+import { IsEmail, isEmail, MaxLength, Min, MinLength } from 'class-validator';
 
 @Schema({ timestamps: true })
 @ObjectType()
@@ -29,25 +29,30 @@ export class User extends RegisterInput {
   @Prop({
     maxlength: 32,
   })
-  @Field()
+  @Field({ nullable: true })
   pseudonym?: string;
 
   @Prop({
     maxlength: 255,
   })
-  @Field()
+  @Field({ nullable: true })
+  @MaxLength(255)
   bio?: string;
 
   @Prop({
     min: 0,
+    default: 0,
   })
   @Field(() => Int)
+  @Min(0)
   likesCount: number;
 
   @Prop({
     min: 0,
+    default: 0,
   })
   @Field(() => Int)
+  @Min(0)
   storiesCount: number;
 }
 

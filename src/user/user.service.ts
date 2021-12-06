@@ -34,7 +34,7 @@ export class UserService {
     _id: string,
     projection?: any | null,
     options?: QueryOptions,
-  ): Promise<User | undefined> {
+  ): Promise<User | null> {
     return this.userModel.findById(_id, projection, options).lean();
   }
 

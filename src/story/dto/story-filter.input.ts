@@ -5,4 +5,7 @@ import { FilterInput } from 'src/pagination/dto/filter.input';
 export class StoryFilterInput extends FilterInput {
   @Field({ nullable: true })
   author?: string;
+
+  @Field({ nullable: true })
+  parent?: string;
 }

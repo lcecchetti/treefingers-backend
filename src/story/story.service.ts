@@ -13,6 +13,14 @@ export class StoryService {
     private paginationService: PaginationService,
   ) {}
 
+  async findById(
+    _id: string,
+    projection?: any | null,
+    options?: QueryOptions,
+  ): Promise<Story | null> {
+    return this.storyModel.findById(_id, projection, options).lean();
+  }
+
   async findAll(
     filter?: FilterQuery<StoryDocument>,
     projection?: any | null,

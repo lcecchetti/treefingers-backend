@@ -1,7 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, SchemaTypes } from 'mongoose';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
+import { MaxLength, Min, MinLength } from 'class-validator';
 
 @Schema({ timestamps: true })
 @ObjectType()
@@ -12,9 +13,29 @@ export class Story {
   @Prop({
     required: true,
     index: true,
+    minlength: 1,
+    maxlength: 255,
   })
   @Field()
   title: string;
+
+  @Prop({
+    required: true,
+    index: true,
+    minlength: 1,
+    maxlength: 1023,
+  })
+  @Field()
+  @MinLength(1)
+  @MaxLength(1023)
+  content: string;
+
+  @Prop({
+    minlength: 1,
+    maxlength: 255,
+  })
+  @Field({ nullable: true })
+  action?: string;
 
   @Prop({
     type: SchemaTypes.ObjectId,
@@ -22,6 +43,54 @@ export class Story {
     index: true,
   })
   author: User;
+
+  @Prop({
+    type: SchemaTypes.ObjectId,
+    ref: Story.name,
+    index: true,
+    default: null,
+  })
+  root?: Story;
+
+  @Prop({
+    type: SchemaTypes.ObjectId,
+    ref: Story.name,
+    index: true,
+    default: null,
+  })
+  parent?: Story;
+
+  @Prop({
+    min: 0,
+    default: 0,
+  })
+  @Field(() => Int)
+  @Min(0)
+  likesCount: number;
+
+  @Prop({
+    min: 0,
+    default: 0,
+  })
+  @Field(() => Int)
+  @Min(0)
+  commentsCount: number;
+
+  @Prop({
+    min: 0,
+    default: 0,
+  })
+  @Field(() => Int)
+  @Min(0)
+  childrenCount: number;
+
+  @Prop({
+    min: 0,
+    default: 0,
+  })
+  @Field(() => Int)
+  @Min(0)
+  descendentsCount: number;
 }
 
 export type StoryDocument = Story & Document;
