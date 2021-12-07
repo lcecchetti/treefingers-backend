@@ -17,6 +17,7 @@ import { CreateStoryInput } from './dto/create-story.input';
 import { CurrentUser } from 'src/user/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
+import { StoryInput } from './dto/story.input';
 
 @Resolver(() => Story)
 export class StoryResolver {
@@ -30,6 +31,13 @@ export class StoryResolver {
     @Args('input', { nullable: true }) input: StoriesInput = new StoriesInput(),
   ): Promise<StoriesPaginated> {
     return this.storyService.paginate(input);
+  }
+
+  @Query(() => Story, { nullable: true })
+  async story(
+    @Args('input', { nullable: true }) { filter }: StoryInput = new StoryInput(),
+  ): Promise<Story> {
+    return this.storyService.findOne(filter);
   }
 
   @Mutation(() => CreateStoryPayload)

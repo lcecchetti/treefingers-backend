@@ -22,6 +22,14 @@ export class TagService {
     return this.tagModel.findById(_id, projection, options).lean();
   }
 
+  async findOne(
+    filter?: FilterQuery<TagDocument>,
+    projection?: any | null,
+    options?: QueryOptions,
+  ): Promise<Tag | undefined> {
+    return this.tagModel.findOne(filter, projection, options).lean();
+  }
+
   async findAll(
     filter?: FilterQuery<TagDocument>,
     projection?: any | null,

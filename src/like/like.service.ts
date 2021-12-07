@@ -16,6 +16,14 @@ export class LikeService {
     return this.likeModel.findById(_id, projection, options).lean();
   }
 
+  async findOne(
+    filter?: FilterQuery<LikeDocument>,
+    projection?: any | null,
+    options?: QueryOptions,
+  ): Promise<Like | undefined> {
+    return this.likeModel.findOne(filter, projection, options).lean();
+  }
+
   async findAll(
     filter?: FilterQuery<LikeDocument>,
     projection?: any | null,

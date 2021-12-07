@@ -4,8 +4,8 @@ import { FilterInput } from 'src/pagination/dto/filter.input';
 @InputType()
 export class CommentFilterInput extends FilterInput {
   @Field(() => ID, { nullable: true })
-  readonly story?: string;
+  readonly story?: any;
 
   @Field(() => ID, { nullable: true })
-  readonly user?: string;
+  readonly user?: any;
 }

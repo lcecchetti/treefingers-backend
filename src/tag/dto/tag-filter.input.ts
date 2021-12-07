@@ -4,5 +4,5 @@ import { FilterInput } from 'src/pagination/dto/filter.input';
 @InputType()
 export class TagFilterInput extends FilterInput {
   @Field(() => ID, { nullable: true })
-  readonly slug?: string;
+  readonly slug?: any;
 }

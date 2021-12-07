@@ -22,6 +22,14 @@ export class CommentService {
     return this.commentModel.findById(_id, projection, options).lean();
   }
 
+  async findOne(
+    filter?: FilterQuery<CommentDocument>,
+    projection?: any | null,
+    options?: QueryOptions,
+  ): Promise<Comment | undefined> {
+    return this.commentModel.findOne(filter, projection, options).lean();
+  }
+
   async findAll(
     filter?: FilterQuery<CommentDocument>,
     projection?: any | null,

@@ -3,7 +3,7 @@ import { CommentFilterInput } from './comment-filter.input';
 
 @InputType()
 @ArgsType()
-export class TagInput {
+export class CommentInput {
   @Field(() => CommentFilterInput, { nullable: true })
   filter?: CommentFilterInput = new CommentFilterInput();
 }

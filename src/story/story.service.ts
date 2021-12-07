@@ -22,6 +22,14 @@ export class StoryService {
     return this.storyModel.findById(_id, projection, options).lean();
   }
 
+  async findOne(
+    filter?: FilterQuery<StoryDocument>,
+    projection?: any | null,
+    options?: QueryOptions,
+  ): Promise<Story | undefined> {
+    return this.storyModel.findOne(filter, projection, options).lean();
+  }
+
   async findAll(
     filter?: FilterQuery<StoryDocument>,
     projection?: any | null,

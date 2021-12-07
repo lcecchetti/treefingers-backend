@@ -15,6 +15,7 @@ import { CreateTagPayload } from './dto/create-tag.payload';
 import { CreateTagInput } from './dto/create-tag.input';
 import { StoriesPaginated } from 'src/story/stories.paginated';
 import { StoriesInput } from 'src/story/dto/stories.input';
+import { TagInput } from 'src/tag/dto/tag.input';
 
 @Resolver(() => Tag)
 export class TagResolver {
@@ -28,6 +29,13 @@ export class TagResolver {
     @Args('input', { nullable: true }) input: TagsInput = new TagsInput(),
   ): Promise<TagsPaginated> {
     return this.tagService.paginate(input);
+  }
+
+  @Query(() => Tag, { nullable: true })
+  async tag(
+    @Args('input', { nullable: true }) { filter }: TagInput = new TagInput(),
+  ): Promise<Tag> {
+    return this.tagService.findOne(filter);
   }
 
   @Mutation(() => CreateTagPayload)

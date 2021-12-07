@@ -4,11 +4,11 @@ import { FilterInput } from 'src/pagination/dto/filter.input';
 @InputType()
 export class StoryFilterInput extends FilterInput {
   @Field(() => ID, { nullable: true })
-  author?: string;
+  author?: any;
 
   @Field(() => ID, { nullable: true })
-  parent?: string;
+  parent?: any;
 
   @Field(() => ID, { nullable: true })
-  tag?: string;
+  tag?: any;
 }

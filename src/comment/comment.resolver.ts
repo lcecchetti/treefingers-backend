@@ -19,6 +19,7 @@ import { CurrentUser } from 'src/user/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { Story } from 'src/story/story.entity';
+import { CommentInput } from './dto/comment.input';
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -33,6 +34,13 @@ export class CommentResolver {
     @Args('input', { nullable: true }) input: CommentsInput = new CommentsInput(),
   ): Promise<CommentsPaginated> {
     return this.commentService.paginate(input);
+  }
+
+  @Query(() => Comment, { nullable: true })
+  async user(
+    @Args('input', { nullable: true }) { filter }: CommentInput = new CommentInput(),
+  ): Promise<Comment> {
+    return this.commentService.findOne(filter);
   }
 
   @Mutation(() => CreateCommentPayload)

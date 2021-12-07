@@ -4,14 +4,14 @@ import { FilterInput } from 'src/pagination/dto/filter.input';
 @InputType()
 export class LikeFilterInput extends FilterInput {
   @Field(() => ID, { nullable: true })
-  readonly story?: string;
+  readonly story?: any;
 
   @Field(() => ID, { nullable: true })
-  readonly user?: string;
+  readonly user?: any;
 
   @Field(() => ID, { nullable: true })
-  readonly comment?: string;
+  readonly comment?: any;
 
   @Field(() => ID, { nullable: true })
-  readonly author?: string;
+  readonly author?: any;
 }
