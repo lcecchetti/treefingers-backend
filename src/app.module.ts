@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import configuration from './config/configuration';
 import { CommentModule } from './comment/comment.module';
 import { LikeModule } from './like/like.module';
+import { TagModule } from './tag/tag.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { LikeModule } from './like/like.module';
     AuthModule,
     CommentModule,
     LikeModule,
+    TagModule,
   ],
   providers: [AppService],
 })
