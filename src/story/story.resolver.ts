@@ -35,7 +35,8 @@ export class StoryResolver {
 
   @Query(() => Story, { nullable: true })
   async story(
-    @Args('input', { nullable: true }) { filter }: StoryInput = new StoryInput(),
+    @Args('input', { nullable: true })
+    { filter }: StoryInput = new StoryInput(),
   ): Promise<Story> {
     return this.storyService.findOne(filter);
   }

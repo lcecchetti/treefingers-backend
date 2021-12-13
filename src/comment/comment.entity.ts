@@ -1,8 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, SchemaTypes } from 'mongoose';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
-import { MaxLength, MinLength } from 'class-validator';
+import { MaxLength, Min, MinLength } from 'class-validator';
 import { Story } from 'src/story/story.entity';
 
 @Schema({ timestamps: true })
@@ -35,6 +35,14 @@ export class Comment {
     index: true,
   })
   story: Story;
+
+  @Prop({
+    min: 0,
+    default: 0,
+  })
+  @Field(() => Int, { defaultValue: 0 })
+  @Min(0)
+  likesCount: number;
 }
 
 export type CommentDocument = Comment & Document;

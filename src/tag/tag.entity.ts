@@ -35,7 +35,7 @@ export class Tag {
     min: 0,
     default: 0,
   })
-  @Field(() => Int)
+  @Field(() => Int, { defaultValue: 0 })
   @Min(0)
   storiesCount: number;
 }

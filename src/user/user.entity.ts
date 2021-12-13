@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
-import { RegisterInput } from 'src/auth/dto/register.input';
 import { IsEmail, isEmail, MaxLength, Min, MinLength } from 'class-validator';
 
 @Schema({ timestamps: true })
@@ -43,7 +42,7 @@ export class User {
     min: 0,
     default: 0,
   })
-  @Field(() => Int)
+  @Field(() => Int, { defaultValue: 0 })
   @Min(0)
   likesCount: number;
 
@@ -51,7 +50,7 @@ export class User {
     min: 0,
     default: 0,
   })
-  @Field(() => Int)
+  @Field(() => Int, { defaultValue: 0 })
   @Min(0)
   storiesCount: number;
 }

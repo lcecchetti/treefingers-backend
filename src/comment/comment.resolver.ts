@@ -31,14 +31,16 @@ export class CommentResolver {
 
   @Query(() => CommentsPaginated)
   async comments(
-    @Args('input', { nullable: true }) input: CommentsInput = new CommentsInput(),
+    @Args('input', { nullable: true })
+    input: CommentsInput = new CommentsInput(),
   ): Promise<CommentsPaginated> {
     return this.commentService.paginate(input);
   }
 
   @Query(() => Comment, { nullable: true })
   async user(
-    @Args('input', { nullable: true }) { filter }: CommentInput = new CommentInput(),
+    @Args('input', { nullable: true })
+    { filter }: CommentInput = new CommentInput(),
   ): Promise<Comment> {
     return this.commentService.findOne(filter);
   }

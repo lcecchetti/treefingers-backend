@@ -59,7 +59,7 @@ export class Story {
     min: 0,
     default: 0,
   })
-  @Field(() => Int)
+  @Field(() => Int, { defaultValue: 0 })
   @Min(0)
   likesCount: number;
 
@@ -67,7 +67,7 @@ export class Story {
     min: 0,
     default: 0,
   })
-  @Field(() => Int)
+  @Field(() => Int, { defaultValue: 0 })
   @Min(0)
   commentsCount: number;
 
@@ -75,7 +75,7 @@ export class Story {
     min: 0,
     default: 0,
   })
-  @Field(() => Int)
+  @Field(() => Int, { defaultValue: 0 })
   @Min(0)
   childrenCount: number;
 
@@ -83,7 +83,7 @@ export class Story {
     min: 0,
     default: 0,
   })
-  @Field(() => Int)
+  @Field(() => Int, { defaultValue: 0 })
   @Min(0)
   descendentsCount: number;
 }
