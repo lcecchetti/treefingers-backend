@@ -1,11 +1,11 @@
 import { Resolver, Query, Args, ResolveField, Parent } from '@nestjs/graphql';
 import { UserService } from './user.service';
-import { UsersPaginated } from './users.paginated';
+import { UsersPaginated } from './dto/users.paginated';
 import { User } from './user.entity';
 import { UserInput } from './dto/user.input';
 import { UsersInput } from './dto/users.input';
 import { StoryService } from 'src/story/story.service';
-import { StoriesPaginated } from 'src/story/stories.paginated';
+import { StoriesPaginated } from 'src/story/dto/stories.paginated';
 import { StoriesInput } from 'src/story/dto/stories.input';
 
 @Resolver(() => User)

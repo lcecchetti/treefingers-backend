@@ -12,7 +12,7 @@ import { UserService } from 'src/user/user.service';
 import { StoryService } from 'src/story/story.service';
 import { User } from 'src/user/user.entity';
 import { CommentsInput } from './dto/comments.input';
-import { CommentsPaginated } from './comments.paginated';
+import { CommentsPaginated } from './dto/comments.paginated';
 import { CreateCommentPayload } from './dto/create-comment.payload';
 import { CreateCommentInput } from './dto/create-comment.input';
 import { CurrentUser } from 'src/user/decorators/current-user.decorator';

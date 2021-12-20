@@ -1,5 +1,5 @@
 import { InputType, ArgsType } from '@nestjs/graphql';
-import { ConnectionInput } from 'src/pagination/dto/connection.input';
+import { ConnectionInput } from 'src/common/pagination/dto/connection.input';
 
 @InputType()
 @ArgsType()

@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Story, StoryDocument } from './story.entity';
 import { CreateStoryInput } from './dto/create-story.input';
-import { PaginationService } from 'src/pagination/pagination.service';
+import { PaginationService } from 'src/common/pagination/pagination.service';
 
 @Injectable()
 export class StoryService extends PaginationService<Story> {

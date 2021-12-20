@@ -10,10 +10,10 @@ import { TagService } from './tag.service';
 import { Tag } from './tag.entity';
 import { StoryService } from 'src/story/story.service';
 import { TagsInput } from './dto/tags.input';
-import { TagsPaginated } from './tags.paginated';
+import { TagsPaginated } from './dto/tags.paginated';
 import { CreateTagPayload } from './dto/create-tag.payload';
 import { CreateTagInput } from './dto/create-tag.input';
-import { StoriesPaginated } from 'src/story/stories.paginated';
+import { StoriesPaginated } from 'src/story/dto/stories.paginated';
 import { StoriesInput } from 'src/story/dto/stories.input';
 import { TagInput } from 'src/tag/dto/tag.input';
 

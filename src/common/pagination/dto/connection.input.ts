@@ -2,8 +2,8 @@ import { Field, InputType, ArgsType } from '@nestjs/graphql';
 import { ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { PaginationInput } from './pagination.input';
-import { FilterInput } from './filter.input';
-import { SortInput } from './sort.input';
+import { FilterInput } from 'src/common/filter/dto/filter.input';
+import { SortInput } from 'src/common/sort/dto/sort.input';
 
 @InputType()
 @ArgsType()

@@ -2,7 +2,7 @@ import { Model, FilterQuery, QueryOptions } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './user.entity';
-import { PaginationService } from 'src/pagination/pagination.service';
+import { PaginationService } from 'src/common/pagination/pagination.service';
 import { UserCreateInput } from './dto/user-create.input';
 
 @Injectable()

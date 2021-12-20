@@ -11,7 +11,7 @@ import { Story } from './story.entity';
 import { UserService } from 'src/user/user.service';
 import { User } from 'src/user/user.entity';
 import { StoriesInput } from './dto/stories.input';
-import { StoriesPaginated } from './stories.paginated';
+import { StoriesPaginated } from './dto/stories.paginated';
 import { CreateStoryPayload } from './dto/create-story.payload';
 import { CreateStoryInput } from './dto/create-story.input';
 import { CurrentUser } from 'src/user/decorators/current-user.decorator';

@@ -1,6 +1,6 @@
+import { SORT_DIRECTION } from '../sort/dto/sort.input';
 import { ConnectionInput } from './dto/connection.input';
-import { DIRECTION } from './dto/sort.input';
-import { IConnection } from './pagination.entity';
+import { IConnection } from './dto/pagination.dto';
 
 const encodeCursor = (cursor: string): string => {
   if (!cursor) {
@@ -43,7 +43,7 @@ export class PaginationService<T> {
     const currentCursor = decodeCursor(cursor);
     if (currentCursor) {
       filter._id =
-        !sort._id || sort._id === DIRECTION.ASC
+        !sort._id || sort._id === SORT_DIRECTION.ASC
           ? { $gt: currentCursor }
           : { $lt: currentCursor };
     }

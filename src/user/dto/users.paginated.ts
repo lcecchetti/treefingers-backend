@@ -1,6 +1,6 @@
-import { Paginated } from 'src/pagination/pagination.entity';
+import { Paginated } from 'src/common/pagination/dto/pagination.dto';
 import { ObjectType } from '@nestjs/graphql';
-import { User } from './user.entity';
+import { User } from '../user.entity';
 
 @ObjectType()
 export class UsersPaginated extends Paginated(User) {}
