@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
-import { MaxLength, Min, MinLength } from 'class-validator';
 
 @Schema({ timestamps: true })
 @ObjectType()
@@ -16,8 +15,6 @@ export class Tag {
     maxlength: 63,
   })
   @Field()
-  @MinLength(1)
-  @MaxLength(63)
   label: string;
 
   @Prop({
@@ -27,8 +24,6 @@ export class Tag {
     maxlength: 63,
   })
   @Field()
-  @MinLength(1)
-  @MaxLength(63)
   slug: string;
 
   @Prop({
@@ -36,7 +31,6 @@ export class Tag {
     default: 0,
   })
   @Field(() => Int, { defaultValue: 0 })
-  @Min(0)
   storiesCount: number;
 }
 

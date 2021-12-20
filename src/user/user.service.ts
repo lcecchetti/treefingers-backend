@@ -3,9 +3,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './user.entity';
 import { PaginationService } from 'src/pagination/pagination.service';
-import { RegisterInput } from 'src/auth/dto/register.input';
 import { UsersInput } from './dto/users.input';
 import { UsersPaginated } from './users.paginated';
+import { UserCreateInput } from './dto/user-create.input';
 
 @Injectable()
 export class UserService {
@@ -42,7 +42,7 @@ export class UserService {
     return this.paginationService.paginate<User>(this.userModel, input);
   }
 
-  async create(registerInput: RegisterInput): Promise<User> {
-    return this.userModel.create(registerInput);
+  async create(input: UserCreateInput): Promise<User> {
+    return this.userModel.create(input);
   }
 }

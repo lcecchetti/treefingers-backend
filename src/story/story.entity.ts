@@ -2,7 +2,6 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, SchemaTypes } from 'mongoose';
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
-import { MaxLength, Min, MinLength } from 'class-validator';
 
 @Schema({ timestamps: true })
 @ObjectType()
@@ -17,19 +16,13 @@ export class Story {
     maxlength: 255,
   })
   @Field()
-  @MinLength(1)
-  @MaxLength(255)
   title: string;
 
   @Prop({
     required: true,
     index: true,
-    minlength: 1,
-    maxlength: 1023,
   })
   @Field()
-  @MinLength(1)
-  @MaxLength(1023)
   content: string;
 
   @Prop({
@@ -60,7 +53,6 @@ export class Story {
     default: 0,
   })
   @Field(() => Int, { defaultValue: 0 })
-  @Min(0)
   likesCount: number;
 
   @Prop({
@@ -68,7 +60,6 @@ export class Story {
     default: 0,
   })
   @Field(() => Int, { defaultValue: 0 })
-  @Min(0)
   commentsCount: number;
 
   @Prop({
@@ -76,7 +67,6 @@ export class Story {
     default: 0,
   })
   @Field(() => Int, { defaultValue: 0 })
-  @Min(0)
   childrenCount: number;
 
   @Prop({
@@ -84,7 +74,6 @@ export class Story {
     default: 0,
   })
   @Field(() => Int, { defaultValue: 0 })
-  @Min(0)
   descendentsCount: number;
 }
 

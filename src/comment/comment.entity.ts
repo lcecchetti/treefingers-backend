@@ -2,7 +2,6 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, SchemaTypes } from 'mongoose';
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
-import { MaxLength, Min, MinLength } from 'class-validator';
 import { Story } from 'src/story/story.entity';
 
 @Schema({ timestamps: true })
@@ -18,8 +17,6 @@ export class Comment {
     maxlength: 511,
   })
   @Field()
-  @MinLength(1)
-  @MaxLength(511)
   content: string;
 
   @Prop({
@@ -41,7 +38,6 @@ export class Comment {
     default: 0,
   })
   @Field(() => Int, { defaultValue: 0 })
-  @Min(0)
   likesCount: number;
 }
 
