@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 import { ConnectionInput } from './dto/connection.input';
 import { DIRECTION } from './dto/sort.input';
 import { IConnection } from './pagination.entity';
@@ -19,10 +18,14 @@ const decodeCursor = (cursor: string): string => {
   return Buffer.from(String(cursor), 'base64').toString('ascii');
 };
 
-@Injectable()
-export class PaginationService {
-  async paginate<T>(
-    model: any,
+export class PaginationService<T> {
+  model: any;
+
+  constructor(model) {
+    this.model = model;
+  }
+
+  async paginate(
     connectionInput: ConnectionInput = new ConnectionInput(),
   ): Promise<IConnection<T>> {
     const result: IConnection<T> = {};
@@ -46,7 +49,7 @@ export class PaginationService {
     }
 
     // get nodes
-    const nodes = await model
+    const nodes = await this.model
       .find(filter, null, {
         sort,
         limit: pageSize,
@@ -63,7 +66,7 @@ export class PaginationService {
     });
 
     // prepare page infos
-    const totalCount = await model.estimatedDocumentCount(filter);
+    const totalCount = await this.model.estimatedDocumentCount(filter);
     const pagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 1;
 
     result.pageInfo = {

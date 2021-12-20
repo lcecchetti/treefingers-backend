@@ -4,7 +4,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
 import { StoryModule } from './story/story.module';
-import { PaginationModule } from './pagination/pagination.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import configuration from './config/configuration';
@@ -30,7 +29,6 @@ import { TagModule } from './tag/tag.module';
       }),
       inject: [ConfigService],
     }),
-    PaginationModule,
     StoryModule,
     UserModule,
     AuthModule,

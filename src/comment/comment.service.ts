@@ -3,16 +3,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Comment, CommentDocument } from './comment.entity';
 import { PaginationService } from 'src/pagination/pagination.service';
-import { CommentsPaginated } from './comments.paginated';
-import { ConnectionInput } from 'src/pagination/dto/connection.input';
 import { CreateCommentInput } from './dto/create-comment.input';
 
 @Injectable()
-export class CommentService {
+export class CommentService extends PaginationService<Comment> {
   constructor(
     @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
-    private paginationService: PaginationService,
-  ) {}
+  ) {
+    super(commentModel);
+  }
 
   async findById(
     _id: string,
@@ -36,13 +35,6 @@ export class CommentService {
     options?: QueryOptions,
   ): Promise<Comment[]> {
     return this.commentModel.find(filter, projection, options).lean();
-  }
-
-  async paginate(connectionInput: ConnectionInput): Promise<CommentsPaginated> {
-    return this.paginationService.paginate<Comment>(
-      this.commentModel,
-      connectionInput,
-    );
   }
 
   async create(input: CreateCommentInput): Promise<Comment> {

@@ -3,14 +3,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { CommentService } from './comment.service';
 import { CommentResolver } from './comment.resolver';
 import { Comment, CommentSchema } from './comment.entity';
-import { PaginationModule } from 'src/pagination/pagination.module';
 import { UserModule } from 'src/user/user.module';
 import { StoryModule } from 'src/story/story.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Comment.name, schema: CommentSchema }]),
-    PaginationModule,
     forwardRef(() => UserModule),
     forwardRef(() => StoryModule),
   ],
