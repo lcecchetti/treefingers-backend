@@ -26,7 +26,7 @@ export class StoryService {
     filter?: FilterQuery<StoryDocument>,
     projection?: any | null,
     options?: QueryOptions,
-  ): Promise<Story | undefined> {
+  ): Promise<Story | null> {
     return this.storyModel.findOne(filter, projection, options).lean();
   }
 

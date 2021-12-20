@@ -26,7 +26,7 @@ export class CommentService {
     filter?: FilterQuery<CommentDocument>,
     projection?: any | null,
     options?: QueryOptions,
-  ): Promise<Comment | undefined> {
+  ): Promise<Comment | null> {
     return this.commentModel.findOne(filter, projection, options).lean();
   }
 

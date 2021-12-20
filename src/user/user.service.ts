@@ -26,7 +26,7 @@ export class UserService {
     filter?: FilterQuery<UserDocument>,
     projection?: any | null,
     options?: QueryOptions,
-  ): Promise<User | undefined> {
+  ): Promise<User | null> {
     return this.userModel.findOne(filter, projection, options).lean();
   }
 

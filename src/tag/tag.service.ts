@@ -26,7 +26,7 @@ export class TagService {
     filter?: FilterQuery<TagDocument>,
     projection?: any | null,
     options?: QueryOptions,
-  ): Promise<Tag | undefined> {
+  ): Promise<Tag | null> {
     return this.tagModel.findOne(filter, projection, options).lean();
   }
 

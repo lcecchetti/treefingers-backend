@@ -20,7 +20,7 @@ export class LikeService {
     filter?: FilterQuery<LikeDocument>,
     projection?: any | null,
     options?: QueryOptions,
-  ): Promise<Like | undefined> {
+  ): Promise<Like | null> {
     return this.likeModel.findOne(filter, projection, options).lean();
   }
 
