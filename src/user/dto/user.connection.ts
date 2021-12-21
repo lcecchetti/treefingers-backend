@@ -3,4 +3,4 @@ import { ObjectType } from '@nestjs/graphql';
 import { User } from '../user.entity';
 
 @ObjectType()
-export class UsersPaginated extends Paginated(User) {}
+export class UserConnection extends Paginated(User) {}

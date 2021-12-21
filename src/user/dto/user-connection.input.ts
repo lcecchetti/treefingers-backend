@@ -4,7 +4,7 @@ import { UserFilterInput } from './user-filter.input';
 
 @InputType()
 @ArgsType()
-export class UsersInput extends ConnectionInput {
+export class UserConnectionInput extends ConnectionInput {
   @Field(() => UserFilterInput, { nullable: true })
   filter?: UserFilterInput = new UserFilterInput();
 }

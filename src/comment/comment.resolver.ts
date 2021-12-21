@@ -11,8 +11,6 @@ import { Comment } from './comment.entity';
 import { UserService } from 'src/user/user.service';
 import { StoryService } from 'src/story/story.service';
 import { User } from 'src/user/user.entity';
-import { CommentsInput } from './dto/comments.input';
-import { CommentsPaginated } from './dto/comments.paginated';
 import { CreateCommentPayload } from './dto/create-comment.payload';
 import { CreateCommentInput } from './dto/create-comment.input';
 import { CurrentUser } from 'src/user/decorators/current-user.decorator';
@@ -20,6 +18,8 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { Story } from 'src/story/story.entity';
 import { CommentInput } from './dto/comment.input';
+import { CommentConnection } from './dto/comment.connection';
+import { CommentConnectionInput } from './dto/comment-connection.input';
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -29,11 +29,11 @@ export class CommentResolver {
     private storyService: StoryService,
   ) {}
 
-  @Query(() => CommentsPaginated)
+  @Query(() => CommentConnection)
   async comments(
     @Args('input', { nullable: true })
-    input: CommentsInput = new CommentsInput(),
-  ): Promise<CommentsPaginated> {
+    input: CommentConnectionInput = new CommentConnectionInput(),
+  ): Promise<CommentConnection> {
     return this.commentService.paginate(input);
   }
 

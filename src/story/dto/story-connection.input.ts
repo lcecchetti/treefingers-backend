@@ -4,7 +4,7 @@ import { StoryFilterInput } from 'src/story/dto/story-filter.input';
 
 @InputType()
 @ArgsType()
-export class StoriesInput extends ConnectionInput {
+export class StoryConnectionInput extends ConnectionInput {
   @Field(() => StoryFilterInput, { nullable: true })
   filter?: StoryFilterInput = new StoryFilterInput();
 }

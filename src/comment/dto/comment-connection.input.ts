@@ -4,7 +4,7 @@ import { CommentFilterInput } from 'src/comment/dto/comment-filter.input';
 
 @InputType()
 @ArgsType()
-export class CommentsInput extends ConnectionInput {
+export class CommentConnectionInput extends ConnectionInput {
   @Field(() => CommentFilterInput, { nullable: true })
   filter?: CommentFilterInput = new CommentFilterInput();
 }

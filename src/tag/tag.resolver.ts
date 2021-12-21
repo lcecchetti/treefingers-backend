@@ -9,13 +9,13 @@ import {
 import { TagService } from './tag.service';
 import { Tag } from './tag.entity';
 import { StoryService } from 'src/story/story.service';
-import { TagsInput } from './dto/tags.input';
-import { TagsPaginated } from './dto/tags.paginated';
 import { CreateTagPayload } from './dto/create-tag.payload';
 import { CreateTagInput } from './dto/create-tag.input';
-import { StoriesPaginated } from 'src/story/dto/stories.paginated';
-import { StoriesInput } from 'src/story/dto/stories.input';
 import { TagInput } from 'src/tag/dto/tag.input';
+import { TagConnection } from './dto/tag.connection';
+import { TagConnectionInput } from './dto/tag-connection.input';
+import { StoryConnection } from 'src/story/dto/story.connection';
+import { StoryConnectionInput } from 'src/story/dto/story-connection.input';
 
 @Resolver(() => Tag)
 export class TagResolver {
@@ -24,10 +24,11 @@ export class TagResolver {
     private storyService: StoryService,
   ) {}
 
-  @Query(() => TagsPaginated)
+  @Query(() => TagConnection)
   async tags(
-    @Args('input', { nullable: true }) input: TagsInput = new TagsInput(),
-  ): Promise<TagsPaginated> {
+    @Args('input', { nullable: true })
+    input: TagConnectionInput = new TagConnectionInput(),
+  ): Promise<TagConnection> {
     return this.tagService.paginate(input);
   }
 
@@ -45,11 +46,12 @@ export class TagResolver {
     return { tag: await this.tagService.create(input) };
   }
 
-  @ResolveField(() => StoriesPaginated)
+  @ResolveField(() => StoryConnection)
   async stories(
-    @Args('input', { nullable: true }) input: StoriesInput = new StoriesInput(),
+    @Args('input', { nullable: true })
+    input: StoryConnectionInput = new StoryConnectionInput(),
     @Parent() tag: Tag,
-  ): Promise<StoriesPaginated> {
+  ): Promise<StoryConnection> {
     //@todo support multiple tags per story
     input.filter.tag = tag._id;
     return this.storyService.paginate(input);
