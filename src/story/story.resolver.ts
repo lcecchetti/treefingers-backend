@@ -15,9 +15,9 @@ import { CreateStoryInput } from './dto/create-story.input';
 import { CurrentUser } from 'src/user/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
-import { StoryInput } from './dto/story.input';
 import { StoryConnection } from './dto/story.connection';
-import { StoryConnectionInput } from './dto/story-connection.input';
+import { StoryFilterInput } from './dto/story-filter.input';
+import { StoryConnectionArgs } from 'src/comment/args/comment-connection.args';
 
 @Resolver(() => Story)
 export class StoryResolver {
@@ -28,16 +28,16 @@ export class StoryResolver {
 
   @Query(() => StoryConnection)
   async stories(
-    @Args('input', { nullable: true })
-    input: StoryConnectionInput = new StoryConnectionInput(),
+    @Args({ nullable: true })
+    args: StoryConnectionArgs = new StoryConnectionArgs(),
   ): Promise<StoryConnection> {
-    return this.storyService.paginate(input);
+    return this.storyService.paginate(args);
   }
 
   @Query(() => Story, { nullable: true })
   async story(
-    @Args('input', { nullable: true })
-    { filter }: StoryInput = new StoryInput(),
+    @Args('filter', { nullable: true })
+    filter: StoryFilterInput = new StoryFilterInput(),
   ): Promise<Story> {
     return this.storyService.findOne(filter);
   }
@@ -70,10 +70,10 @@ export class StoryResolver {
   @ResolveField(() => StoryConnection, { nullable: true })
   async chapters(
     @Parent() story: Story,
-    @Args('input', { nullable: true })
-    input: StoryConnectionInput = new StoryConnectionInput(),
+    @Args({ nullable: true })
+    args: StoryConnectionArgs = new StoryConnectionArgs(),
   ): Promise<StoryConnection> {
-    input.filter.parent = story._id;
-    return this.storyService.paginate(input);
+    args.filter.parent = story._id;
+    return this.storyService.paginate(args);
   }
 }

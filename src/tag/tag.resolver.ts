@@ -11,11 +11,11 @@ import { Tag } from './tag.entity';
 import { StoryService } from 'src/story/story.service';
 import { CreateTagPayload } from './dto/create-tag.payload';
 import { CreateTagInput } from './dto/create-tag.input';
-import { TagInput } from 'src/tag/dto/tag.input';
 import { TagConnection } from './dto/tag.connection';
-import { TagConnectionInput } from './dto/tag-connection.input';
 import { StoryConnection } from 'src/story/dto/story.connection';
-import { StoryConnectionInput } from 'src/story/dto/story-connection.input';
+import { TagFilterInput } from './dto/tag-filter.input';
+import { TagConnectionArgs } from './args/tag-connection.args';
+import { StoryConnectionArgs } from 'src/comment/args/comment-connection.args';
 
 @Resolver(() => Tag)
 export class TagResolver {
@@ -26,34 +26,35 @@ export class TagResolver {
 
   @Query(() => TagConnection)
   async tags(
-    @Args('input', { nullable: true })
-    input: TagConnectionInput = new TagConnectionInput(),
+    @Args({ nullable: true })
+    args: TagConnectionArgs = new TagConnectionArgs(),
   ): Promise<TagConnection> {
-    return this.tagService.paginate(input);
+    return this.tagService.paginate(args);
   }
 
   @Query(() => Tag, { nullable: true })
   async tag(
-    @Args('input', { nullable: true }) { filter }: TagInput = new TagInput(),
+    @Args('filter', { nullable: true })
+    filter: TagFilterInput = new TagFilterInput(),
   ): Promise<Tag> {
     return this.tagService.findOne(filter);
   }
 
   @Mutation(() => CreateTagPayload)
-  async createStory(
+  async createTag(
     @Args('input') input: CreateTagInput,
   ): Promise<CreateTagPayload> {
-    return { tag: await this.tagService.create(input) };
+    return { tag: await this.tagService.create(input.data) };
   }
 
   @ResolveField(() => StoryConnection)
   async stories(
-    @Args('input', { nullable: true })
-    input: StoryConnectionInput = new StoryConnectionInput(),
+    @Args({ nullable: true })
+    args: StoryConnectionArgs = new StoryConnectionArgs(),
     @Parent() tag: Tag,
   ): Promise<StoryConnection> {
     //@todo support multiple tags per story
-    input.filter.tag = tag._id;
-    return this.storyService.paginate(input);
+    args.filter.tag = tag._id;
+    return this.storyService.paginate(args);
   }
 }

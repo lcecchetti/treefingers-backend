@@ -1,13 +1,12 @@
-import { Field, InputType, ArgsType } from '@nestjs/graphql';
-import { ValidateNested } from 'class-validator';
+import { ArgsType, Field } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
-import { PaginationInput } from './pagination.input';
+import { ValidateNested } from 'class-validator';
 import { FilterInput } from 'src/common/filter/dto/filter.input';
 import { SortInput } from 'src/common/sort/dto/sort.input';
+import { PaginationInput } from '../dto/pagination.input';
 
-@InputType()
 @ArgsType()
-export class ConnectionInput {
+export class ConnectionArgs {
   @Field({ nullable: true })
   readonly filter?: FilterInput = new FilterInput();
 

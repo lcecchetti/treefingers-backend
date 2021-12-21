@@ -1,12 +1,12 @@
 import { Resolver, Query, Args, ResolveField, Parent } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { User } from './user.entity';
-import { UserInput } from './dto/user.input';
 import { StoryService } from 'src/story/story.service';
 import { UserConnection } from './dto/user.connection';
-import { UserConnectionInput } from './dto/user-connection.input';
 import { StoryConnection } from 'src/story/dto/story.connection';
-import { StoryConnectionInput } from 'src/story/dto/story-connection.input';
+import { UserFilterInput } from './dto/user-filter.input';
+import { UserConnectionArgs } from './args/user-connection.args';
+import { StoryConnectionArgs } from 'src/comment/args/comment-connection.args';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -17,25 +17,27 @@ export class UserResolver {
 
   @Query(() => UserConnection)
   async users(
-    @Args('input', { nullable: true })
-    input: UserConnectionInput = new UserConnectionInput(),
+    @Args({ nullable: true })
+    args: UserConnectionArgs = new UserConnectionArgs(),
   ): Promise<UserConnection> {
-    return this.userService.paginate(input);
+    return this.userService.paginate(args);
   }
 
   @Query(() => User, { nullable: true })
   async user(
-    @Args('input', { nullable: true }) { filter }: UserInput = new UserInput(),
+    @Args('filter', { nullable: true })
+    filter: UserFilterInput = new UserFilterInput(),
   ): Promise<User> {
     return this.userService.findOne(filter);
   }
 
   @ResolveField(() => StoryConnection)
   async stories(
-    @Args('input', { nullable: true }) input: StoryConnectionInput = new StoryConnectionInput(),
+    @Args({ nullable: true })
+    args: StoryConnectionArgs = new StoryConnectionArgs(),
     @Parent() user: User,
   ): Promise<StoryConnection> {
-    input.filter.author = user._id;
-    return this.storyService.paginate(input);
+    args.filter.author = user._id;
+    return this.storyService.paginate(args);
   }
 }

@@ -17,9 +17,9 @@ import { CurrentUser } from 'src/user/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { Story } from 'src/story/story.entity';
-import { CommentInput } from './dto/comment.input';
 import { CommentConnection } from './dto/comment.connection';
-import { CommentConnectionInput } from './dto/comment-connection.input';
+import { CommentFilterInput } from './dto/comment-filter.input';
+import { CommentConnectionArgs } from 'src/story/args/story-connection.args';
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -31,16 +31,16 @@ export class CommentResolver {
 
   @Query(() => CommentConnection)
   async comments(
-    @Args('input', { nullable: true })
-    input: CommentConnectionInput = new CommentConnectionInput(),
+    @Args({ nullable: true })
+    args: CommentConnectionArgs = new CommentConnectionArgs(),
   ): Promise<CommentConnection> {
-    return this.commentService.paginate(input);
+    return this.commentService.paginate(args);
   }
 
   @Query(() => Comment, { nullable: true })
   async user(
     @Args('input', { nullable: true })
-    { filter }: CommentInput = new CommentInput(),
+    filter: CommentFilterInput = new CommentFilterInput(),
   ): Promise<Comment> {
     return this.commentService.findOne(filter);
   }

@@ -1,6 +1,8 @@
-import { SORT_DIRECTION } from '../sort/dto/sort.input';
-import { ConnectionInput } from './dto/connection.input';
+import { FilterInput } from '../filter/dto/filter.input';
+import { SortInput, SORT_DIRECTION } from '../sort/dto/sort.input';
+import { ConnectionArgs } from './args/connection.args';
 import { IConnection } from './dto/pagination.dto';
+import { PaginationInput } from './dto/pagination.input';
 
 const encodeCursor = (cursor: string): string => {
   if (!cursor) {
@@ -26,12 +28,11 @@ export class PaginationService<T> {
   }
 
   async paginate(
-    connectionInput: ConnectionInput = new ConnectionInput(),
+    { filter, sort, pagination }: ConnectionArgs = new ConnectionArgs(),
   ): Promise<IConnection<T>> {
     const result: IConnection<T> = {};
 
     // prepare arguments
-    const { filter, sort, pagination } = connectionInput;
     const { cursor, pageSize, currentPage } = pagination;
 
     // validate inputs for cursor pagination
