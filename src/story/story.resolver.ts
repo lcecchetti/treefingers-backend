@@ -17,7 +17,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { StoryConnection } from './dto/story.connection';
 import { StoryFilterInput } from './dto/story-filter.input';
-import { StoryConnectionArgs } from 'src/comment/args/comment-connection.args';
+import { StoryConnectionArgs } from './args/story-connection.args';
 
 @Resolver(() => Story)
 export class StoryResolver {

@@ -1,9 +1,9 @@
 import { ArgsType, Field } from '@nestjs/graphql';
 import { ConnectionArgs } from 'src/common/pagination/args/connection.args';
-import { StoryFilterInput } from 'src/story/dto/story-filter.input';
+import { CommentFilterInput } from '../dto/comment-filter.input';
 
 @ArgsType()
-export class StoryConnectionArgs extends ConnectionArgs {
-  @Field(() => StoryFilterInput, { nullable: true })
-  filter?: StoryFilterInput = new StoryFilterInput();
+export class CommentConnectionArgs extends ConnectionArgs {
+  @Field(() => CommentFilterInput, { nullable: true })
+  filter?: CommentFilterInput = new CommentFilterInput();
 }

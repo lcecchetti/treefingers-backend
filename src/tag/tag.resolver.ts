@@ -15,7 +15,7 @@ import { TagConnection } from './dto/tag.connection';
 import { StoryConnection } from 'src/story/dto/story.connection';
 import { TagFilterInput } from './dto/tag-filter.input';
 import { TagConnectionArgs } from './args/tag-connection.args';
-import { StoryConnectionArgs } from 'src/comment/args/comment-connection.args';
+import { StoryConnectionArgs } from 'src/story/args/story-connection.args';
 
 @Resolver(() => Tag)
 export class TagResolver {

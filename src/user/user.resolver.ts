@@ -6,7 +6,7 @@ import { UserConnection } from './dto/user.connection';
 import { StoryConnection } from 'src/story/dto/story.connection';
 import { UserFilterInput } from './dto/user-filter.input';
 import { UserConnectionArgs } from './args/user-connection.args';
-import { StoryConnectionArgs } from 'src/comment/args/comment-connection.args';
+import { StoryConnectionArgs } from 'src/story/args/story-connection.args';
 
 @Resolver(() => User)
 export class UserResolver {

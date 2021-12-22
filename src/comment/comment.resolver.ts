@@ -19,7 +19,7 @@ import { UseGuards } from '@nestjs/common';
 import { Story } from 'src/story/story.entity';
 import { CommentConnection } from './dto/comment.connection';
 import { CommentFilterInput } from './dto/comment-filter.input';
-import { CommentConnectionArgs } from 'src/story/args/story-connection.args';
+import { CommentConnectionArgs } from './args/comment-connection.args';
 
 @Resolver(() => Comment)
 export class CommentResolver {
