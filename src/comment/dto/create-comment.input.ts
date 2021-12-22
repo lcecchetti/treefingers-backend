@@ -2,7 +2,7 @@ import { Field, ID, InputType } from '@nestjs/graphql';
 import { MaxLength } from 'class-validator';
 
 @InputType()
-export class CreateCommentInput {
+export class CreateCommentDataInput {
   @Field()
   @MaxLength(255)
   readonly content: string;
@@ -11,4 +11,9 @@ export class CreateCommentInput {
   readonly story: string;
 
   user?: string;
+}
+@InputType()
+export class CreateCommentInput {
+  @Field()
+  data: CreateCommentDataInput;
 }

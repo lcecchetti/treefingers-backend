@@ -45,11 +45,11 @@ export class StoryResolver {
   @Mutation(() => CreateStoryPayload)
   @UseGuards(JwtAuthGuard)
   async createStory(
-    @Args('input') input: CreateStoryInput,
+    @Args('input') { data }: CreateStoryInput,
     @CurrentUser() user: User,
   ): Promise<CreateStoryPayload> {
-    input.author = user._id;
-    return { story: await this.storyService.create(input) };
+    data.author = user._id;
+    return { story: await this.storyService.create(data) };
   }
 
   @ResolveField(() => User)

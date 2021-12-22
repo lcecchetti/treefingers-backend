@@ -1,5 +1,19 @@
-import { InputType } from '@nestjs/graphql';
-import { RegisterInput } from 'src/auth/dto/register.input';
+import { Field, InputType } from '@nestjs/graphql';
+import { IsEmail, MinLength } from 'class-validator';
 
 @InputType()
-export class UserCreateInput extends RegisterInput {}
+export class UserCreateDataInput {
+  @Field()
+  @IsEmail()
+  readonly email: string;
+
+  @Field()
+  @MinLength(10)
+  readonly password: string;
+}
+
+@InputType()
+export class UserCreateInput {
+  @Field()
+  data: UserCreateDataInput;
+}

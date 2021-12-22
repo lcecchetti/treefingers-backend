@@ -38,8 +38,8 @@ export class CommentResolver {
   }
 
   @Query(() => Comment, { nullable: true })
-  async user(
-    @Args('input', { nullable: true })
+  async comment(
+    @Args('filter', { nullable: true })
     filter: CommentFilterInput = new CommentFilterInput(),
   ): Promise<Comment> {
     return this.commentService.findOne(filter);
@@ -47,12 +47,12 @@ export class CommentResolver {
 
   @Mutation(() => CreateCommentPayload)
   @UseGuards(JwtAuthGuard)
-  async createStory(
-    @Args('input') input: CreateCommentInput,
+  async createComment(
+    @Args('input') { data }: CreateCommentInput,
     @CurrentUser() user: User,
   ): Promise<CreateCommentPayload> {
-    input.user = user._id;
-    return { comment: await this.commentService.create(input) };
+    data.user = user._id;
+    return { comment: await this.commentService.create(data) };
   }
 
   @ResolveField(() => User)

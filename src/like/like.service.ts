@@ -2,7 +2,7 @@ import { FilterQuery, Model, QueryOptions } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Like, LikeDocument } from './like.entity';
-import { CreateLikeInput } from './dto/create-like.input';
+import { CreateLikeDataInput } from './dto/create-like.input';
 
 @Injectable()
 export class LikeService {
@@ -32,7 +32,7 @@ export class LikeService {
     return this.likeModel.find(filter, projection, options).lean();
   }
 
-  async create(input: CreateLikeInput): Promise<Like> {
+  async create(input: CreateLikeDataInput): Promise<Like> {
     return this.likeModel.create(input);
   }
 }

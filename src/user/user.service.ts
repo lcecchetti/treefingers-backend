@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './user.entity';
 import { PaginationService } from 'src/common/pagination/pagination.service';
-import { UserCreateInput } from './dto/user-create.input';
+import { UserCreateDataInput } from './dto/user-create.input';
 
 @Injectable()
 export class UserService extends PaginationService<User> {
@@ -35,7 +35,7 @@ export class UserService extends PaginationService<User> {
     return this.userModel.findById(_id, projection, options).lean();
   }
 
-  async create(input: UserCreateInput): Promise<User> {
+  async create(input: UserCreateDataInput): Promise<User> {
     return this.userModel.create(input);
   }
 }

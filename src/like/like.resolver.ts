@@ -32,7 +32,7 @@ export class LikeResolver {
 
   @Query(() => Like, { nullable: true })
   async like(
-    @Args('input', { nullable: true }) { filter }: LikeInput = new LikeInput(),
+    @Args({ nullable: true }) filter: LikeInput = new LikeInput(),
   ): Promise<Like> {
     return this.likeService.findOne(filter);
   }
@@ -40,11 +40,11 @@ export class LikeResolver {
   @Mutation(() => CreateLikePayload)
   @UseGuards(JwtAuthGuard)
   async createLike(
-    @Args('input') input: CreateLikeInput,
+    @Args('input') { data }: CreateLikeInput,
     @CurrentUser() user: User,
   ): Promise<CreateLikePayload> {
-    input.user = user._id;
-    return { like: await this.likeService.create(input) };
+    data.user = user._id;
+    return { like: await this.likeService.create(data) };
   }
 
   @ResolveField(() => User, { nullable: true })

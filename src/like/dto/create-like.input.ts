@@ -1,7 +1,7 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
 
 @InputType()
-export class CreateLikeInput {
+export class CreateLikeDataInput {
   @Field(() => ID, { nullable: true })
   readonly story?: string;
 
@@ -12,4 +12,9 @@ export class CreateLikeInput {
   readonly author?: string;
 
   user?: string;
+}
+@InputType()
+export class CreateLikeInput {
+  @Field()
+  data: CreateLikeDataInput;
 }

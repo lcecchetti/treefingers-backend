@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Tag, TagDocument } from './tag.entity';
 import { PaginationService } from 'src/common/pagination/pagination.service';
-import { CreateTagInputData } from './dto/create-tag.input';
+import { CreateTagDataInput } from './dto/create-tag.input';
 
 @Injectable()
 export class TagService extends PaginationService<Tag> {
@@ -35,7 +35,7 @@ export class TagService extends PaginationService<Tag> {
     return this.tagModel.find(filter, projection, options).lean();
   }
 
-  async create(input: CreateTagInputData): Promise<Tag> {
+  async create(input: CreateTagDataInput): Promise<Tag> {
     return this.tagModel.create(input);
   }
 }

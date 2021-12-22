@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Comment, CommentDocument } from './comment.entity';
 import { PaginationService } from 'src/common/pagination/pagination.service';
-import { CreateCommentInput } from './dto/create-comment.input';
+import { CreateCommentDataInput } from './dto/create-comment.input';
 
 @Injectable()
 export class CommentService extends PaginationService<Comment> {
@@ -37,7 +37,7 @@ export class CommentService extends PaginationService<Comment> {
     return this.commentModel.find(filter, projection, options).lean();
   }
 
-  async create(input: CreateCommentInput): Promise<Comment> {
-    return this.commentModel.create(input);
+  async create(data: CreateCommentDataInput): Promise<Comment> {
+    return this.commentModel.create(data);
   }
 }
