@@ -1,3 +1,5 @@
+import { Model } from 'mongoose';
+import { gqlFilterToMongo } from '../filter/filter.helper';
 import { SORT_DIRECTION } from '../sort/dto/sort.input';
 import { ConnectionArgs } from './args/connection.args';
 import { IConnection } from './dto/pagination.dto';
@@ -18,8 +20,8 @@ const decodeCursor = (cursor: string): string => {
   return Buffer.from(String(cursor), 'base64').toString('ascii');
 };
 
-export class PaginationService<T> {
-  model: any;
+export class PaginationService<E, D> {
+  model: Model<D>;
 
   constructor(model) {
     this.model = model;
@@ -27,8 +29,8 @@ export class PaginationService<T> {
 
   async paginate(
     { filter, sort, pagination }: ConnectionArgs = new ConnectionArgs(),
-  ): Promise<IConnection<T>> {
-    const result: IConnection<T> = {};
+  ): Promise<IConnection<E>> {
+    const result: IConnection<E> = {};
 
     // prepare arguments
     const { cursor, pageSize, currentPage } = pagination;
@@ -43,13 +45,16 @@ export class PaginationService<T> {
     if (currentCursor) {
       filter._id =
         !sort._id || sort._id === SORT_DIRECTION.ASC
-          ? { $gt: currentCursor }
-          : { $lt: currentCursor };
+          ? { gt: currentCursor }
+          : { lt: currentCursor };
     }
+
+    // convert filter
+    const mongoFilter = gqlFilterToMongo<D>(filter);
 
     // get nodes
     const nodes = await this.model
-      .find(filter, null, {
+      .find(mongoFilter, null, {
         sort,
         limit: pageSize,
         skip: pageSize * (currentPage - 1),
@@ -65,7 +70,7 @@ export class PaginationService<T> {
     });
 
     // prepare page infos
-    const totalCount = await this.model.estimatedDocumentCount(filter);
+    const totalCount = await this.model.estimatedDocumentCount();
     const pagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 1;
 
     result.pageInfo = {

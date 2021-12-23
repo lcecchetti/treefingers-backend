@@ -6,7 +6,10 @@ import { PaginationService } from 'src/common/pagination/pagination.service';
 import { CreateCommentDataInput } from './dto/create-comment.input';
 
 @Injectable()
-export class CommentService extends PaginationService<Comment> {
+export class CommentService extends PaginationService<
+  Comment,
+  CommentDocument
+> {
   constructor(
     @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
   ) {

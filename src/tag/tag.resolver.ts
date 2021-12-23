@@ -7,7 +7,7 @@ import {
   Mutation,
 } from '@nestjs/graphql';
 import { TagService } from './tag.service';
-import { Tag } from './tag.entity';
+import { Tag, TagDocument } from './tag.entity';
 import { StoryService } from 'src/story/story.service';
 import { CreateTagPayload } from './dto/create-tag.payload';
 import { CreateTagInput } from './dto/create-tag.input';
@@ -16,6 +16,7 @@ import { StoryConnection } from 'src/story/dto/story.connection';
 import { TagFilterInput } from './dto/tag-filter.input';
 import { TagConnectionArgs } from './args/tag-connection.args';
 import { StoryConnectionArgs } from 'src/story/args/story-connection.args';
+import { gqlFilterToMongo } from 'src/common/filter/filter.helper';
 
 @Resolver(() => Tag)
 export class TagResolver {
@@ -37,7 +38,8 @@ export class TagResolver {
     @Args('filter', { nullable: true })
     filter: TagFilterInput = new TagFilterInput(),
   ): Promise<Tag> {
-    return this.tagService.findOne(filter);
+    const mongoFilter = gqlFilterToMongo<TagDocument>(filter);
+    return this.tagService.findOne(mongoFilter);
   }
 
   @Mutation(() => CreateTagPayload)
@@ -53,8 +55,7 @@ export class TagResolver {
     args: StoryConnectionArgs = new StoryConnectionArgs(),
     @Parent() tag: Tag,
   ): Promise<StoryConnection> {
-    //@todo support multiple tags per story
-    args.filter.tag = tag._id;
+    args.filter.tag = { eq: tag._id };
     return this.storyService.paginate(args);
   }
 }

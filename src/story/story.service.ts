@@ -6,7 +6,7 @@ import { CreateStoryDataInput } from './dto/create-story.input';
 import { PaginationService } from 'src/common/pagination/pagination.service';
 
 @Injectable()
-export class StoryService extends PaginationService<Story> {
+export class StoryService extends PaginationService<Story, StoryDocument> {
   constructor(
     @InjectModel(Story.name) private storyModel: Model<StoryDocument>,
   ) {

@@ -6,7 +6,7 @@ import { PaginationService } from 'src/common/pagination/pagination.service';
 import { CreateTagDataInput } from './dto/create-tag.input';
 
 @Injectable()
-export class TagService extends PaginationService<Tag> {
+export class TagService extends PaginationService<Tag, TagDocument> {
   constructor(@InjectModel(Tag.name) private tagModel: Model<TagDocument>) {
     super(tagModel);
   }

@@ -7,7 +7,7 @@ import {
   Mutation,
 } from '@nestjs/graphql';
 import { StoryService } from './story.service';
-import { Story } from './story.entity';
+import { Story, StoryDocument } from './story.entity';
 import { UserService } from 'src/user/user.service';
 import { User } from 'src/user/user.entity';
 import { CreateStoryPayload } from './dto/create-story.payload';
@@ -18,6 +18,7 @@ import { UseGuards } from '@nestjs/common';
 import { StoryConnection } from './dto/story.connection';
 import { StoryFilterInput } from './dto/story-filter.input';
 import { StoryConnectionArgs } from './args/story-connection.args';
+import { gqlFilterToMongo } from 'src/common/filter/filter.helper';
 
 @Resolver(() => Story)
 export class StoryResolver {
@@ -39,7 +40,8 @@ export class StoryResolver {
     @Args('filter', { nullable: true })
     filter: StoryFilterInput = new StoryFilterInput(),
   ): Promise<Story> {
-    return this.storyService.findOne(filter);
+    const mongoFilter = gqlFilterToMongo<StoryDocument>(filter);
+    return this.storyService.findOne(mongoFilter);
   }
 
   @Mutation(() => CreateStoryPayload)
@@ -73,7 +75,7 @@ export class StoryResolver {
     @Args({ nullable: true })
     args: StoryConnectionArgs = new StoryConnectionArgs(),
   ): Promise<StoryConnection> {
-    args.filter.parent = story._id;
+    args.filter.parent = { eq: story._id };
     return this.storyService.paginate(args);
   }
 }
