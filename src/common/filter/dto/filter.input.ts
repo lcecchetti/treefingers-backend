@@ -1,16 +1,7 @@
 import { Field, ID, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
-export class FilterFieldInput {
-  @Field(() => [FilterFieldInput], { nullable: true })
-  and?: [FilterFieldInput];
-
-  @Field(() => [FilterFieldInput], { nullable: true })
-  or?: [FilterFieldInput];
-}
-
-@InputType()
-export class FilterFieldStringInput extends FilterFieldInput {
+export class FilterStringInput {
   @Field(() => String, { nullable: true })
   eq?: string;
 
@@ -19,7 +10,7 @@ export class FilterFieldStringInput extends FilterFieldInput {
 }
 
 @InputType()
-export class FilterFieldIdInput extends FilterFieldInput {
+export class FilterIdInput {
   @Field(() => ID, { nullable: true })
   eq?: string;
 
@@ -34,7 +25,7 @@ export class FilterFieldIdInput extends FilterFieldInput {
 }
 
 @InputType()
-export class FilterFieldIntInput extends FilterFieldInput {
+export class FilterIntInput {
   @Field(() => Int, { nullable: true })
   eq?: number;
 
@@ -44,6 +35,12 @@ export class FilterFieldIntInput extends FilterFieldInput {
 
 @InputType()
 export class FilterInput {
-  @Field(() => FilterFieldIdInput, { nullable: true })
-  _id?: FilterFieldIdInput;
+  @Field(() => [FilterInput], { nullable: true })
+  and?: [FilterInput];
+
+  @Field(() => [FilterInput], { nullable: true })
+  or?: [FilterInput];
+
+  @Field(() => FilterIdInput, { nullable: true })
+  _id?: FilterIdInput;
 }

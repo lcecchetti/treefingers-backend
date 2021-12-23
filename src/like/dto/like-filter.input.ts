@@ -1,20 +1,17 @@
 import { Field, InputType } from '@nestjs/graphql';
-import {
-  FilterFieldIdInput,
-  FilterInput,
-} from 'src/common/filter/dto/filter.input';
+import { FilterIdInput, FilterInput } from 'src/common/filter/dto/filter.input';
 
 @InputType()
 export class LikeFilterInput extends FilterInput {
-  @Field(() => FilterFieldIdInput, { nullable: true })
-  readonly story?: FilterFieldIdInput;
+  @Field(() => FilterIdInput, { nullable: true })
+  readonly story?: FilterIdInput;
 
-  @Field(() => FilterFieldIdInput, { nullable: true })
-  readonly user?: FilterFieldIdInput;
+  @Field(() => FilterIdInput, { nullable: true })
+  readonly user?: FilterIdInput;
 
-  @Field(() => FilterFieldIdInput, { nullable: true })
-  readonly comment?: FilterFieldIdInput;
+  @Field(() => FilterIdInput, { nullable: true })
+  readonly comment?: FilterIdInput;
 
-  @Field(() => FilterFieldIdInput, { nullable: true })
-  readonly author?: FilterFieldIdInput;
+  @Field(() => FilterIdInput, { nullable: true })
+  readonly author?: FilterIdInput;
 }

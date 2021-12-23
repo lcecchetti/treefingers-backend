@@ -10,16 +10,18 @@ const filterMap = {
   or: '$or',
 };
 
-export const gqlFilterToMongo = <T>(
-  gqlFilter: FilterInput,
-): FilterQuery<T> | any => {
+export const gqlFilterToMongo = <T>(gqlFilter: FilterInput): FilterQuery<T> => {
   if (typeof gqlFilter !== 'object' || gqlFilter === null) {
-    return gqlFilter;
+    return;
   }
 
   const mongoFilter = {};
   Object.keys(gqlFilter).map((key) => {
-    mongoFilter[filterMap[key] ?? key] = gqlFilterToMongo(gqlFilter[key]);
+    if (typeof gqlFilter[key] === 'object' && gqlFilter[key] !== null) {
+      mongoFilter[filterMap[key] ?? key] = gqlFilterToMongo<T>(gqlFilter[key]);
+    } else {
+      mongoFilter[filterMap[key] ?? key] = gqlFilter[key];
+    }
   });
 
   return mongoFilter;

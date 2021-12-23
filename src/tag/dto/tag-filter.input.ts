@@ -1,11 +1,11 @@
 import { Field, InputType } from '@nestjs/graphql';
 import {
-  FilterFieldStringInput,
+  FilterStringInput,
   FilterInput,
 } from 'src/common/filter/dto/filter.input';
 
 @InputType()
 export class TagFilterInput extends FilterInput {
-  @Field(() => FilterFieldStringInput, { nullable: true })
-  readonly slug?: FilterFieldStringInput;
+  @Field(() => FilterStringInput, { nullable: true })
+  readonly slug?: FilterStringInput;
 }
