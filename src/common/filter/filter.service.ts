@@ -11,22 +11,22 @@ const filterMap = {
 };
 
 export const gqlFilterToMongo = <T>(gqlFilter: FilterInput): FilterQuery<T> => {
-  let mongoFilter = {};
-
-  if (Array.isArray(gqlFilter)) {
-    mongoFilter = gqlFilter.map((filter) => {
-      return gqlFilterToMongo<T>(filter);
-    });
-  }
+  const mongoFilter = {};
 
   Object.keys(gqlFilter).map((key) => {
-    mongoFilter[filterMap[key] ?? key] =
-      typeof gqlFilter[key] === 'object' && gqlFilter[key] !== null
-        ? gqlFilterToMongo<T>(gqlFilter[key])
-        : gqlFilter[key];
-  });
+    const newKey = filterMap[key] ?? key;
+    const value = gqlFilter[key];
 
-  //mongoFilter['test'] = '';
+    if (Array.isArray(value)) {
+      mongoFilter[newKey] = value.map((filter) => {
+        return gqlFilterToMongo<T>(filter);
+      });
+    } else if (typeof value === 'object' && value !== null) {
+      mongoFilter[newKey] = gqlFilterToMongo<T>(value);
+    } else {
+      mongoFilter[newKey] = value;
+    }
+  });
 
   return mongoFilter;
 };
