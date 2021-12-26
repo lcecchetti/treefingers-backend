@@ -35,12 +35,6 @@ export class FilterIntInput {
 
 @InputType()
 export class FilterInput {
-  @Field(() => [FilterInput], { nullable: true })
-  and?: [FilterInput];
-
-  @Field(() => [FilterInput], { nullable: true })
-  or?: [FilterInput];
-
   @Field(() => FilterIdInput, { nullable: true })
   _id?: FilterIdInput;
 }

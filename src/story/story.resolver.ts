@@ -18,7 +18,7 @@ import { UseGuards } from '@nestjs/common';
 import { StoryConnection } from './dto/story.connection';
 import { StoryFilterInput } from './dto/story-filter.input';
 import { StoryConnectionArgs } from './args/story-connection.args';
-import { gqlFilterToMongo } from 'src/common/filter/filter.helper';
+import { gqlFilterToMongo } from 'src/common/filter/filter.service';
 
 @Resolver(() => Story)
 export class StoryResolver {

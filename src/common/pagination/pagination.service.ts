@@ -1,5 +1,5 @@
 import { Model } from 'mongoose';
-import { gqlFilterToMongo } from '../filter/filter.helper';
+import { gqlFilterToMongo } from '../filter/filter.service';
 import { SORT_DIRECTION } from '../sort/dto/sort.input';
 import { ConnectionArgs } from './args/connection.args';
 import { IConnection } from './dto/pagination.dto';

@@ -6,6 +6,12 @@ import {
 
 @InputType()
 export class UserFilterInput extends FilterInput {
+  @Field(() => [UserFilterInput], { nullable: true })
+  and?: [UserFilterInput];
+
+  @Field(() => [UserFilterInput], { nullable: true })
+  or?: [UserFilterInput];
+
   @Field(() => FilterStringInput, { nullable: true })
   email?: FilterStringInput;
 }

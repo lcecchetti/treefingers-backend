@@ -20,7 +20,7 @@ import { Story } from 'src/story/story.entity';
 import { CommentConnection } from './dto/comment.connection';
 import { CommentFilterInput } from './dto/comment-filter.input';
 import { CommentConnectionArgs } from './args/comment-connection.args';
-import { gqlFilterToMongo } from 'src/common/filter/filter.helper';
+import { gqlFilterToMongo } from 'src/common/filter/filter.service';
 
 @Resolver(() => Comment)
 export class CommentResolver {

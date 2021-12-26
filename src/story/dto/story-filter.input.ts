@@ -3,6 +3,12 @@ import { FilterIdInput, FilterInput } from 'src/common/filter/dto/filter.input';
 
 @InputType()
 export class StoryFilterInput extends FilterInput {
+  @Field(() => [StoryFilterInput], { nullable: true })
+  and?: [StoryFilterInput];
+
+  @Field(() => [StoryFilterInput], { nullable: true })
+  or?: [StoryFilterInput];
+
   @Field(() => FilterIdInput, { nullable: true })
   author?: FilterIdInput;
 

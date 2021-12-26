@@ -16,7 +16,7 @@ import { StoryConnection } from 'src/story/dto/story.connection';
 import { TagFilterInput } from './dto/tag-filter.input';
 import { TagConnectionArgs } from './args/tag-connection.args';
 import { StoryConnectionArgs } from 'src/story/args/story-connection.args';
-import { gqlFilterToMongo } from 'src/common/filter/filter.helper';
+import { gqlFilterToMongo } from 'src/common/filter/filter.service';
 
 @Resolver(() => Tag)
 export class TagResolver {

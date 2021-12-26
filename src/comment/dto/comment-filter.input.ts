@@ -3,9 +3,15 @@ import { FilterIdInput, FilterInput } from 'src/common/filter/dto/filter.input';
 
 @InputType()
 export class CommentFilterInput extends FilterInput {
-  @Field(() => FilterIdInput, { nullable: true })
-  readonly story?: FilterIdInput;
+  @Field(() => [CommentFilterInput], { nullable: true })
+  and?: [CommentFilterInput];
+
+  @Field(() => [CommentFilterInput], { nullable: true })
+  or?: [CommentFilterInput];
 
   @Field(() => FilterIdInput, { nullable: true })
-  readonly user?: FilterIdInput;
+  story?: FilterIdInput;
+
+  @Field(() => FilterIdInput, { nullable: true })
+  user?: FilterIdInput;
 }

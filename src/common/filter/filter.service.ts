@@ -26,5 +26,7 @@ export const gqlFilterToMongo = <T>(gqlFilter: FilterInput): FilterQuery<T> => {
         : gqlFilter[key];
   });
 
+  //mongoFilter['test'] = '';
+
   return mongoFilter;
 };

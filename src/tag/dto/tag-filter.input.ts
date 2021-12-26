@@ -6,6 +6,12 @@ import {
 
 @InputType()
 export class TagFilterInput extends FilterInput {
+  @Field(() => [TagFilterInput], { nullable: true })
+  and?: [TagFilterInput];
+
+  @Field(() => [TagFilterInput], { nullable: true })
+  or?: [TagFilterInput];
+
   @Field(() => FilterStringInput, { nullable: true })
   readonly slug?: FilterStringInput;
 }
