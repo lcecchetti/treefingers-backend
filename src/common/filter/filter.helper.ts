@@ -11,17 +11,19 @@ const filterMap = {
 };
 
 export const gqlFilterToMongo = <T>(gqlFilter: FilterInput): FilterQuery<T> => {
-  if (typeof gqlFilter !== 'object' || gqlFilter === null) {
-    return;
+  let mongoFilter = {};
+
+  if (Array.isArray(gqlFilter)) {
+    mongoFilter = gqlFilter.map((filter) => {
+      return gqlFilterToMongo<T>(filter);
+    });
   }
 
-  const mongoFilter = {};
   Object.keys(gqlFilter).map((key) => {
-    if (typeof gqlFilter[key] === 'object' && gqlFilter[key] !== null) {
-      mongoFilter[filterMap[key] ?? key] = gqlFilterToMongo<T>(gqlFilter[key]);
-    } else {
-      mongoFilter[filterMap[key] ?? key] = gqlFilter[key];
-    }
+    mongoFilter[filterMap[key] ?? key] =
+      typeof gqlFilter[key] === 'object' && gqlFilter[key] !== null
+        ? gqlFilterToMongo<T>(gqlFilter[key])
+        : gqlFilter[key];
   });
 
   return mongoFilter;
