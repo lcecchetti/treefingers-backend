@@ -24,6 +24,7 @@ export class Comment {
     ref: User.name,
     index: true,
   })
+  @Field(() => User)
   user: User;
 
   @Prop({
@@ -31,6 +32,7 @@ export class Comment {
     ref: Story.name,
     index: true,
   })
+  @Field(() => Story)
   story: Story;
 
   @Prop({

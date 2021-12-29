@@ -54,18 +54,18 @@ export class StoryResolver {
     return { story: await this.storyService.create(data) };
   }
 
-  @ResolveField(() => User)
+  @ResolveField()
   async author(@Parent() story: Story): Promise<User> {
     return this.userService.findById(story.author._id);
   }
 
-  @ResolveField(() => Story, { nullable: true })
+  @ResolveField()
   async root(@Parent() story: Story): Promise<Story> {
     return this.storyService.findById(story.root?._id);
   }
 
-  @ResolveField(() => Story, { nullable: true })
-  async parent(@Parent() story: Story): Promise<Story> {
+  @ResolveField()
+  async parent(@Parent() story: StoryDocument): Promise<Story> {
     return this.storyService.findById(story.parent?._id);
   }
 

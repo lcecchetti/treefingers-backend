@@ -57,12 +57,12 @@ export class CommentResolver {
     return { comment: await this.commentService.create(data) };
   }
 
-  @ResolveField(() => User)
-  async author(@Parent() comment: Comment): Promise<User> {
+  @ResolveField()
+  async user(@Parent() comment: Comment): Promise<User> {
     return this.userService.findById(comment.user._id);
   }
 
-  @ResolveField(() => Story, { nullable: true })
+  @ResolveField()
   async story(@Parent() comment: Comment): Promise<Story> {
     return this.storyService.findById(comment.story._id);
   }

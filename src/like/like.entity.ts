@@ -16,6 +16,7 @@ export class Like {
     ref: Story.name,
     index: true,
   })
+  @Field(() => Story, { nullable: true })
   story?: Story;
 
   @Prop({
@@ -23,6 +24,7 @@ export class Like {
     ref: Comment.name,
     index: true,
   })
+  @Field(() => Comment, { nullable: true })
   comment?: Comment;
 
   @Prop({
@@ -30,6 +32,7 @@ export class Like {
     ref: User.name,
     index: true,
   })
+  @Field(() => User, { nullable: true })
   author?: User;
 
   @Prop({
@@ -38,6 +41,7 @@ export class Like {
     index: true,
     required: true,
   })
+  @Field(() => User)
   user: User;
 }
 

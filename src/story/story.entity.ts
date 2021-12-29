@@ -30,6 +30,7 @@ export class Story {
     ref: User.name,
     index: true,
   })
+  @Field(() => User)
   author: User;
 
   @Prop({
@@ -38,6 +39,7 @@ export class Story {
     index: true,
     default: null,
   })
+  @Field(() => Story, { nullable: true })
   root?: Story;
 
   @Prop({
@@ -46,6 +48,7 @@ export class Story {
     index: true,
     default: null,
   })
+  @Field(() => Story, { nullable: true })
   parent?: Story;
 
   @Prop({

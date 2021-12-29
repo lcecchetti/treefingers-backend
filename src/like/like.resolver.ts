@@ -47,22 +47,22 @@ export class LikeResolver {
     return { like: await this.likeService.create(data) };
   }
 
-  @ResolveField(() => User, { nullable: true })
+  @ResolveField()
   async author(@Parent() like: Like): Promise<User> {
     return this.userService.findById(like.author?._id);
   }
 
-  @ResolveField(() => Story)
+  @ResolveField()
   async story(@Parent() like: Like): Promise<Story> {
     return this.storyService.findById(like.story?._id);
   }
 
-  @ResolveField(() => Comment)
+  @ResolveField()
   async comment(@Parent() like: Like): Promise<Comment> {
     return this.commentService.findById(like.comment?._id);
   }
 
-  @ResolveField(() => User)
+  @ResolveField()
   async user(@Parent() like: Like): Promise<User> {
     return this.userService.findById(like.user._id);
   }
