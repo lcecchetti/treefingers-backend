@@ -8,6 +8,7 @@ import { UserFilterInput } from './dto/user-filter.input';
 import { UserConnectionArgs } from './args/user-connection.args';
 import { StoryConnectionArgs } from 'src/story/args/story-connection.args';
 import { gqlFilterToMongo } from 'src/common/filter/filter.service';
+import { CurrentUser } from './decorators/current-user.decorator';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -31,6 +32,14 @@ export class UserResolver {
   ): Promise<User> {
     const mongoFilter = gqlFilterToMongo<UserDocument>(filter);
     return this.userService.findOne(mongoFilter);
+  }
+
+  @Query(() => User, { nullable: true })
+  async currentUser(@CurrentUser() user): Promise<User | null> {
+    if (!user) {
+      return null;
+    }
+    return this.userService.findById(user.id);
   }
 
   @ResolveField(() => StoryConnection)
