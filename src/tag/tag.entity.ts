@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
+import { Field, GraphQLISODateTime, ID, Int, ObjectType } from '@nestjs/graphql';
 
 @Schema({ timestamps: true })
 @ObjectType()
@@ -32,6 +32,14 @@ export class Tag {
   })
   @Field(() => Int, { defaultValue: 0 })
   storiesCount: number;
+
+  @Prop({ default: Date.now })
+  @Field(() => GraphQLISODateTime)
+  createdAt: Date;
+
+  @Prop({ default: Date.now })
+  @Field(() => GraphQLISODateTime)
+  updatedAt: Date;
 }
 
 export type TagDocument = Tag & Document;

@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
+import { Field, GraphQLISODateTime, ID, Int, ObjectType } from '@nestjs/graphql';
 import { isEmail } from 'class-validator';
 
 @Schema({ timestamps: true })
@@ -54,6 +54,14 @@ export class User {
   })
   @Field(() => Int, { defaultValue: 0 })
   storiesCount?: number;
+
+  @Prop({ default: Date.now })
+  @Field(() => GraphQLISODateTime)
+  createdAt: Date;
+
+  @Prop({ default: Date.now })
+  @Field(() => GraphQLISODateTime)
+  updatedAt: Date;
 }
 
 export type UserDocument = User & Document;

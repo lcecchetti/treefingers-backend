@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, SchemaTypes } from 'mongoose';
-import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
+import { Field, GraphQLISODateTime, ID, Int, ObjectType } from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
 
 @Schema({ timestamps: true })
@@ -85,6 +85,14 @@ export class Story {
   })
   @Field(() => Int, { defaultValue: 0 })
   descendentsCount: number;
+
+  @Prop({ default: Date.now })
+  @Field(() => GraphQLISODateTime)
+  createdAt: Date;
+
+  @Prop({ default: Date.now })
+  @Field(() => GraphQLISODateTime)
+  updatedAt: Date;
 }
 
 export type StoryDocument = Story & Document;
