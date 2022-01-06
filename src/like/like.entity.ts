@@ -13,7 +13,7 @@ export class Like {
 
   @Prop({
     type: SchemaTypes.ObjectId,
-    ref: Story.name,
+    ref: 'Story',
     index: true,
   })
   @Field(() => Story, { nullable: true })
@@ -21,7 +21,7 @@ export class Like {
 
   @Prop({
     type: SchemaTypes.ObjectId,
-    ref: Comment.name,
+    ref: 'Comment',
     index: true,
   })
   @Field(() => Comment, { nullable: true })
@@ -29,7 +29,7 @@ export class Like {
 
   @Prop({
     type: SchemaTypes.ObjectId,
-    ref: User.name,
+    ref: 'User',
     index: true,
   })
   @Field(() => User, { nullable: true })
@@ -37,7 +37,7 @@ export class Like {
 
   @Prop({
     type: SchemaTypes.ObjectId,
-    ref: User.name,
+    ref: 'User',
     index: true,
     required: true,
   })

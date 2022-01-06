@@ -1,8 +1,15 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, SchemaTypes } from 'mongoose';
-import { Field, GraphQLISODateTime, ID, Int, ObjectType } from '@nestjs/graphql';
+import {
+  Field,
+  GraphQLISODateTime,
+  ID,
+  Int,
+  ObjectType,
+} from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
 import { Story } from 'src/story/story.entity';
+import { Like } from 'src/like/like.entity';
 
 @Schema({ timestamps: true })
 @ObjectType()
@@ -21,7 +28,7 @@ export class Comment {
 
   @Prop({
     type: SchemaTypes.ObjectId,
-    ref: User.name,
+    ref: 'User',
     index: true,
   })
   @Field(() => User)
@@ -29,11 +36,14 @@ export class Comment {
 
   @Prop({
     type: SchemaTypes.ObjectId,
-    ref: Story.name,
+    ref: 'Story',
     index: true,
   })
   @Field(() => Story)
   story: Story;
+
+  @Field(() => Like, { nullable: true })
+  currentUserLike?: Like;
 
   @Prop({
     min: 0,

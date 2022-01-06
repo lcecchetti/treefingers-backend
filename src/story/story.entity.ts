@@ -1,7 +1,15 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, SchemaTypes } from 'mongoose';
-import { Field, GraphQLISODateTime, ID, Int, ObjectType } from '@nestjs/graphql';
+import {
+  Field,
+  GraphQLISODateTime,
+  ID,
+  Int,
+  ObjectType,
+} from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
+import { Tag } from 'src/tag/tag.entity';
+import { Like } from 'src/like/like.entity';
 
 @Schema({ timestamps: true })
 @ObjectType()
@@ -34,7 +42,7 @@ export class Story {
 
   @Prop({
     type: SchemaTypes.ObjectId,
-    ref: User.name,
+    ref: 'User',
     index: true,
   })
   @Field(() => User)
@@ -42,7 +50,7 @@ export class Story {
 
   @Prop({
     type: SchemaTypes.ObjectId,
-    ref: Story.name,
+    ref: 'Story',
     index: true,
     default: null,
   })
@@ -51,7 +59,7 @@ export class Story {
 
   @Prop({
     type: SchemaTypes.ObjectId,
-    ref: Story.name,
+    ref: 'Story',
     index: true,
     default: null,
   })
@@ -64,6 +72,9 @@ export class Story {
   })
   @Field(() => Int, { defaultValue: 0 })
   likesCount: number;
+
+  @Field(() => Like, { nullable: true })
+  currentUserLike?: Like;
 
   @Prop({
     min: 0,
@@ -85,6 +96,15 @@ export class Story {
   })
   @Field(() => Int, { defaultValue: 0 })
   descendentsCount: number;
+
+  @Prop({
+    type: [SchemaTypes.ObjectId],
+    ref: 'Tag',
+    index: true,
+    default: null,
+  })
+  @Field(() => [Tag], { nullable: true })
+  tags?: [Tag];
 
   @Prop({ default: Date.now })
   @Field(() => GraphQLISODateTime)
