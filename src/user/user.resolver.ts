@@ -9,6 +9,8 @@ import { UserConnectionArgs } from './args/user-connection.args';
 import { StoryConnectionArgs } from 'src/story/args/story-connection.args';
 import { gqlFilterToMongo } from 'src/common/filter/filter.service';
 import { CurrentUser } from './decorators/current-user.decorator';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -35,11 +37,12 @@ export class UserResolver {
   }
 
   @Query(() => User, { nullable: true })
+  @UseGuards(JwtAuthGuard)
   async currentUser(@CurrentUser() user): Promise<User | null> {
     if (!user) {
       return null;
     }
-    return this.userService.findById(user.id);
+    return this.userService.findById(user._id);
   }
 
   @ResolveField(() => StoryConnection)
