@@ -4,7 +4,9 @@ import { Types } from 'mongoose';
 
 const filterMap = {
   eq: '$eq',
+  ne: '$ne',
   in: '$in',
+  nin: '$nin',
   lt: '$lt',
   gt: '$gt',
   and: '$and',

@@ -6,7 +6,7 @@ export class FilterStringInput {
   eq?: string;
 
   @Field(() => String, { nullable: true })
-  neq?: string;
+  ne?: string;
 
   @Field(() => [String], { nullable: true })
   in?: [string];
@@ -21,7 +21,7 @@ export class FilterIdInput {
   eq?: string;
 
   @Field(() => ID, { nullable: true })
-  neq?: string;
+  ne?: string;
 
   @Field(() => [ID], { nullable: true })
   in?: [string];
@@ -42,7 +42,7 @@ export class FilterIntInput {
   eq?: number;
 
   @Field(() => Int, { nullable: true })
-  neq?: number;
+  ne?: number;
 
   @Field(() => [Number], { nullable: true })
   in?: [number];
