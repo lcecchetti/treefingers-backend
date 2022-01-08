@@ -1,6 +1,5 @@
 import { FilterQuery } from 'mongoose';
 import { FilterInput } from './dto/filter.input';
-import { Types } from 'mongoose';
 
 const filterMap = {
   eq: '$eq',
@@ -14,28 +13,15 @@ const filterMap = {
 };
 
 export const gqlFilterToMongo = <T>(gqlFilter: FilterInput): FilterQuery<T> => {
-  const mongoFilter = {};
+  // convert filters to string
+  let filterString = JSON.stringify(gqlFilter);
 
-  Object.keys(gqlFilter).map((key) => {
-    const newKey = filterMap[key] ?? key;
-    const value = gqlFilter[key];
-
-    if (Array.isArray(value)) {
-      // array condition
-      mongoFilter[newKey] = value.map((filter) => {
-        return gqlFilterToMongo<T>(filter);
-      });
-    } else if (value instanceof Types.ObjectId) {
-      // mongoose id
-      mongoFilter[newKey] = value.toString();
-    } else if (typeof value === 'object' && value !== null) {
-      // nested condition object
-      mongoFilter[newKey] = gqlFilterToMongo<T>(value);
-    } else {
-      // condition value
-      mongoFilter[newKey] = value;
-    }
+  // replace gql to mongo
+  Object.keys(filterMap).forEach((key) => {
+    filterString = filterString.replace(key, filterMap[key]);
   });
 
-  return mongoFilter;
+  console.log(JSON.parse(filterString));
+  // return parsed json object
+  return JSON.parse(filterString);
 };
