@@ -52,7 +52,7 @@ export class Story {
     type: SchemaTypes.ObjectId,
     ref: 'Story',
     index: true,
-    default: null,
+    sparse: true,
   })
   @Field(() => Story, { nullable: true })
   root?: Story;
@@ -61,7 +61,7 @@ export class Story {
     type: SchemaTypes.ObjectId,
     ref: 'Story',
     index: true,
-    default: null,
+    sparse: true,
   })
   @Field(() => Story, { nullable: true })
   parent?: Story;
