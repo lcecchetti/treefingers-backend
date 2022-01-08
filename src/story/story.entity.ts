@@ -103,7 +103,6 @@ export class Story {
     index: true,
     default: null,
   })
-  @Field(() => [Tag], { nullable: true })
   tags?: [Tag];
 
   @Prop({ default: Date.now })

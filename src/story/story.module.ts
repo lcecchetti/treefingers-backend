@@ -6,6 +6,7 @@ import { StorySchema } from './story.entity';
 import { UserModule } from 'src/user/user.module';
 import { LikeModule } from 'src/like/like.module';
 import { CommentModule } from 'src/comment/comment.module';
+import { TagModule } from 'src/tag/tag.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { CommentModule } from 'src/comment/comment.module';
     forwardRef(() => UserModule),
     forwardRef(() => LikeModule),
     forwardRef(() => CommentModule),
+    forwardRef(() => TagModule),
   ],
   providers: [StoryService, StoryResolver],
   exports: [StoryService],

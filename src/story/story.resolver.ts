@@ -19,12 +19,15 @@ import { StoryConnection } from './dto/story.connection';
 import { StoryFilterInput } from './dto/story-filter.input';
 import { StoryConnectionArgs } from './args/story-connection.args';
 import { gqlFilterToMongo } from 'src/common/filter/filter.service';
+import { Tag } from 'src/tag/tag.entity';
+import { TagService } from 'src/tag/tag.service';
 
 @Resolver(() => Story)
 export class StoryResolver {
   constructor(
     private storyService: StoryService,
     private userService: UserService,
+    private tagService: TagService,
   ) {}
 
   @Query(() => StoryConnection)
@@ -77,5 +80,10 @@ export class StoryResolver {
   ): Promise<StoryConnection> {
     args.filter.parent = { eq: story._id };
     return this.storyService.paginate(args);
+  }
+
+  @ResolveField(() => [Tag], { nullable: true })
+  async tags(@Parent() story: Story): Promise<Tag[]> {
+    return this.tagService.findAll({ _id: { $in: story.tags } });
   }
 }
