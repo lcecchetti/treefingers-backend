@@ -18,10 +18,9 @@ export const gqlFilterToMongo = <T>(gqlFilter: FilterInput): FilterQuery<T> => {
 
   // replace gql to mongo
   Object.keys(filterMap).forEach((key) => {
-    filterString = filterString.replace(key, filterMap[key]);
+    filterString = filterString.replace(`"${key}":`, `"${filterMap[key]}":`);
   });
 
-  console.log(JSON.parse(filterString));
   // return parsed json object
   return JSON.parse(filterString);
 };
