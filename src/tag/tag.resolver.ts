@@ -55,7 +55,7 @@ export class TagResolver {
     args: StoryConnectionArgs = new StoryConnectionArgs(),
     @Parent() tag: Tag,
   ): Promise<StoryConnection> {
-    args.filter.tag = { eq: tag._id };
+    args.filter.tags = { in: [tag._id] };
     return this.storyService.paginate(args);
   }
 }

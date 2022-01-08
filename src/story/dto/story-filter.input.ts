@@ -16,7 +16,7 @@ export class StoryFilterInput extends FilterInput {
   parent?: FilterIdInput;
 
   @Field(() => FilterIdInput, { nullable: true })
-  tag?: FilterIdInput;
+  tags?: FilterIdInput;
 
   @Field(() => FilterIdInput, { nullable: true })
   root?: FilterIdInput;
