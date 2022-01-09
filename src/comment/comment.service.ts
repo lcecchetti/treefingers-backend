@@ -11,7 +11,7 @@ export class CommentService extends PaginationService<
   CommentDocument
 > {
   constructor(
-    @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
+    @InjectModel('Comment') private commentModel: Model<CommentDocument>,
   ) {
     super(commentModel);
   }

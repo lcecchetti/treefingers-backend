@@ -9,7 +9,7 @@ import { StringService } from 'src/utils/services/string.service';
 @Injectable()
 export class StoryService extends PaginationService<Story, StoryDocument> {
   constructor(
-    @InjectModel(Story.name) private storyModel: Model<StoryDocument>,
+    @InjectModel('Story') private storyModel: Model<StoryDocument>,
     private stringService: StringService,
   ) {
     super(storyModel);

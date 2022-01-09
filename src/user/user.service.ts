@@ -7,7 +7,7 @@ import { UserCreateDataInput } from './dto/user-create.input';
 
 @Injectable()
 export class UserService extends PaginationService<User, UserDocument> {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {
+  constructor(@InjectModel('User') private userModel: Model<UserDocument>) {
     super(userModel);
   }
 

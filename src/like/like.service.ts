@@ -6,7 +6,7 @@ import { CreateLikeDataInput } from './dto/create-like.input';
 
 @Injectable()
 export class LikeService {
-  constructor(@InjectModel(Like.name) private likeModel: Model<LikeDocument>) {}
+  constructor(@InjectModel('Like') private likeModel: Model<LikeDocument>) {}
 
   async findById(
     _id: string,
