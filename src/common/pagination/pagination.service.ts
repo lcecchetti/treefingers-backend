@@ -70,7 +70,7 @@ export class PaginationService<E, D> {
     });
 
     // prepare page infos
-    const totalCount = await this.model.estimatedDocumentCount();
+    const totalCount = await this.model.count(mongoFilter);
     const pagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 1;
 
     result.pageInfo = {
