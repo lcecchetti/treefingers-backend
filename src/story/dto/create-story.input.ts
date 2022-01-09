@@ -20,6 +20,7 @@ export class CreateStoryDataInput {
   readonly parent?: string;
 
   author?: string;
+  excerpt?: string;
 }
 @InputType()
 export class CreateStoryInput {

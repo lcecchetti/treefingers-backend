@@ -6,17 +6,19 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { StoryModule } from './story/story.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
-import configuration from './config/configuration';
+import config from './app.config';
 import { CommentModule } from './comment/comment.module';
 import { LikeModule } from './like/like.module';
 import { TagModule } from './tag/tag.module';
+import { UtilsModule } from './utils/utils.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [configuration],
+      load: [config],
     }),
+    UtilsModule,
     GraphQLModule.forRootAsync({
       useFactory: async (configService: ConfigService) => ({
         autoSchemaFile: configService.get<string>('graphql.schema'),
