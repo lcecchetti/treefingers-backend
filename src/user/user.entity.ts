@@ -48,13 +48,6 @@ export class User {
   @Field({ nullable: true })
   bio?: string;
 
-  @Prop({
-    required: true,
-    maxlength: 128,
-  })
-  @Field({ nullable: true })
-  excerpt?: string;
-
   @Field(() => Like, { nullable: true })
   currentUserLike?: Like;
 

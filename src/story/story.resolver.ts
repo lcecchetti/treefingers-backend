@@ -21,10 +21,12 @@ import { StoryConnectionArgs } from './args/story-connection.args';
 import { gqlFilterToMongo } from 'src/common/filter/filter.service';
 import { Tag } from 'src/tag/tag.entity';
 import { TagService } from 'src/tag/tag.service';
+import { StringService } from 'src/utils/services/string.service';
 
 @Resolver(() => Story)
 export class StoryResolver {
   constructor(
+    private stringService: StringService,
     private storyService: StoryService,
     private userService: UserService,
     private tagService: TagService,
@@ -55,6 +57,11 @@ export class StoryResolver {
   ): Promise<CreateStoryPayload> {
     data.author = user._id;
     return { story: await this.storyService.create(data) };
+  }
+
+  @ResolveField(() => String)
+  async excerpt(@Parent() story: Story): Promise<string> {
+    return this.stringService.createExcerpt(story.content);
   }
 
   @ResolveField()

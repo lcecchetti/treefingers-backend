@@ -11,10 +11,12 @@ import { gqlFilterToMongo } from 'src/common/filter/filter.service';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { StringService } from 'src/utils/services/string.service';
 
 @Resolver(() => User)
 export class UserResolver {
   constructor(
+    private stringService: StringService,
     private userService: UserService,
     private storyService: StoryService,
   ) {}
@@ -43,6 +45,11 @@ export class UserResolver {
       return null;
     }
     return this.userService.findById(user._id);
+  }
+
+  @ResolveField(() => String)
+  async excerpt(@Parent() user: User): Promise<string> {
+    return this.stringService.createExcerpt(user.bio);
   }
 
   @ResolveField(() => StoryConnection)

@@ -34,13 +34,6 @@ export class Story {
   content: string;
 
   @Prop({
-    required: true,
-    maxlength: 128,
-  })
-  @Field()
-  excerpt: string;
-
-  @Prop({
     type: SchemaTypes.ObjectId,
     ref: 'User',
     index: true,
