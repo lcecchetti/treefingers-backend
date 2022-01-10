@@ -7,7 +7,6 @@ import { StoryConnection } from 'src/story/dto/story.connection';
 import { UserFilterInput } from './dto/user-filter.input';
 import { UserConnectionArgs } from './args/user-connection.args';
 import { StoryConnectionArgs } from 'src/story/args/story-connection.args';
-import { gqlFilterToMongo } from 'src/common/filter/filter.service';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -34,7 +33,7 @@ export class UserResolver {
     @Args('filter', { nullable: true })
     filter: UserFilterInput,
   ): Promise<User> {
-    const mongoFilter = gqlFilterToMongo<UserDocument>(filter);
+    const mongoFilter = this.userService.gqlFilterToMongo(filter);
     return this.userService.findOne(mongoFilter);
   }
 

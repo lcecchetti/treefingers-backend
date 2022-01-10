@@ -7,7 +7,7 @@ import {
   Mutation,
 } from '@nestjs/graphql';
 import { CommentService } from './comment.service';
-import { Comment, CommentDocument } from './comment.entity';
+import { Comment } from './comment.entity';
 import { UserService } from 'src/user/user.service';
 import { StoryService } from 'src/story/story.service';
 import { User } from 'src/user/user.entity';
@@ -20,7 +20,6 @@ import { Story } from 'src/story/story.entity';
 import { CommentConnection } from './dto/comment.connection';
 import { CommentFilterInput } from './dto/comment-filter.input';
 import { CommentConnectionArgs } from './args/comment-connection.args';
-import { gqlFilterToMongo } from 'src/common/filter/filter.service';
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -43,7 +42,7 @@ export class CommentResolver {
     @Args('filter', { nullable: true })
     filter: CommentFilterInput,
   ): Promise<Comment> {
-    const mongoFilter = gqlFilterToMongo<CommentDocument>(filter);
+    const mongoFilter = this.commentService.gqlFilterToMongo(filter);
     return this.commentService.findOne(mongoFilter);
   }
 

@@ -8,12 +8,12 @@ import {
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Tag, TagDocument } from './tag.entity';
-import { PaginationService } from 'src/common/pagination/pagination.service';
 import { CreateTagDataInput } from './dto/create-tag.input';
 import { DeleteResult } from 'mongodb';
+import { QueryService } from 'src/query/query.service';
 
 @Injectable()
-export class TagService extends PaginationService<Tag, TagDocument> {
+export class TagService extends QueryService<Tag, TagDocument> {
   constructor(@InjectModel('Tag') private tagModel: Model<TagDocument>) {
     super(tagModel);
   }

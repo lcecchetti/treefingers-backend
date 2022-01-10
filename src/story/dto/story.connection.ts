@@ -1,5 +1,5 @@
-import { Paginated } from 'src/common/pagination/dto/pagination.dto';
 import { ObjectType } from '@nestjs/graphql';
+import { Paginated } from 'src/query/dto/pagination.dto';
 import { Story } from '../story.entity';
 
 @ObjectType()

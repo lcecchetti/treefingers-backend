@@ -1,8 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import {
-  FilterStringInput,
-  FilterInput,
-} from 'src/common/filter/dto/filter.input';
+import { FilterStringInput, FilterInput } from 'src/query/dto/filter.input';
 
 @InputType()
 export class TagFilterInput extends FilterInput {

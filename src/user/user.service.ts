@@ -8,12 +8,12 @@ import {
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './user.entity';
-import { PaginationService } from 'src/common/pagination/pagination.service';
 import { DeleteResult } from 'mongodb';
 import { CreateUserDataInput } from './dto/create-user.input';
+import { QueryService } from 'src/query/query.service';
 
 @Injectable()
-export class UserService extends PaginationService<User, UserDocument> {
+export class UserService extends QueryService<User, UserDocument> {
   constructor(@InjectModel('User') private userModel: Model<UserDocument>) {
     super(userModel);
   }

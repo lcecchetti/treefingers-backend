@@ -1,9 +1,9 @@
 import { ArgsType, Field } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
-import { FilterInput } from 'src/common/filter/dto/filter.input';
-import { SortInput } from 'src/common/sort/dto/sort.input';
+import { FilterInput } from 'src/query/dto/filter.input';
 import { PaginationInput } from '../dto/pagination.input';
+import { SortInput } from '../dto/sort.input';
 
 @ArgsType()
 export class ConnectionArgs {

@@ -8,15 +8,12 @@ import {
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Comment, CommentDocument } from './comment.entity';
-import { PaginationService } from 'src/common/pagination/pagination.service';
 import { CreateCommentDataInput } from './dto/create-comment.input';
 import { DeleteResult } from 'mongodb';
+import { QueryService } from 'src/query/query.service';
 
 @Injectable()
-export class CommentService extends PaginationService<
-  Comment,
-  CommentDocument
-> {
+export class CommentService extends QueryService<Comment, CommentDocument> {
   constructor(
     @InjectModel('Comment') private commentModel: Model<CommentDocument>,
   ) {

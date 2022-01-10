@@ -1,8 +1,19 @@
-import { Model } from 'mongoose';
-import { gqlFilterToMongo } from '../filter/filter.service';
-import { SORT_DIRECTION } from '../sort/dto/sort.input';
+import { FilterQuery, Model } from 'mongoose';
 import { ConnectionArgs } from './args/connection.args';
+import { FilterInput } from './dto/filter.input';
 import { IConnection } from './dto/pagination.dto';
+import { SORT_DIRECTION } from './dto/sort.input';
+
+const filterMap = {
+  eq: '$eq',
+  ne: '$ne',
+  in: '$in',
+  nin: '$nin',
+  lt: '$lt',
+  gt: '$gt',
+  and: '$and',
+  or: '$or',
+};
 
 const encodeCursor = (cursor: string): string => {
   if (!cursor) {
@@ -20,7 +31,7 @@ const decodeCursor = (cursor: string): string => {
   return Buffer.from(String(cursor), 'base64').toString('ascii');
 };
 
-export class PaginationService<E, D> {
+export class QueryService<E, D> {
   model: Model<D>;
 
   constructor(model) {
@@ -50,7 +61,7 @@ export class PaginationService<E, D> {
     }
 
     // convert filter
-    const mongoFilter = gqlFilterToMongo<D>(filter);
+    const mongoFilter = this.gqlFilterToMongo(filter);
 
     // get nodes
     const nodes = await this.model
@@ -84,5 +95,18 @@ export class PaginationService<E, D> {
     };
 
     return result;
+  }
+
+  gqlFilterToMongo(gqlFilter: FilterInput): FilterQuery<D> {
+    // convert filters to string
+    let filterString = JSON.stringify(gqlFilter);
+
+    // replace gql to mongo
+    Object.keys(filterMap).forEach((key) => {
+      filterString = filterString.replace(`"${key}":`, `"${filterMap[key]}":`);
+    });
+
+    // return parsed json object
+    return JSON.parse(filterString);
   }
 }

@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { FilterIdInput, FilterInput } from 'src/common/filter/dto/filter.input';
+import { FilterIdInput, FilterInput } from 'src/query/dto/filter.input';
 
 @InputType()
 export class LikeFilterInput extends FilterInput {

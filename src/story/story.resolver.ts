@@ -18,7 +18,6 @@ import { UseGuards } from '@nestjs/common';
 import { StoryConnection } from './dto/story.connection';
 import { StoryFilterInput } from './dto/story-filter.input';
 import { StoryConnectionArgs } from './args/story-connection.args';
-import { gqlFilterToMongo } from 'src/common/filter/filter.service';
 import { Tag } from 'src/tag/tag.entity';
 import { TagService } from 'src/tag/tag.service';
 import { StringService } from 'src/utils/services/string.service';
@@ -45,7 +44,7 @@ export class StoryResolver {
     @Args('filter', { nullable: true })
     filter: StoryFilterInput,
   ): Promise<Story> {
-    const mongoFilter = gqlFilterToMongo<StoryDocument>(filter);
+    const mongoFilter = this.storyService.gqlFilterToMongo(filter);
     return this.storyService.findOne(mongoFilter);
   }
 
