@@ -1,10 +1,16 @@
-import { Model, FilterQuery, QueryOptions } from 'mongoose';
+import {
+  Model,
+  FilterQuery,
+  QueryOptions,
+  UpdateQuery,
+  UpdateWriteOpResult,
+} from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './user.entity';
 import { PaginationService } from 'src/common/pagination/pagination.service';
-import { UserCreateDataInput } from './dto/user-create.input';
 import { DeleteResult } from 'mongodb';
+import { CreateUserDataInput } from './dto/create-user.input';
 
 @Injectable()
 export class UserService extends PaginationService<User, UserDocument> {
@@ -36,7 +42,7 @@ export class UserService extends PaginationService<User, UserDocument> {
     return this.userModel.findById(_id, projection, options).lean();
   }
 
-  async create(input: UserCreateDataInput): Promise<User> {
+  async create(input: CreateUserDataInput): Promise<User> {
     return this.userModel.create(input);
   }
 
@@ -56,5 +62,21 @@ export class UserService extends PaginationService<User, UserDocument> {
     options?: QueryOptions,
   ): Promise<DeleteResult> {
     return this.userModel.deleteMany(filter, options);
+  }
+
+  async updateOne(
+    filter?: FilterQuery<UserDocument>,
+    update?: UpdateQuery<UserDocument>,
+    options?: QueryOptions,
+  ): Promise<UpdateWriteOpResult> {
+    return this.userModel.updateOne(filter, update, options);
+  }
+
+  async updateMany(
+    filter?: FilterQuery<UserDocument>,
+    update?: UpdateQuery<UserDocument>,
+    options?: QueryOptions,
+  ): Promise<UpdateWriteOpResult> {
+    return this.userModel.updateMany(filter, update, options);
   }
 }

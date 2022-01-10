@@ -1,4 +1,10 @@
-import { FilterQuery, Model, QueryOptions } from 'mongoose';
+import {
+  FilterQuery,
+  Model,
+  QueryOptions,
+  UpdateQuery,
+  UpdateWriteOpResult,
+} from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Story, StoryDocument } from './story.entity';
@@ -61,5 +67,21 @@ export class StoryService extends PaginationService<Story, StoryDocument> {
     options?: QueryOptions,
   ): Promise<DeleteResult> {
     return this.storyModel.deleteMany(filter, options);
+  }
+
+  async updateOne(
+    filter?: FilterQuery<StoryDocument>,
+    update?: UpdateQuery<StoryDocument>,
+    options?: QueryOptions,
+  ): Promise<UpdateWriteOpResult> {
+    return this.storyModel.updateOne(filter, update, options);
+  }
+
+  async updateMany(
+    filter?: FilterQuery<StoryDocument>,
+    update?: UpdateQuery<StoryDocument>,
+    options?: QueryOptions,
+  ): Promise<UpdateWriteOpResult> {
+    return this.storyModel.updateMany(filter, update, options);
   }
 }
