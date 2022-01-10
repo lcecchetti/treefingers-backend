@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './user.entity';
 import { PaginationService } from 'src/common/pagination/pagination.service';
 import { UserCreateDataInput } from './dto/user-create.input';
+import { UserFilterInput } from './dto/user-filter.input';
 
 @Injectable()
 export class UserService extends PaginationService<User, UserDocument> {
@@ -37,5 +38,9 @@ export class UserService extends PaginationService<User, UserDocument> {
 
   async create(input: UserCreateDataInput): Promise<User> {
     return this.userModel.create(input);
+  }
+
+  async count(filter?: FilterQuery<UserDocument>): Promise<number> {
+    return this.userModel.count(filter);
   }
 }

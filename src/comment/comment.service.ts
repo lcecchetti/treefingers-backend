@@ -43,4 +43,8 @@ export class CommentService extends PaginationService<
   async create(data: CreateCommentDataInput): Promise<Comment> {
     return this.commentModel.create(data);
   }
+
+  async count(filter?: FilterQuery<CommentDocument>): Promise<number> {
+    return this.commentModel.count(filter);
+  }
 }

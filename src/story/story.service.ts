@@ -43,4 +43,8 @@ export class StoryService extends PaginationService<Story, StoryDocument> {
     input.excerpt = this.stringService.createExcerpt(input.content);
     return this.storyModel.create(input);
   }
+
+  async count(filter?: FilterQuery<StoryDocument>): Promise<number> {
+    return this.storyModel.count(filter);
+  }
 }

@@ -38,4 +38,8 @@ export class TagService extends PaginationService<Tag, TagDocument> {
   async create(input: CreateTagDataInput): Promise<Tag> {
     return this.tagModel.create(input);
   }
+
+  async count(filter?: FilterQuery<TagDocument>): Promise<number> {
+    return this.tagModel.count(filter);
+  }
 }

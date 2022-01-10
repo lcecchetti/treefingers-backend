@@ -35,4 +35,8 @@ export class LikeService {
   async create(input: CreateLikeDataInput): Promise<Like> {
     return this.likeModel.create(input);
   }
+
+  async count(filter?: FilterQuery<LikeDocument>): Promise<number> {
+    return this.likeModel.count(filter);
+  }
 }
