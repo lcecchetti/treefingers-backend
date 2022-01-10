@@ -32,7 +32,7 @@ export class UserResolver {
   @Query(() => User, { nullable: true })
   async user(
     @Args('filter', { nullable: true })
-    filter: UserFilterInput = new UserFilterInput(),
+    filter: UserFilterInput,
   ): Promise<User> {
     const mongoFilter = gqlFilterToMongo<UserDocument>(filter);
     return this.userService.findOne(mongoFilter);

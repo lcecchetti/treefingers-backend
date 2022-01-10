@@ -31,9 +31,7 @@ export class LikeResolver {
   ) {}
 
   @Query(() => Like, { nullable: true })
-  async like(
-    @Args({ nullable: true }) filter: LikeInput = new LikeInput(),
-  ): Promise<Like> {
+  async like(@Args({ nullable: true }) filter: LikeInput): Promise<Like> {
     return this.likeService.findOne(filter);
   }
 

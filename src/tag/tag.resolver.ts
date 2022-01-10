@@ -36,7 +36,7 @@ export class TagResolver {
   @Query(() => Tag, { nullable: true })
   async tag(
     @Args('filter', { nullable: true })
-    filter: TagFilterInput = new TagFilterInput(),
+    filter: TagFilterInput,
   ): Promise<Tag> {
     const mongoFilter = gqlFilterToMongo<TagDocument>(filter);
     return this.tagService.findOne(mongoFilter);

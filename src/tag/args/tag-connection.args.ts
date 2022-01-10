@@ -5,5 +5,5 @@ import { TagFilterInput } from '../dto/tag-filter.input';
 @ArgsType()
 export class TagConnectionArgs extends ConnectionArgs {
   @Field(() => TagFilterInput, { nullable: true })
-  filter?: TagFilterInput = new TagFilterInput();
+  filter?: TagFilterInput;
 }

@@ -5,5 +5,5 @@ import { StoryFilterInput } from '../dto/story-filter.input';
 @ArgsType()
 export class StoryConnectionArgs extends ConnectionArgs {
   @Field(() => StoryFilterInput, { nullable: true })
-  filter?: StoryFilterInput = new StoryFilterInput();
+  filter?: StoryFilterInput;
 }

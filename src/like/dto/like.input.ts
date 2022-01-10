@@ -5,5 +5,5 @@ import { LikeFilterInput } from './like-filter.input';
 @ArgsType()
 export class LikeInput {
   @Field(() => LikeFilterInput, { nullable: true })
-  filter?: LikeFilterInput = new LikeFilterInput();
+  filter?: LikeFilterInput;
 }

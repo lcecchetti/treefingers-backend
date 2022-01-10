@@ -43,7 +43,7 @@ export class StoryResolver {
   @Query(() => Story, { nullable: true })
   async story(
     @Args('filter', { nullable: true })
-    filter: StoryFilterInput = new StoryFilterInput(),
+    filter: StoryFilterInput,
   ): Promise<Story> {
     const mongoFilter = gqlFilterToMongo<StoryDocument>(filter);
     return this.storyService.findOne(mongoFilter);

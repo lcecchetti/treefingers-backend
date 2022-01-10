@@ -41,7 +41,7 @@ export class CommentResolver {
   @Query(() => Comment, { nullable: true })
   async comment(
     @Args('filter', { nullable: true })
-    filter: CommentFilterInput = new CommentFilterInput(),
+    filter: CommentFilterInput,
   ): Promise<Comment> {
     const mongoFilter = gqlFilterToMongo<CommentDocument>(filter);
     return this.commentService.findOne(mongoFilter);
