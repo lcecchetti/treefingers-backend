@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Comment, CommentDocument } from './comment.entity';
 import { PaginationService } from 'src/common/pagination/pagination.service';
 import { CreateCommentDataInput } from './dto/create-comment.input';
+import { DeleteResult } from 'mongodb';
 
 @Injectable()
 export class CommentService extends PaginationService<
@@ -46,5 +47,19 @@ export class CommentService extends PaginationService<
 
   async count(filter?: FilterQuery<CommentDocument>): Promise<number> {
     return this.commentModel.count(filter);
+  }
+
+  async deleteOne(
+    filter?: FilterQuery<CommentDocument>,
+    options?: QueryOptions,
+  ): Promise<DeleteResult> {
+    return this.commentModel.deleteOne(filter, options);
+  }
+
+  async deleteMany(
+    filter?: FilterQuery<CommentDocument>,
+    options?: QueryOptions,
+  ): Promise<DeleteResult> {
+    return this.commentModel.deleteMany(filter, options);
   }
 }

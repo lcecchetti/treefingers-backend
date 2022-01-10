@@ -5,6 +5,7 @@ import { Story, StoryDocument } from './story.entity';
 import { CreateStoryDataInput } from './dto/create-story.input';
 import { PaginationService } from 'src/common/pagination/pagination.service';
 import { StringService } from 'src/utils/services/string.service';
+import { DeleteResult } from 'mongodb';
 
 @Injectable()
 export class StoryService extends PaginationService<Story, StoryDocument> {
@@ -46,5 +47,19 @@ export class StoryService extends PaginationService<Story, StoryDocument> {
 
   async count(filter?: FilterQuery<StoryDocument>): Promise<number> {
     return this.storyModel.count(filter);
+  }
+
+  async deleteOne(
+    filter?: FilterQuery<StoryDocument>,
+    options?: QueryOptions,
+  ): Promise<DeleteResult> {
+    return this.storyModel.deleteOne(filter, options);
+  }
+
+  async deleteMany(
+    filter?: FilterQuery<StoryDocument>,
+    options?: QueryOptions,
+  ): Promise<DeleteResult> {
+    return this.storyModel.deleteMany(filter, options);
   }
 }

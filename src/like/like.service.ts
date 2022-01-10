@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Like, LikeDocument } from './like.entity';
 import { CreateLikeDataInput } from './dto/create-like.input';
+import { DeleteResult } from 'mongodb';
 
 @Injectable()
 export class LikeService {
@@ -38,5 +39,19 @@ export class LikeService {
 
   async count(filter?: FilterQuery<LikeDocument>): Promise<number> {
     return this.likeModel.count(filter);
+  }
+
+  async deleteOne(
+    filter?: FilterQuery<LikeDocument>,
+    options?: QueryOptions,
+  ): Promise<DeleteResult> {
+    return this.likeModel.deleteOne(filter, options);
+  }
+
+  async deleteMany(
+    filter?: FilterQuery<LikeDocument>,
+    options?: QueryOptions,
+  ): Promise<DeleteResult> {
+    return this.likeModel.deleteMany(filter, options);
   }
 }

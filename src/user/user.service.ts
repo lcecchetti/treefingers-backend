@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './user.entity';
 import { PaginationService } from 'src/common/pagination/pagination.service';
 import { UserCreateDataInput } from './dto/user-create.input';
-import { UserFilterInput } from './dto/user-filter.input';
+import { DeleteResult } from 'mongodb';
 
 @Injectable()
 export class UserService extends PaginationService<User, UserDocument> {
@@ -42,5 +42,19 @@ export class UserService extends PaginationService<User, UserDocument> {
 
   async count(filter?: FilterQuery<UserDocument>): Promise<number> {
     return this.userModel.count(filter);
+  }
+
+  async deleteOne(
+    filter?: FilterQuery<UserDocument>,
+    options?: QueryOptions,
+  ): Promise<DeleteResult> {
+    return this.userModel.deleteOne(filter, options);
+  }
+
+  async deleteMany(
+    filter?: FilterQuery<UserDocument>,
+    options?: QueryOptions,
+  ): Promise<DeleteResult> {
+    return this.userModel.deleteMany(filter, options);
   }
 }
