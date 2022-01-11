@@ -54,8 +54,9 @@ export class StoryResolver {
     @Args('input') { data }: CreateStoryInput,
     @CurrentUser() user: User,
   ): Promise<CreateStoryPayload> {
-    data.author = user._id;
-    return { story: await this.storyService.create(data) };
+    return {
+      story: await this.storyService.create({ ...data, author: user._id }),
+    };
   }
 
   @ResolveField(() => String)

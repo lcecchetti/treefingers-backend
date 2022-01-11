@@ -1,4 +1,11 @@
-import { FilterQuery, Model } from 'mongoose';
+import {
+  FilterQuery,
+  Model,
+  QueryOptions,
+  UpdateQuery,
+  UpdateWriteOpResult,
+} from 'mongoose';
+import { DeleteResult } from 'mongodb';
 import { ConnectionArgs } from './args/connection.args';
 import { FilterInput } from './dto/filter.input';
 import { IConnection } from './dto/pagination.dto';
@@ -108,5 +115,67 @@ export class QueryService<E, D> {
 
     // return parsed json object
     return JSON.parse(filterString);
+  }
+
+  async findById(
+    _id: string,
+    projection?: any | null,
+    options?: QueryOptions,
+  ): Promise<D | null> {
+    return this.model.findById(_id, projection, options).lean();
+  }
+
+  async findOne(
+    filter?: FilterQuery<D>,
+    projection?: any | null,
+    options?: QueryOptions,
+  ): Promise<E | null> {
+    return this.model.findOne(filter, projection, options).lean();
+  }
+
+  async findAll(
+    filter?: FilterQuery<D>,
+    projection?: any | null,
+    options?: QueryOptions,
+  ): Promise<E[]> {
+    return this.model.find(filter, projection, options).lean();
+  }
+
+  async create(data: any): Promise<D> {
+    return this.model.create(data);
+  }
+
+  async count(filter?: FilterQuery<D>): Promise<number> {
+    return this.model.count(filter);
+  }
+
+  async deleteOne(
+    filter?: FilterQuery<D>,
+    options?: QueryOptions,
+  ): Promise<DeleteResult> {
+    return this.model.deleteOne(filter, options);
+  }
+
+  async deleteMany(
+    filter?: FilterQuery<D>,
+    options?: QueryOptions,
+  ): Promise<DeleteResult> {
+    return this.model.deleteMany(filter, options);
+  }
+
+  async updateOne(
+    filter?: FilterQuery<D>,
+    update?: UpdateQuery<D>,
+    options?: QueryOptions,
+  ): Promise<UpdateWriteOpResult> {
+    return this.model.updateOne(filter, update, options);
+  }
+
+  async updateMany(
+    filter?: FilterQuery<D>,
+    update?: UpdateQuery<D>,
+    options?: QueryOptions,
+  ): Promise<UpdateWriteOpResult> {
+    return this.model.updateMany(filter, update, options);
   }
 }

@@ -41,8 +41,7 @@ export class LikeResolver {
     @Args('input') { data }: CreateLikeInput,
     @CurrentUser() user: User,
   ): Promise<CreateLikePayload> {
-    data.user = user._id;
-    return { like: await this.likeService.create(data) };
+    return { like: await this.likeService.create({ ...data, user: user._id }) };
   }
 
   @ResolveField()

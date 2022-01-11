@@ -52,8 +52,9 @@ export class CommentResolver {
     @Args('input') { data }: CreateCommentInput,
     @CurrentUser() user: User,
   ): Promise<CreateCommentPayload> {
-    data.user = user._id;
-    return { comment: await this.commentService.create(data) };
+    return {
+      comment: await this.commentService.create({ ...data, user: user._id }),
+    };
   }
 
   @ResolveField()

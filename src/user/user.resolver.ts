@@ -1,6 +1,6 @@
 import { Resolver, Query, Args, ResolveField, Parent } from '@nestjs/graphql';
 import { UserService } from './user.service';
-import { User, UserDocument } from './user.entity';
+import { User } from './user.entity';
 import { StoryService } from 'src/story/story.service';
 import { UserConnection } from './dto/user.connection';
 import { StoryConnection } from 'src/story/dto/story.connection';
