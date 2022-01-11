@@ -7,8 +7,6 @@ export class CreateTagDataInput {
   @MinLength(1)
   @MaxLength(63)
   readonly label: string;
-
-  slug: string;
 }
 @InputType()
 export class CreateTagInput {
