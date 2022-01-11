@@ -6,10 +6,12 @@ import { CommentSchema } from './comment.entity';
 import { UserModule } from 'src/user/user.module';
 import { StoryModule } from 'src/story/story.module';
 import { LikeModule } from 'src/like/like.module';
+import { QueryModule } from 'src/query/query.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'Comment', schema: CommentSchema }]),
+    QueryModule,
     forwardRef(() => UserModule),
     forwardRef(() => StoryModule),
     forwardRef(() => LikeModule),

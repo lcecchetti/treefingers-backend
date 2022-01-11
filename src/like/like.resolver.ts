@@ -19,7 +19,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { Story } from 'src/story/story.entity';
 import { CommentService } from 'src/comment/comment.service';
-import { LikeInput } from './dto/like.input';
+import { LikeFilterInput } from './dto/like-filter.input';
 
 @Resolver(() => Like)
 export class LikeResolver {
@@ -31,7 +31,9 @@ export class LikeResolver {
   ) {}
 
   @Query(() => Like, { nullable: true })
-  async like(@Args({ nullable: true }) filter: LikeInput): Promise<Like> {
+  async like(
+    @Args('filter', { nullable: true }) filter: LikeFilterInput,
+  ): Promise<Like> {
     return this.likeService.findOne(filter);
   }
 

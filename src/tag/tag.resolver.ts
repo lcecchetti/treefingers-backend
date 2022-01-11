@@ -37,8 +37,7 @@ export class TagResolver {
     @Args('filter', { nullable: true })
     filter: TagFilterInput,
   ): Promise<Tag> {
-    const mongoFilter = this.tagService.gqlFilterToMongo(filter);
-    return this.tagService.findOne(mongoFilter);
+    return this.tagService.findOne(filter);
   }
 
   @Mutation(() => CreateTagPayload)

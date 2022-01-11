@@ -44,8 +44,7 @@ export class StoryResolver {
     @Args('filter', { nullable: true })
     filter: StoryFilterInput,
   ): Promise<Story> {
-    const mongoFilter = this.storyService.gqlFilterToMongo(filter);
-    return this.storyService.findOne(mongoFilter);
+    return this.storyService.findOne(filter);
   }
 
   @Mutation(() => CreateStoryPayload)
@@ -91,6 +90,7 @@ export class StoryResolver {
 
   @ResolveField(() => [Tag], { nullable: true })
   async tags(@Parent() story: Story): Promise<Tag[]> {
-    return this.tagService.findAll({ _id: { $in: story.tags } });
+    const tags = story.tags.map((tag) => tag._id);
+    return this.tagService.findAll({ _id: { in: tags } });
   }
 }

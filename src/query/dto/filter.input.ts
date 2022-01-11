@@ -9,10 +9,10 @@ export class FilterStringInput {
   ne?: string;
 
   @Field(() => [String], { nullable: true })
-  in?: [string];
+  in?: string[];
 
   @Field(() => [String], { nullable: true })
-  nin?: [string];
+  nin?: string[];
 }
 
 @InputType()
@@ -24,10 +24,10 @@ export class FilterIdInput {
   ne?: string;
 
   @Field(() => [ID], { nullable: true })
-  in?: [string];
+  in?: string[];
 
   @Field(() => [ID], { nullable: true })
-  nin?: [string];
+  nin?: string[];
 
   @Field(() => ID, { nullable: true })
   gt?: string;
@@ -45,10 +45,10 @@ export class FilterIntInput {
   ne?: number;
 
   @Field(() => [Number], { nullable: true })
-  in?: [number];
+  in?: number[];
 
   @Field(() => [Number], { nullable: true })
-  nin?: [number];
+  nin?: number[];
 }
 
 @InputType()

@@ -10,13 +10,15 @@ import { JwtPayload } from './dto/jwt.payload';
 
 @Injectable()
 export class AuthService {
+
+  //@todo inject user model rather than service
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
   ) {}
 
   async validateUser(email: string, password: string): Promise<User | null> {
-    const user = await this.userService.findOne({ email });
+    const user = await this.userService.findOne({ email: { eq: email } });
     const isPasswordMatching = await bcrypt.compare(password, user.password);
     if (isPasswordMatching) {
       // strip out password
@@ -37,7 +39,7 @@ export class AuthService {
   async register(registerInput: RegisterInput): Promise<RegisterPayload> {
     // check if user already exists
     const existingUser = await this.userService.findOne({
-      email: registerInput.email,
+      email: { eq: registerInput.email },
     });
     if (existingUser) {
       throw new ConflictException('User already exists');
@@ -45,7 +47,7 @@ export class AuthService {
 
     // create user
     const encryptedPassword = await bcrypt.hash(registerInput.password, 10);
-    const user = await this.userService.create({
+    const user = await this.userService.register({
       ...registerInput,
       password: encryptedPassword,
     });

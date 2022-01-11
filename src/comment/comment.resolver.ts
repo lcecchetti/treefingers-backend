@@ -42,8 +42,7 @@ export class CommentResolver {
     @Args('filter', { nullable: true })
     filter: CommentFilterInput,
   ): Promise<Comment> {
-    const mongoFilter = this.commentService.gqlFilterToMongo(filter);
-    return this.commentService.findOne(mongoFilter);
+    return this.commentService.findOne(filter);
   }
 
   @Mutation(() => CreateCommentPayload)

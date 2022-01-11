@@ -33,8 +33,7 @@ export class UserResolver {
     @Args('filter', { nullable: true })
     filter: UserFilterInput,
   ): Promise<User> {
-    const mongoFilter = this.userService.gqlFilterToMongo(filter);
-    return this.userService.findOne(mongoFilter);
+    return this.userService.findOne(filter);
   }
 
   @Query(() => User, { nullable: true })

@@ -10,6 +10,8 @@ export class CreateLikeDataInput {
 
   @Field(() => ID, { nullable: true })
   readonly author?: string;
+
+  user?: string;
 }
 @InputType()
 export class CreateLikeInput {

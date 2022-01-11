@@ -4,10 +4,10 @@ import { FilterIdInput, FilterInput } from 'src/query/dto/filter.input';
 @InputType()
 export class StoryFilterInput extends FilterInput {
   @Field(() => [StoryFilterInput], { nullable: true })
-  and?: [StoryFilterInput];
+  and?: StoryFilterInput[];
 
   @Field(() => [StoryFilterInput], { nullable: true })
-  or?: [StoryFilterInput];
+  or?: StoryFilterInput[];
 
   @Field(() => FilterIdInput, { nullable: true })
   author?: FilterIdInput;

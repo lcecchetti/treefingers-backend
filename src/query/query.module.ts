@@ -3,5 +3,6 @@ import { QueryService } from './query.service';
 
 @Module({
   providers: [QueryService],
+  exports: [QueryService],
 })
 export class QueryModule {}

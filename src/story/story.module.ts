@@ -7,10 +7,12 @@ import { UserModule } from 'src/user/user.module';
 import { LikeModule } from 'src/like/like.module';
 import { CommentModule } from 'src/comment/comment.module';
 import { TagModule } from 'src/tag/tag.module';
+import { QueryModule } from 'src/query/query.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'Story', schema: StorySchema }]),
+    QueryModule,
     forwardRef(() => UserModule),
     forwardRef(() => LikeModule),
     forwardRef(() => CommentModule),

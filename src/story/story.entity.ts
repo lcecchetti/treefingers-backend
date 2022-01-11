@@ -96,7 +96,7 @@ export class Story {
     index: true,
     default: null,
   })
-  tags?: [Tag];
+  tags?: Tag[];
 
   @Prop({ default: Date.now })
   @Field(() => GraphQLISODateTime)

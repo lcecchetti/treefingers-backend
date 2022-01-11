@@ -38,7 +38,6 @@ import { QueryModule } from './query/query.module';
     CommentModule,
     LikeModule,
     TagModule,
-    QueryModule,
   ],
   providers: [AppService],
 })

@@ -18,6 +18,8 @@ export class CreateStoryDataInput {
 
   @Field(() => ID, { nullable: true })
   readonly parent?: string;
+
+  author?: string;
 }
 @InputType()
 export class CreateStoryInput {
