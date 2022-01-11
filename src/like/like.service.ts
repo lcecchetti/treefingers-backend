@@ -6,7 +6,7 @@ import { QueryService } from 'src/query/query.service';
 
 @Injectable()
 export class LikeService extends QueryService<Like, LikeDocument> {
-  constructor(@InjectModel('Like') model: Model<LikeDocument>) {
+  constructor(@InjectModel('Like') protected model: Model<LikeDocument>) {
     super(model);
   }
 }

@@ -6,7 +6,7 @@ import { Model } from 'mongoose';
 
 @Injectable()
 export class TagService extends QueryService<Tag, TagDocument> {
-  constructor(@InjectModel('Tag') model: Model<TagDocument>) {
+  constructor(@InjectModel('Tag') protected model: Model<TagDocument>) {
     super(model);
   }
 }

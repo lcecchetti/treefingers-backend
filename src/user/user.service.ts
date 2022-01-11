@@ -5,7 +5,7 @@ import { QueryService } from 'src/query/query.service';
 import { Model } from 'mongoose';
 @Injectable()
 export class UserService extends QueryService<User, UserDocument> {
-  constructor(@InjectModel('User') model: Model<UserDocument>) {
+  constructor(@InjectModel('User') protected model: Model<UserDocument>) {
     super(model);
   }
 }

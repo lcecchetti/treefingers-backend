@@ -6,7 +6,7 @@ import { QueryService } from 'src/query/query.service';
 
 @Injectable()
 export class CommentService extends QueryService<Comment, CommentDocument> {
-  constructor(@InjectModel('Comment') model: Model<CommentDocument>) {
+  constructor(@InjectModel('Comment') protected model: Model<CommentDocument>) {
     super(model);
   }
 }

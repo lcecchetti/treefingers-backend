@@ -6,7 +6,7 @@ import { Model } from 'mongoose';
 
 @Injectable()
 export class StoryService extends QueryService<Story, StoryDocument> {
-  constructor(@InjectModel('Story') model: Model<StoryDocument>) {
+  constructor(@InjectModel('Story') protected model: Model<StoryDocument>) {
     super(model);
   }
 }

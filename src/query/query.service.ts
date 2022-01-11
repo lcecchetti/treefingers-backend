@@ -39,11 +39,7 @@ const decodeCursor = (cursor: string): string => {
 };
 
 export class QueryService<E, D> {
-  model: Model<D>;
-
-  constructor(model) {
-    this.model = model;
-  }
+  constructor(protected model: Model<D>) {}
 
   async paginate(
     { filter, sort, pagination }: ConnectionArgs = new ConnectionArgs(),
