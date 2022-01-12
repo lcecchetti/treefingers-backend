@@ -11,7 +11,6 @@ import { CommentModule } from './comment/comment.module';
 import { LikeModule } from './like/like.module';
 import { TagModule } from './tag/tag.module';
 import { UtilsModule } from './utils/utils.module';
-import { QueryModule } from './query/query.module';
 
 @Module({
   imports: [

@@ -13,13 +13,14 @@ import { StoryService } from 'src/story/story.service';
 import { User } from 'src/user/user.entity';
 import { CreateCommentPayload } from './dto/create-comment.payload';
 import { CreateCommentInput } from './dto/create-comment.input';
-import { CurrentUser } from 'src/user/decorators/current-user.decorator';
+import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { Story } from 'src/story/story.entity';
 import { CommentConnection } from './dto/comment.connection';
 import { CommentFilterInput } from './dto/comment-filter.input';
 import { CommentConnectionArgs } from './args/comment-connection.args';
+import { CurrentUser } from 'src/auth/dto/current-user.dto';
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -49,10 +50,13 @@ export class CommentResolver {
   @UseGuards(JwtAuthGuard)
   async createComment(
     @Args('input') { data }: CreateCommentInput,
-    @CurrentUser() user: User,
+    @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<CreateCommentPayload> {
     return {
-      comment: await this.commentService.create({ ...data, user: user._id }),
+      comment: await this.commentService.create({
+        ...data,
+        user: currentUser._id,
+      }),
     };
   }
 

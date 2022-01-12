@@ -7,10 +7,10 @@ import * as bcrypt from 'bcrypt';
 import { RegisterInput } from './dto/register.input';
 import { User } from 'src/user/user.entity';
 import { JwtPayload } from './dto/jwt.payload';
+import { CurrentUser } from './dto/current-user.dto';
 
 @Injectable()
 export class AuthService {
-
   //@todo inject user model rather than service
   constructor(
     private userService: UserService,
@@ -28,11 +28,14 @@ export class AuthService {
     return null;
   }
 
-  async login(user: User): Promise<LoginPayload> {
-    const payload: JwtPayload = { email: user.email, sub: user._id };
+  async login(currentUser: CurrentUser): Promise<LoginPayload> {
+    const payload: JwtPayload = {
+      email: currentUser.email,
+      sub: currentUser._id,
+    };
     return {
       token: this.jwtService.sign(payload),
-      user,
+      currentUser,
     };
   }
 

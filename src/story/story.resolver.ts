@@ -12,7 +12,7 @@ import { UserService } from 'src/user/user.service';
 import { User } from 'src/user/user.entity';
 import { CreateStoryPayload } from './dto/create-story.payload';
 import { CreateStoryInput } from './dto/create-story.input';
-import { CurrentUser } from 'src/user/decorators/current-user.decorator';
+import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { StoryConnection } from './dto/story.connection';
@@ -21,6 +21,7 @@ import { StoryConnectionArgs } from './args/story-connection.args';
 import { Tag } from 'src/tag/tag.entity';
 import { TagService } from 'src/tag/tag.service';
 import { StringService } from 'src/utils/services/string.service';
+import { CurrentUser } from 'src/auth/dto/current-user.dto';
 
 @Resolver(() => Story)
 export class StoryResolver {
@@ -51,10 +52,13 @@ export class StoryResolver {
   @UseGuards(JwtAuthGuard)
   async createStory(
     @Args('input') { data }: CreateStoryInput,
-    @CurrentUser() user: User,
+    @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<CreateStoryPayload> {
     return {
-      story: await this.storyService.create({ ...data, author: user._id }),
+      story: await this.storyService.create({
+        ...data,
+        author: currentUser._id,
+      }),
     };
   }
 

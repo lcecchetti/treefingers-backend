@@ -14,12 +14,13 @@ import { User } from 'src/user/user.entity';
 import { Comment } from 'src/comment/comment.entity';
 import { CreateLikePayload } from './dto/create-like.payload';
 import { CreateLikeInput } from './dto/create-like.input';
-import { CurrentUser } from 'src/user/decorators/current-user.decorator';
+import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { Story } from 'src/story/story.entity';
 import { CommentService } from 'src/comment/comment.service';
 import { LikeFilterInput } from './dto/like-filter.input';
+import { CurrentUser } from 'src/auth/dto/current-user.dto';
 
 @Resolver(() => Like)
 export class LikeResolver {
@@ -41,9 +42,11 @@ export class LikeResolver {
   @UseGuards(JwtAuthGuard)
   async createLike(
     @Args('input') { data }: CreateLikeInput,
-    @CurrentUser() user: User,
+    @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<CreateLikePayload> {
-    return { like: await this.likeService.create({ ...data, user: user._id }) };
+    return {
+      like: await this.likeService.create({ ...data, user: currentUser._id }),
+    };
   }
 
   @ResolveField()

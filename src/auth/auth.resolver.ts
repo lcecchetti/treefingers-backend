@@ -7,7 +7,8 @@ import { RegisterInput } from './dto/register.input';
 import { User } from 'src/user/user.entity';
 import { LoginPayload } from './dto/login.payload';
 import { RegisterPayload } from './dto/register.payload';
-import { CurrentUser } from 'src/user/decorators/current-user.decorator';
+import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
+import { CurrentUser } from './dto/current-user.dto';
 
 @Resolver()
 export class AuthResolver {
@@ -16,10 +17,10 @@ export class AuthResolver {
   @UseGuards(LocalAuthGuard)
   @Mutation(() => LoginPayload)
   async login(
-    @CurrentUser() user: User,
+    @GetCurrentUser() currentUser: CurrentUser,
     @Args('input') input: LoginInput,
   ): Promise<LoginPayload> {
-    return this.authService.login(user);
+    return this.authService.login(currentUser);
   }
 
   @Mutation(() => RegisterPayload)
