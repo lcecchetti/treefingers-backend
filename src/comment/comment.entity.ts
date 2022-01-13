@@ -9,7 +9,6 @@ import {
 } from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
 import { Story } from 'src/story/story.entity';
-import { Like } from 'src/like/like.entity';
 
 @Schema({ timestamps: true })
 @ObjectType()
@@ -41,9 +40,6 @@ export class Comment {
   })
   @Field(() => Story)
   story: Story;
-
-  @Field(() => Like, { nullable: true })
-  currentUserLike?: Like;
 
   @Prop({
     min: 0,
