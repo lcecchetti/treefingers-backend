@@ -31,7 +31,7 @@ export class LikeService {
     return this.likeModel.count(this.queryService.gqlFilterToMongo(filter));
   }
 
-  async deleteOne(filter?: LikeFilterInput): Promise<Like | null> {
+  async findOneAndDelete(filter?: LikeFilterInput): Promise<Like | null> {
     return this.likeModel
       .findOneAndDelete(this.queryService.gqlFilterToMongo(filter))
       .lean();

@@ -56,7 +56,7 @@ export class LikeResolver {
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<DeleteLikePayload> {
     return {
-      like: await this.likeService.deleteOne({
+      like: await this.likeService.findOneAndDelete({
         ...filter,
         user: { eq: currentUser._id },
       }),
