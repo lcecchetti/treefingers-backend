@@ -57,9 +57,17 @@ export type LikeDocument = Like & Document;
 
 const LikeSchema = SchemaFactory.createForClass(Like);
 
-//@todo move this to business logic instead?
-LikeSchema.index({ user: 1, story: 1 }, { unique: true, sparse: true });
-LikeSchema.index({ user: 1, comment: 1 }, { unique: true, sparse: true });
-LikeSchema.index({ user: 1, author: 1 }, { unique: true, sparse: true });
+LikeSchema.index(
+  { user: 1, story: 1 },
+  { unique: true, partialFilterExpression: { comment: null, author: null } },
+);
+LikeSchema.index(
+  { user: 1, comment: 1 },
+  { unique: true, partialFilterExpression: { story: null, author: null } },
+);
+LikeSchema.index(
+  { user: 1, author: 1 },
+  { unique: true, partialFilterExpression: { comment: null, story: null } },
+);
 
 export { LikeSchema };
