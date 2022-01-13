@@ -13,7 +13,6 @@ import { User } from 'src/user/user.entity';
 import { CreateStoryPayload } from './dto/create-story.payload';
 import { CreateStoryInput } from './dto/create-story.input';
 import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { StoryConnection } from './dto/story.connection';
 import { StoryFilterInput } from './dto/story-filter.input';
@@ -22,6 +21,8 @@ import { Tag } from 'src/tag/tag.entity';
 import { TagService } from 'src/tag/tag.service';
 import { StringService } from 'src/utils/services/string.service';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
+import { Like } from 'src/like/like.entity';
+import { LikeService } from 'src/like/like.service';
 
 @Resolver(() => Story)
 export class StoryResolver {
@@ -30,6 +31,7 @@ export class StoryResolver {
     private storyService: StoryService,
     private userService: UserService,
     private tagService: TagService,
+    private likeService: LikeService,
   ) {}
 
   @Query(() => StoryConnection)
@@ -43,13 +45,12 @@ export class StoryResolver {
   @Query(() => Story, { nullable: true })
   async story(
     @Args('filter', { nullable: true })
-    filter: StoryFilterInput,
+    filter: StoryFilterInput = new StoryFilterInput(),
   ): Promise<Story> {
     return this.storyService.findOne(filter);
   }
 
   @Mutation(() => CreateStoryPayload)
-  @UseGuards(JwtAuthGuard)
   async createStory(
     @Args('input') { data }: CreateStoryInput,
     @GetCurrentUser() currentUser: CurrentUser,
@@ -60,6 +61,22 @@ export class StoryResolver {
         author: currentUser._id,
       }),
     };
+  }
+
+  @ResolveField(() => Like, { nullable: true })
+  async currentUserLike(
+    @GetCurrentUser() currentUser: CurrentUser,
+    @Parent() story: Story,
+  ): Promise<Like | null> {
+    if (!currentUser) {
+      return null;
+    }
+
+    //@todo check why i cannot apply two filters without it complaining (probably gql to mongo issue)
+    return this.likeService.findOne({
+      story: { eq: story._id },
+      user: { eq: currentUser._id },
+    });
   }
 
   @ResolveField(() => String)

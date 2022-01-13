@@ -9,8 +9,8 @@ import { UserConnectionArgs } from './args/user-connection.args';
 import { StoryConnectionArgs } from 'src/story/args/story-connection.args';
 import { GetCurrentUser } from '../auth/decorators/get-current-user.decorator';
 import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { StringService } from 'src/utils/services/string.service';
+import { CurrentUser } from 'src/auth/dto/current-user.dto';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -31,14 +31,15 @@ export class UserResolver {
   @Query(() => User, { nullable: true })
   async user(
     @Args('filter', { nullable: true })
-    filter: UserFilterInput,
+    filter: UserFilterInput = new UserFilterInput(),
   ): Promise<User> {
     return this.userService.findOne(filter);
   }
 
   @Query(() => User, { nullable: true })
-  @UseGuards(JwtAuthGuard)
-  async currentUser(@GetCurrentUser() currentUser): Promise<User | null> {
+  async currentUser(
+    @GetCurrentUser() currentUser: CurrentUser,
+  ): Promise<User | null> {
     if (!currentUser) {
       return null;
     }

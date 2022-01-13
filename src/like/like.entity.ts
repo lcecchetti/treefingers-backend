@@ -54,4 +54,10 @@ export class Like {
 }
 
 export type LikeDocument = Like & Document;
-export const LikeSchema = SchemaFactory.createForClass(Like);
+
+const LikeSchema = SchemaFactory.createForClass(Like);
+LikeSchema.index({ user: 1, story: 1 }, { unique: true, sparse: true });
+LikeSchema.index({ user: 1, comment: 1 }, { unique: true, sparse: true });
+LikeSchema.index({ user: 1, author: 1 }, { unique: true, sparse: true });
+
+export { LikeSchema };

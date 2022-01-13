@@ -14,7 +14,6 @@ import { User } from 'src/user/user.entity';
 import { CreateCommentPayload } from './dto/create-comment.payload';
 import { CreateCommentInput } from './dto/create-comment.input';
 import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { Story } from 'src/story/story.entity';
 import { CommentConnection } from './dto/comment.connection';
@@ -47,7 +46,6 @@ export class CommentResolver {
   }
 
   @Mutation(() => CreateCommentPayload)
-  @UseGuards(JwtAuthGuard)
   async createComment(
     @Args('input') { data }: CreateCommentInput,
     @GetCurrentUser() currentUser: CurrentUser,

@@ -15,12 +15,13 @@ import { Comment } from 'src/comment/comment.entity';
 import { CreateLikePayload } from './dto/create-like.payload';
 import { CreateLikeInput } from './dto/create-like.input';
 import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { Story } from 'src/story/story.entity';
 import { CommentService } from 'src/comment/comment.service';
 import { LikeFilterInput } from './dto/like-filter.input';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
+import { DeleteLikePayload } from './dto/delete-like.payload';
+import { DeleteLikeInput } from './dto/delete-like.input';
 
 @Resolver(() => Like)
 export class LikeResolver {
@@ -33,13 +34,13 @@ export class LikeResolver {
 
   @Query(() => Like, { nullable: true })
   async like(
-    @Args('filter', { nullable: true }) filter: LikeFilterInput,
+    @Args('filter', { nullable: true })
+    filter: LikeFilterInput = new LikeFilterInput(),
   ): Promise<Like> {
     return this.likeService.findOne(filter);
   }
 
   @Mutation(() => CreateLikePayload)
-  @UseGuards(JwtAuthGuard)
   async createLike(
     @Args('input') { data }: CreateLikeInput,
     @GetCurrentUser() currentUser: CurrentUser,
@@ -47,6 +48,17 @@ export class LikeResolver {
     return {
       like: await this.likeService.create({ ...data, user: currentUser._id }),
     };
+  }
+
+  @Mutation(() => DeleteLikePayload)
+  async deleteLike(
+    @Args('input') { filter }: DeleteLikeInput,
+    @GetCurrentUser() currentUser: CurrentUser,
+  ): Promise<DeleteLikePayload> {
+    return await this.likeService.deleteOne({
+      ...filter,
+      user: { eq: currentUser._id },
+    });
   }
 
   @ResolveField()

@@ -66,9 +66,6 @@ export class Story {
   @Field(() => Int, { defaultValue: 0 })
   likesCount: number;
 
-  @Field(() => Like, { nullable: true })
-  currentUserLike?: Like;
-
   @Prop({
     min: 0,
     default: 0,
@@ -97,6 +94,9 @@ export class Story {
     default: null,
   })
   tags?: Tag[];
+
+  @Field(() => Like, { nullable: true })
+  currentUserLike?: Like;
 
   @Prop({ default: Date.now })
   @Field(() => GraphQLISODateTime)
