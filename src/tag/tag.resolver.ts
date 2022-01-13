@@ -44,7 +44,7 @@ export class TagResolver {
   async createTag(
     @Args('input') { data }: CreateTagInput,
   ): Promise<CreateTagPayload> {
-    return { tag: await this.tagService.create(data) };
+    return { tag: await this.tagService.createOne(data) };
   }
 
   @ResolveField(() => StoryConnection)

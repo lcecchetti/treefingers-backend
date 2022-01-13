@@ -36,7 +36,6 @@
     "class-validator": "^0.13.1",
     "graphql": "^15.5.2",
     "graphql-tools": "^8.2.0",
-    "mongodb": "^4.3.0",
     "mongoose": "^6.1.6",
     "passport": "^0.5.0",
     "passport-jwt": "^4.0.0",

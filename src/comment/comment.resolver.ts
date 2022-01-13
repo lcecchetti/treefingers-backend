@@ -14,7 +14,6 @@ import { User } from 'src/user/user.entity';
 import { CreateCommentPayload } from './dto/create-comment.payload';
 import { CreateCommentInput } from './dto/create-comment.input';
 import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
-import { UseGuards } from '@nestjs/common';
 import { Story } from 'src/story/story.entity';
 import { CommentConnection } from './dto/comment.connection';
 import { CommentFilterInput } from './dto/comment-filter.input';
@@ -51,7 +50,7 @@ export class CommentResolver {
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<CreateCommentPayload> {
     return {
-      comment: await this.commentService.create({
+      comment: await this.commentService.createOne({
         ...data,
         user: currentUser._id,
       }),

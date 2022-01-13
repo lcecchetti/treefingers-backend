@@ -2,13 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './user.entity';
 import { QueryService } from 'src/query/query.service';
-import { Model, UpdateWriteOpResult } from 'mongoose';
+import { Model } from 'mongoose';
 import { UserFilterInput } from './dto/user-filter.input';
 import { CreateUserDataInput } from './dto/create-user.input';
-import { DeleteResult } from 'mongodb';
 import { UpdateUserDataInput } from './dto/update-user.input';
 import { UserConnectionArgs } from './args/user-connection.args';
 import { UserConnection } from './dto/user.connection';
+import { DeleteResultPayload } from 'src/query/args/delete-result.payload';
+import { UpdateResultPayload } from 'src/query/args/update-result.payload';
 @Injectable()
 export class UserService {
   constructor(
@@ -26,21 +27,23 @@ export class UserService {
       .lean();
   }
 
-  async findAll(filter?: UserFilterInput): Promise<User[]> {
+  async findMany(filter?: UserFilterInput): Promise<User[]> {
     return this.userModel
       .find(this.queryService.gqlFilterToMongo(filter))
       .lean();
   }
 
-  async register(data: CreateUserDataInput): Promise<User> {
+  async createOne(data: CreateUserDataInput): Promise<User> {
     return this.userModel.create(data);
   }
 
-  async deleteOne(filter?: UserFilterInput): Promise<DeleteResult> {
-    return this.userModel.deleteOne(this.queryService.gqlFilterToMongo(filter));
+  async deleteOne(filter?: UserFilterInput): Promise<User | null> {
+    return this.userModel.findOneAndDelete(
+      this.queryService.gqlFilterToMongo(filter),
+    );
   }
 
-  async deleteMany(filter?: UserFilterInput): Promise<DeleteResult> {
+  async deleteMany(filter?: UserFilterInput): Promise<DeleteResultPayload> {
     return this.userModel.deleteMany(
       this.queryService.gqlFilterToMongo(filter),
     );
@@ -49,17 +52,16 @@ export class UserService {
   async updateOne(
     filter?: UserFilterInput,
     update?: UpdateUserDataInput,
-  ): Promise<UpdateWriteOpResult> {
-    return this.userModel.updateOne(
-      this.queryService.gqlFilterToMongo(filter),
-      update,
-    );
+  ): Promise<User | null> {
+    return this.userModel
+      .findOneAndUpdate(this.queryService.gqlFilterToMongo(filter), update)
+      .lean();
   }
 
   async updateMany(
     filter?: UserFilterInput,
     update?: UpdateUserDataInput,
-  ): Promise<UpdateWriteOpResult> {
+  ): Promise<UpdateResultPayload> {
     return this.userModel.updateMany(
       this.queryService.gqlFilterToMongo(filter),
       update,

@@ -58,7 +58,6 @@ export type LikeDocument = Like & Document;
 const LikeSchema = SchemaFactory.createForClass(Like);
 
 //@todo move this to business logic instead?
-//@todo delete return item or count?
 LikeSchema.index({ user: 1, story: 1 }, { unique: true, sparse: true });
 LikeSchema.index({ user: 1, comment: 1 }, { unique: true, sparse: true });
 LikeSchema.index({ user: 1, author: 1 }, { unique: true, sparse: true });

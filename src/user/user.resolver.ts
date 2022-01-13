@@ -8,7 +8,6 @@ import { UserFilterInput } from './dto/user-filter.input';
 import { UserConnectionArgs } from './args/user-connection.args';
 import { StoryConnectionArgs } from 'src/story/args/story-connection.args';
 import { GetCurrentUser } from '../auth/decorators/get-current-user.decorator';
-import { UseGuards } from '@nestjs/common';
 import { StringService } from 'src/utils/services/string.service';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
 

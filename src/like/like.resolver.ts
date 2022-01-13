@@ -46,7 +46,10 @@ export class LikeResolver {
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<CreateLikePayload> {
     return {
-      like: await this.likeService.create({ ...data, user: currentUser._id }),
+      like: await this.likeService.createOne({
+        ...data,
+        user: currentUser._id,
+      }),
     };
   }
 
@@ -56,7 +59,7 @@ export class LikeResolver {
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<DeleteLikePayload> {
     return {
-      like: await this.likeService.findOneAndDelete({
+      like: await this.likeService.deleteOne({
         ...filter,
         user: { eq: currentUser._id },
       }),

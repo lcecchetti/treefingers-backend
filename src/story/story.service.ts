@@ -5,10 +5,10 @@ import { QueryService } from 'src/query/query.service';
 import { Model, UpdateWriteOpResult } from 'mongoose';
 import { StoryFilterInput } from './dto/story-filter.input';
 import { CreateStoryDataInput } from './dto/create-story.input';
-import { DeleteResult } from 'mongodb';
 import { UpdateStoryDataInput } from './dto/update-story.input';
 import { StoryConnectionArgs } from './args/story-connection.args';
 import { StoryConnection } from './dto/story.connection';
+import { DeleteResultPayload } from 'src/query/args/delete-result.payload';
 
 @Injectable()
 export class StoryService {
@@ -27,13 +27,13 @@ export class StoryService {
       .lean();
   }
 
-  async findAll(filter?: StoryFilterInput): Promise<Story[]> {
+  async findMany(filter?: StoryFilterInput): Promise<Story[]> {
     return this.storyModel
       .find(this.queryService.gqlFilterToMongo(filter))
       .lean();
   }
 
-  async create(data: CreateStoryDataInput): Promise<Story> {
+  async createOne(data: CreateStoryDataInput): Promise<Story> {
     return this.storyModel.create(data);
   }
 
@@ -41,13 +41,13 @@ export class StoryService {
     return this.storyModel.count(this.queryService.gqlFilterToMongo(filter));
   }
 
-  async deleteOne(filter?: StoryFilterInput): Promise<DeleteResult> {
-    return this.storyModel.deleteOne(
-      this.queryService.gqlFilterToMongo(filter),
-    );
+  async deleteOne(filter?: StoryFilterInput): Promise<Story | null> {
+    return this.storyModel
+      .findOneAndDelete(this.queryService.gqlFilterToMongo(filter))
+      .lean();
   }
 
-  async deleteMany(filter?: StoryFilterInput): Promise<DeleteResult> {
+  async deleteMany(filter?: StoryFilterInput): Promise<DeleteResultPayload> {
     return this.storyModel.deleteMany(
       this.queryService.gqlFilterToMongo(filter),
     );

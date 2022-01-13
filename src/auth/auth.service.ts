@@ -11,7 +11,6 @@ import { CurrentUser } from './dto/current-user.dto';
 
 @Injectable()
 export class AuthService {
-  //@todo inject user model rather than service
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
@@ -50,7 +49,7 @@ export class AuthService {
 
     // create user
     const encryptedPassword = await bcrypt.hash(registerInput.password, 10);
-    const user = await this.userService.register({
+    const user = await this.userService.createOne({
       ...registerInput,
       password: encryptedPassword,
     });

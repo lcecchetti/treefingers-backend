@@ -56,7 +56,7 @@ export class StoryResolver {
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<CreateStoryPayload> {
     return {
-      story: await this.storyService.create({
+      story: await this.storyService.createOne({
         ...data,
         author: currentUser._id,
       }),
@@ -111,6 +111,6 @@ export class StoryResolver {
   @ResolveField(() => [Tag], { nullable: true })
   async tags(@Parent() story: Story): Promise<Tag[]> {
     const tags = story.tags.map((tag) => tag._id);
-    return this.tagService.findAll({ _id: { in: tags } });
+    return this.tagService.findMany({ _id: { in: tags } });
   }
 }

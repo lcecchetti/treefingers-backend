@@ -25,13 +25,13 @@ export class TagService {
       .lean();
   }
 
-  async findAll(filter?: TagFilterInput): Promise<Tag[]> {
+  async findMany(filter?: TagFilterInput): Promise<Tag[]> {
     return this.tagModel
       .find(this.queryService.gqlFilterToMongo(filter))
       .lean();
   }
 
-  async create(data: CreateTagDataInput): Promise<Tag> {
+  async createOne(data: CreateTagDataInput): Promise<Tag> {
     return this.tagModel.create(data);
   }
 
