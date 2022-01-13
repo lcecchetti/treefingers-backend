@@ -95,10 +95,14 @@ export class QueryService<E, D> {
   gqlFilterToMongo(gqlFilter: FilterInput): FilterQuery<D> {
     // convert filters to string
     let filterString = JSON.stringify(gqlFilter);
+    console.log(filterString);
 
     // replace gql to mongo
     Object.keys(filterMap).forEach((key) => {
-      filterString = filterString.replace(`"${key}":`, `"${filterMap[key]}":`);
+      filterString = filterString.replace(
+        new RegExp(`"${key}":`, 'g'),
+        `"${filterMap[key]}":`,
+      );
     });
 
     // return parsed json object

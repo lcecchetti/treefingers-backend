@@ -72,7 +72,6 @@ export class StoryResolver {
       return null;
     }
 
-    //@todo check why i cannot apply two filters without it complaining (probably gql to mongo issue)
     return this.likeService.findOne({
       story: { eq: story._id },
       user: { eq: currentUser._id },
