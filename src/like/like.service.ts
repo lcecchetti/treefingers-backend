@@ -5,7 +5,6 @@ import { Like, LikeDocument } from './like.entity';
 import { QueryService } from 'src/query/query.service';
 import { LikeFilterInput } from './dto/like-filter.input';
 import { CreateLikeDataInput } from './dto/create-like.input';
-import { DeleteResult } from 'mongodb';
 
 @Injectable()
 export class LikeService {
@@ -32,7 +31,9 @@ export class LikeService {
     return this.likeModel.count(this.queryService.gqlFilterToMongo(filter));
   }
 
-  async deleteOne(filter?: LikeFilterInput): Promise<DeleteResult> {
-    return this.likeModel.deleteOne(this.queryService.gqlFilterToMongo(filter));
+  async deleteOne(filter?: LikeFilterInput): Promise<Like | null> {
+    return this.likeModel
+      .findOneAndDelete(this.queryService.gqlFilterToMongo(filter))
+      .lean();
   }
 }

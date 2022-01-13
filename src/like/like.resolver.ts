@@ -55,10 +55,12 @@ export class LikeResolver {
     @Args('input') { filter }: DeleteLikeInput,
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<DeleteLikePayload> {
-    return await this.likeService.deleteOne({
-      ...filter,
-      user: { eq: currentUser._id },
-    });
+    return {
+      like: await this.likeService.deleteOne({
+        ...filter,
+        user: { eq: currentUser._id },
+      }),
+    };
   }
 
   @ResolveField()

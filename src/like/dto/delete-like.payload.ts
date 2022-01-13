@@ -1,7 +1,8 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { Like } from '../like.entity';
 
 @ObjectType()
 export class DeleteLikePayload {
-  @Field(() => Int)
-  readonly deletedCount: number;
+  @Field(() => Like)
+  readonly like: Like;
 }
