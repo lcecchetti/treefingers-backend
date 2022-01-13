@@ -8,7 +8,7 @@ import { SortInput } from '../dto/sort.input';
 @ArgsType()
 export class ConnectionArgs {
   @Field({ nullable: true })
-  readonly filter?: FilterInput = new FilterInput();
+  readonly filter?: FilterInput;
 
   @Field({ nullable: true })
   readonly sort?: SortInput = new SortInput();

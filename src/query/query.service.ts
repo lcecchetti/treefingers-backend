@@ -92,7 +92,11 @@ export class QueryService<E, D> {
     return result;
   }
 
-  gqlFilterToMongo(gqlFilter: FilterInput): FilterQuery<D> {
+  gqlFilterToMongo(gqlFilter: FilterInput): FilterQuery<D> | null {
+    if (!gqlFilter) {
+      return null;
+    }
+
     // convert filters to string
     let filterString = JSON.stringify(gqlFilter);
 

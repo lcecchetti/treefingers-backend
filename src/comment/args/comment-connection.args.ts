@@ -5,5 +5,5 @@ import { CommentFilterInput } from '../dto/comment-filter.input';
 @ArgsType()
 export class CommentConnectionArgs extends ConnectionArgs {
   @Field(() => CommentFilterInput, { nullable: true })
-  filter?: CommentFilterInput = new CommentFilterInput();
+  filter?: CommentFilterInput;
 }

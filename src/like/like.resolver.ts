@@ -15,7 +15,6 @@ import { Comment } from 'src/comment/comment.entity';
 import { CreateLikePayload } from './dto/create-like.payload';
 import { CreateLikeInput } from './dto/create-like.input';
 import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
-import { UseGuards } from '@nestjs/common';
 import { Story } from 'src/story/story.entity';
 import { CommentService } from 'src/comment/comment.service';
 import { LikeFilterInput } from './dto/like-filter.input';
@@ -35,7 +34,7 @@ export class LikeResolver {
   @Query(() => Like, { nullable: true })
   async like(
     @Args('filter', { nullable: true })
-    filter: LikeFilterInput = new LikeFilterInput(),
+    filter: LikeFilterInput,
   ): Promise<Like> {
     return this.likeService.findOne(filter);
   }

@@ -19,6 +19,8 @@ import { CommentConnection } from './dto/comment.connection';
 import { CommentFilterInput } from './dto/comment-filter.input';
 import { CommentConnectionArgs } from './args/comment-connection.args';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
+import { Like } from 'src/like/like.entity';
+import { LikeService } from 'src/like/like.service';
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -26,6 +28,7 @@ export class CommentResolver {
     private commentService: CommentService,
     private userService: UserService,
     private storyService: StoryService,
+    private likeService: LikeService,
   ) {}
 
   @Query(() => CommentConnection)
@@ -55,6 +58,21 @@ export class CommentResolver {
         user: currentUser._id,
       }),
     };
+  }
+
+  @ResolveField(() => Like, { nullable: true })
+  async currentUserLike(
+    @GetCurrentUser() currentUser: CurrentUser,
+    @Parent() comment: Comment,
+  ): Promise<Like | null> {
+    if (!currentUser) {
+      return null;
+    }
+
+    return this.likeService.findOne({
+      comment: { eq: comment._id },
+      user: { eq: currentUser._id },
+    });
   }
 
   @ResolveField()

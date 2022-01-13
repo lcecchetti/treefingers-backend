@@ -10,6 +10,8 @@ import { StoryConnectionArgs } from 'src/story/args/story-connection.args';
 import { GetCurrentUser } from '../auth/decorators/get-current-user.decorator';
 import { StringService } from 'src/utils/services/string.service';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
+import { Like } from 'src/like/like.entity';
+import { LikeService } from 'src/like/like.service';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -17,6 +19,7 @@ export class UserResolver {
     private stringService: StringService,
     private userService: UserService,
     private storyService: StoryService,
+    private likeService: LikeService,
   ) {}
 
   @Query(() => UserConnection)
@@ -30,7 +33,7 @@ export class UserResolver {
   @Query(() => User, { nullable: true })
   async user(
     @Args('filter', { nullable: true })
-    filter: UserFilterInput = new UserFilterInput(),
+    filter: UserFilterInput,
   ): Promise<User> {
     return this.userService.findOne(filter);
   }
@@ -43,6 +46,21 @@ export class UserResolver {
       return null;
     }
     return this.userService.findById(currentUser._id);
+  }
+
+  @ResolveField(() => Like, { nullable: true })
+  async currentUserLike(
+    @GetCurrentUser() currentUser: CurrentUser,
+    @Parent() author: User,
+  ): Promise<Like | null> {
+    if (!currentUser) {
+      return null;
+    }
+
+    return this.likeService.findOne({
+      author: { eq: author._id },
+      user: { eq: currentUser._id },
+    });
   }
 
   @ResolveField(() => String)

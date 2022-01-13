@@ -13,6 +13,7 @@ import { QueryModule } from 'src/query/query.module';
     QueryModule,
     forwardRef(() => StoryModule),
     forwardRef(() => LikeModule),
+    forwardRef(() => LikeModule),
   ],
   providers: [UserService, UserResolver],
   exports: [UserService],

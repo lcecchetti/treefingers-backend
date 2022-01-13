@@ -13,7 +13,6 @@ import { User } from 'src/user/user.entity';
 import { CreateStoryPayload } from './dto/create-story.payload';
 import { CreateStoryInput } from './dto/create-story.input';
 import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
-import { UseGuards } from '@nestjs/common';
 import { StoryConnection } from './dto/story.connection';
 import { StoryFilterInput } from './dto/story-filter.input';
 import { StoryConnectionArgs } from './args/story-connection.args';
@@ -45,7 +44,7 @@ export class StoryResolver {
   @Query(() => Story, { nullable: true })
   async story(
     @Args('filter', { nullable: true })
-    filter: StoryFilterInput = new StoryFilterInput(),
+    filter: StoryFilterInput,
   ): Promise<Story> {
     return this.storyService.findOne(filter);
   }
