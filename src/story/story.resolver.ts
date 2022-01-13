@@ -109,7 +109,10 @@ export class StoryResolver {
 
   @ResolveField(() => [Tag], { nullable: true })
   async tags(@Parent() story: Story): Promise<Tag[]> {
-    const tags = story.tags.map((tag) => tag._id);
+    // prepare tags
+    const tags = [];
+    story.tags?.forEach((tag) => tags.push(tag._id));
+
     return this.tagService.findMany({ _id: { in: tags } });
   }
 }
