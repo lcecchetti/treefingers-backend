@@ -71,4 +71,11 @@ export class UserService {
   async paginate(args: UserConnectionArgs): Promise<UserConnection> {
     return this.queryService.paginate(this.userModel, args);
   }
+
+  async updateLikesCount(author: string, amount: number) {
+    return this.userModel.updateOne(
+      { _id: author },
+      { $inc: { likesCount: amount } },
+    );
+  }
 }

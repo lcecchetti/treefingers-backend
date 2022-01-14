@@ -76,4 +76,11 @@ export class StoryService {
   async paginate(args: StoryConnectionArgs): Promise<StoryConnection> {
     return this.queryService.paginate(this.storyModel, args);
   }
+
+  async updateLikesCount(story: string, amount: number) {
+    return await this.storyModel.updateOne(
+      { _id: story },
+      { $inc: { likesCount: amount } },
+    );
+  }
 }

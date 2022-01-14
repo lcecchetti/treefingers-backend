@@ -75,4 +75,11 @@ export class CommentService {
   async paginate(args: CommentConnectionArgs): Promise<CommentConnection> {
     return this.queryService.paginate(this.commentModel, args);
   }
+
+  async updateLikesCount(comment: string, amount: number) {
+    return this.commentModel.updateOne(
+      { _id: comment },
+      { $inc: { likesCount: amount } },
+    );
+  }
 }
