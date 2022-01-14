@@ -14,6 +14,6 @@ export class CreateCommentDataInput {
 }
 @InputType()
 export class CreateCommentInput {
-  @Field()
+  @Field(() => CreateCommentDataInput)
   data: CreateCommentDataInput;
 }

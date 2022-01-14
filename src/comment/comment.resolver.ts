@@ -21,10 +21,6 @@ import { CommentConnection } from './dto/comment-connection.dto';
 import { CommentFilterInput } from './inputs/comment-filter.input';
 import { CreateCommentPayload } from './payloads/create-comment.payload';
 import { CreateCommentInput } from './inputs/create-comment.input';
-import { LikeCommentPayload } from 'src/like/payloads/like.payload';
-import { LikeCommentInput } from 'src/like/inputs/like.input';
-import { DislikeCommentPayload } from 'src/like/payloads/dislike.payload';
-import { DislikeCommentInput } from 'src/like/inputs/dislike.input';
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -60,32 +56,6 @@ export class CommentResolver {
       comment: await this.commentService.createOne({
         ...data,
         user: currentUser._id,
-      }),
-    };
-  }
-
-  @Mutation(() => LikeCommentPayload)
-  async likeComment(
-    @Args('input') { comment }: LikeCommentInput,
-    @GetCurrentUser() currentUser: CurrentUser,
-  ): Promise<LikeCommentPayload> {
-    return {
-      like: await this.likeService.createOne({
-        comment,
-        user: currentUser._id,
-      }),
-    };
-  }
-
-  @Mutation(() => DislikeCommentPayload)
-  async dislikeComment(
-    @Args('input') { comment }: DislikeCommentInput,
-    @GetCurrentUser() currentUser: CurrentUser,
-  ): Promise<DislikeCommentPayload> {
-    return {
-      like: await this.likeService.deleteOne({
-        comment: { eq: comment },
-        user: { eq: currentUser._id },
       }),
     };
   }

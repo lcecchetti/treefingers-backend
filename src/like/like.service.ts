@@ -7,12 +7,6 @@ import { StoryService } from 'src/story/story.service';
 import { CommentService } from 'src/comment/comment.service';
 import { UserService } from 'src/user/user.service';
 import { LikeFilterInput } from './inputs/like-filter.input';
-import {
-  LikeAuthorInput,
-  LikeCommentInput,
-  LikeStoryInput,
-} from './inputs/like.input';
-import { DeleteResultPayload } from 'src/query/payloads/delete-result.payload';
 
 @Injectable()
 export class LikeService {
@@ -34,22 +28,38 @@ export class LikeService {
       .lean();
   }
 
-  async createOne(
-    data: LikeStoryInput | LikeCommentInput | LikeAuthorInput,
-  ): Promise<Like> {
-    const like = await this.likeModel.create(data);
+  async likeStory(story: string, user: string): Promise<Like> {
+    const like = await this.likeModel.create({ story, user });
 
     if (!like) {
       return null;
     }
 
-    if (like.story) {
-      await this.storyService.updateLikesCount(like.story._id, 1);
-    } else if (like.comment) {
-      await this.commentService.updateLikesCount(like.comment._id, 1);
-    } else if (like.author) {
-      await this.userService.updateLikesCount(like.author._id, 1);
+    await this.storyService.updateLikesCount(story, 1);
+
+    return like;
+  }
+
+  async likeComment(comment: string, user: string): Promise<Like> {
+    const like = await this.likeModel.create({ comment, user });
+
+    if (!like) {
+      return null;
     }
+
+    await this.commentService.updateLikesCount(comment, 1);
+
+    return like;
+  }
+
+  async likeAuthor(author: string, user: string): Promise<Like> {
+    const like = await this.likeModel.create({ author, user });
+
+    if (!like) {
+      return null;
+    }
+
+    await this.userService.updateLikesCount(author, 1);
 
     return like;
   }
@@ -58,29 +68,41 @@ export class LikeService {
     return this.likeModel.count(this.queryService.gqlFilterToMongo(filter));
   }
 
-  async deleteOne(filter?: LikeFilterInput): Promise<Like | null> {
+  async dislikeStory(story: string, user: string): Promise<Like | null> {
+    const like = await this.likeModel.findOneAndDelete({ story, user }).lean();
+
+    if (!like) {
+      return null;
+    }
+
+    await this.storyService.updateLikesCount(like.story._id, -1);
+
+    return like;
+  }
+
+  async dislikeComment(comment: string, user: string): Promise<Like | null> {
     const like = await this.likeModel
-      .findOneAndDelete(this.queryService.gqlFilterToMongo(filter))
+      .findOneAndDelete({ comment, user })
       .lean();
 
     if (!like) {
       return null;
     }
 
-    if (like.story) {
-      await this.storyService.updateLikesCount(like.story._id, -1);
-    } else if (like.comment) {
-      await this.commentService.updateLikesCount(like.comment._id, -1);
-    } else if (like.author) {
-      await this.userService.updateLikesCount(like.author._id, -1);
-    }
+    await this.commentService.updateLikesCount(like.comment._id, -1);
 
     return like;
   }
 
-  async deleteMany(filter?: LikeFilterInput): Promise<DeleteResultPayload> {
-    return this.likeModel.deleteMany(
-      this.queryService.gqlFilterToMongo(filter),
-    );
+  async dislikeAuthor(author: string, user: string): Promise<Like | null> {
+    const like = await this.likeModel.findOneAndDelete({ author, user }).lean();
+
+    if (!like) {
+      return null;
+    }
+
+    await this.userService.updateLikesCount(like.author._id, -1);
+
+    return like;
   }
 }

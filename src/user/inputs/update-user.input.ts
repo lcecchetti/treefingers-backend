@@ -7,9 +7,9 @@ export class UpdateUserDataInput extends CreateUserDataInput {}
 
 @InputType()
 export class UpdateUserInput {
-  @Field()
+  @Field(() => UpdateUserDataInput)
   data: UpdateUserDataInput;
 
-  @Field()
+  @Field(() => UserFilterInput)
   filter: UserFilterInput;
 }

@@ -7,9 +7,9 @@ export class UpdateStoryDataInput extends CreateStoryDataInput {}
 
 @InputType()
 export class UpdateStoryInput {
-  @Field()
+  @Field(() => UpdateStoryDataInput)
   data: UpdateStoryDataInput;
 
-  @Field()
+  @Field(() => StoryFilterInput)
   filter: StoryFilterInput;
 }

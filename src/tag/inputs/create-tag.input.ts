@@ -1,5 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { MaxLength, MinLength } from 'class-validator';
+import { CreateCommentDataInput } from 'src/comment/inputs/create-comment.input';
 
 @InputType()
 export class CreateTagDataInput {
@@ -10,6 +11,6 @@ export class CreateTagDataInput {
 }
 @InputType()
 export class CreateTagInput {
-  @Field()
+  @Field(() => CreateCommentDataInput)
   data: CreateTagDataInput;
 }

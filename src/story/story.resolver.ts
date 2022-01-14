@@ -22,10 +22,6 @@ import { StoryConnection } from './dto/story-connection.dto';
 import { StoryFilterInput } from './inputs/story-filter.input';
 import { CreateStoryPayload } from './payloads/create-story.payload';
 import { CreateStoryInput } from './inputs/create-story.input';
-import { LikeStoryPayload } from 'src/like/payloads/like.payload';
-import { LikeStoryInput } from 'src/like/inputs/like.input';
-import { DislikeStoryPayload } from 'src/like/payloads/dislike.payload';
-import { DislikeStoryInput } from 'src/like/inputs/dislike.input';
 
 @Resolver(() => Story)
 export class StoryResolver {
@@ -62,32 +58,6 @@ export class StoryResolver {
       story: await this.storyService.createOne({
         ...data,
         author: currentUser._id,
-      }),
-    };
-  }
-
-  @Mutation(() => LikeStoryPayload)
-  async likeStory(
-    @Args('input') { story }: LikeStoryInput,
-    @GetCurrentUser() currentUser: CurrentUser,
-  ): Promise<LikeStoryPayload> {
-    return {
-      like: await this.likeService.createOne({
-        story,
-        user: currentUser._id,
-      }),
-    };
-  }
-
-  @Mutation(() => DislikeStoryPayload)
-  async dislikeStory(
-    @Args('input') { story }: DislikeStoryInput,
-    @GetCurrentUser() currentUser: CurrentUser,
-  ): Promise<DislikeStoryPayload> {
-    return {
-      like: await this.likeService.deleteOne({
-        story: { eq: story },
-        user: { eq: currentUser._id },
       }),
     };
   }

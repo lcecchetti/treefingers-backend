@@ -6,6 +6,6 @@ export class LoginPayload {
   @Field()
   token: string;
 
-  @Field()
+  @Field(() => CurrentUser)
   currentUser: CurrentUser;
 }

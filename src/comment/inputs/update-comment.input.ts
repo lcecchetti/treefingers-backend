@@ -7,9 +7,9 @@ export class UpdateCommentDataInput extends CreateCommentDataInput {}
 
 @InputType()
 export class UpdateCommentInput {
-  @Field()
+  @Field(() => UpdateCommentDataInput)
   data: UpdateCommentDataInput;
 
-  @Field()
+  @Field(() => CommentFilterInput)
   filter: CommentFilterInput;
 }

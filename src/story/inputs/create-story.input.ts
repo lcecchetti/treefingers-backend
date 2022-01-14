@@ -23,6 +23,6 @@ export class CreateStoryDataInput {
 }
 @InputType()
 export class CreateStoryInput {
-  @Field()
+  @Field(() => CreateStoryDataInput)
   data: CreateStoryDataInput;
 }
