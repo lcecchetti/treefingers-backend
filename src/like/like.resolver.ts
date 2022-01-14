@@ -7,7 +7,7 @@ import { User } from 'src/user/user.entity';
 import { Comment } from 'src/comment/comment.entity';
 import { Story } from 'src/story/story.entity';
 import { CommentService } from 'src/comment/comment.service';
-import { LikeFilterInput } from './dto/like-filter.input';
+import { LikeFilterInput } from './inputs/like-filter.input';
 
 @Resolver(() => Like)
 export class LikeResolver {

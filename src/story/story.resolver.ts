@@ -10,11 +10,7 @@ import { StoryService } from './story.service';
 import { Story, StoryDocument } from './story.entity';
 import { UserService } from 'src/user/user.service';
 import { User } from 'src/user/user.entity';
-import { CreateStoryPayload } from './dto/create-story.payload';
-import { CreateStoryInput } from './dto/create-story.input';
 import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
-import { StoryConnection } from './dto/story.connection';
-import { StoryFilterInput } from './dto/story-filter.input';
 import { StoryConnectionArgs } from './args/story-connection.args';
 import { Tag } from 'src/tag/tag.entity';
 import { TagService } from 'src/tag/tag.service';
@@ -22,10 +18,14 @@ import { StringService } from 'src/utils/services/string.service';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
 import { Like } from 'src/like/like.entity';
 import { LikeService } from 'src/like/like.service';
-import { DislikeStoryPayload } from 'src/like/dto/dislike.payload';
-import { DislikeStoryInput } from 'src/like/dto/dislike.input';
-import { LikeStoryPayload } from 'src/like/dto/like.payload';
-import { LikeStoryInput } from 'src/like/dto/like.input';
+import { StoryConnection } from './dto/story-connection.dto';
+import { StoryFilterInput } from './inputs/story-filter.input';
+import { CreateStoryPayload } from './payloads/create-story.payload';
+import { CreateStoryInput } from './inputs/create-story.input';
+import { LikeStoryPayload } from 'src/like/payloads/like.payload';
+import { LikeStoryInput } from 'src/like/inputs/like.input';
+import { DislikeStoryPayload } from 'src/like/payloads/dislike.payload';
+import { DislikeStoryInput } from 'src/like/inputs/dislike.input';
 
 @Resolver(() => Story)
 export class StoryResolver {

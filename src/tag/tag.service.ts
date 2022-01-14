@@ -3,10 +3,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Tag, TagDocument } from './tag.entity';
 import { QueryService } from 'src/query/query.service';
 import { Model } from 'mongoose';
-import { TagFilterInput } from './dto/tag-filter.input';
-import { CreateTagDataInput } from './dto/create-tag.input';
 import { TagConnectionArgs } from './args/tag-connection.args';
-import { TagConnection } from './dto/tag.connection';
+import { TagFilterInput } from './inputs/tag-filter.input';
+import { CreateTagDataInput } from './inputs/create-tag.input';
+import { TagConnection } from './dto/tag-connection.dto';
 
 @Injectable()
 export class TagService {

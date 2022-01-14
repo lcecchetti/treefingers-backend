@@ -3,12 +3,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { CommentDocument, Comment } from './comment.entity';
 import { QueryService } from 'src/query/query.service';
-import { CommentFilterInput } from './dto/comment-filter.input';
-import { CreateCommentDataInput } from './dto/create-comment.input';
-import { UpdateCommentDataInput } from './dto/update-comment.input';
 import { CommentConnectionArgs } from './args/comment-connection.args';
-import { CommentConnection } from './dto/comment.connection';
-import { DeleteResultPayload } from 'src/query/args/delete-result.payload';
+import { CommentFilterInput } from './inputs/comment-filter.input';
+import { CreateCommentDataInput } from './inputs/create-comment.input';
+import { UpdateCommentDataInput } from './inputs/update-comment.input';
+import { CommentConnection } from './dto/comment-connection.dto';
+import { DeleteResultPayload } from 'src/query/payloads/delete-result.payload';
 
 @Injectable()
 export class CommentService {

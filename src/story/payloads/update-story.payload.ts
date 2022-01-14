@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { UpdateResultPayload } from 'src/query/args/update-result.payload';
+import { UpdateResultPayload } from 'src/query/payloads/update-result.payload';
 import { Story } from '../story.entity';
 
 @ObjectType()

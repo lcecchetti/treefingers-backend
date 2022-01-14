@@ -3,16 +3,16 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Like, LikeDocument } from './like.entity';
 import { QueryService } from 'src/query/query.service';
-import { LikeFilterInput } from './dto/like-filter.input';
-import { DeleteResultPayload } from 'src/query/args/delete-result.payload';
 import { StoryService } from 'src/story/story.service';
 import { CommentService } from 'src/comment/comment.service';
 import { UserService } from 'src/user/user.service';
+import { LikeFilterInput } from './inputs/like-filter.input';
 import {
   LikeAuthorInput,
   LikeCommentInput,
   LikeStoryInput,
-} from './dto/like.input';
+} from './inputs/like.input';
+import { DeleteResultPayload } from 'src/query/payloads/delete-result.payload';
 
 @Injectable()
 export class LikeService {

@@ -9,13 +9,13 @@ import {
 import { TagService } from './tag.service';
 import { Tag } from './tag.entity';
 import { StoryService } from 'src/story/story.service';
-import { CreateTagPayload } from './dto/create-tag.payload';
-import { CreateTagInput } from './dto/create-tag.input';
-import { TagConnection } from './dto/tag.connection';
-import { StoryConnection } from 'src/story/dto/story.connection';
-import { TagFilterInput } from './dto/tag-filter.input';
 import { TagConnectionArgs } from './args/tag-connection.args';
 import { StoryConnectionArgs } from 'src/story/args/story-connection.args';
+import { TagConnection } from './dto/tag-connection.dto';
+import { TagFilterInput } from './inputs/tag-filter.input';
+import { CreateTagPayload } from './payloads/create-tag.payload';
+import { CreateTagInput } from './inputs/create-tag.input';
+import { StoryConnection } from 'src/story/dto/story-connection.dto';
 
 @Resolver(() => Tag)
 export class TagResolver {

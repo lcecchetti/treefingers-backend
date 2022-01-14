@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { CurrentUser } from './current-user.dto';
+import { CurrentUser } from '../dto/current-user.dto';
 
 @ObjectType()
 export class LoginPayload {

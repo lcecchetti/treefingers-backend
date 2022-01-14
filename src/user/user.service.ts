@@ -3,13 +3,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './user.entity';
 import { QueryService } from 'src/query/query.service';
 import { Model } from 'mongoose';
-import { UserFilterInput } from './dto/user-filter.input';
-import { CreateUserDataInput } from './dto/create-user.input';
-import { UpdateUserDataInput } from './dto/update-user.input';
 import { UserConnectionArgs } from './args/user-connection.args';
-import { UserConnection } from './dto/user.connection';
-import { DeleteResultPayload } from 'src/query/args/delete-result.payload';
-import { UpdateResultPayload } from 'src/query/args/update-result.payload';
+import { UserFilterInput } from './inputs/user-filter.input';
+import { CreateUserDataInput } from './inputs/create-user.input';
+import { DeleteResultPayload } from 'src/query/payloads/delete-result.payload';
+import { UpdateUserDataInput } from './inputs/update-user.input';
+import { UpdateResultPayload } from 'src/query/payloads/update-result.payload';
+import { UserConnection } from './dto/user-connection.dto';
 @Injectable()
 export class UserService {
   constructor(

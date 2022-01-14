@@ -1,6 +1,6 @@
 import { ArgsType, Field } from '@nestjs/graphql';
 import { ConnectionArgs } from 'src/query/args/connection.args';
-import { CommentFilterInput } from '../dto/comment-filter.input';
+import { CommentFilterInput } from '../inputs/comment-filter.input';
 
 @ArgsType()
 export class CommentConnectionArgs extends ConnectionArgs {

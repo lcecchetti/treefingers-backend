@@ -1,8 +1,8 @@
 import { FilterQuery, Model } from 'mongoose';
 import { ConnectionArgs } from './args/connection.args';
-import { FilterInput } from './dto/filter.input';
 import { IConnection } from './dto/pagination.dto';
-import { SORT_DIRECTION } from './dto/sort.input';
+import { FilterInput } from './inputs/filter.input';
+import { SORT_DIRECTION } from './inputs/sort.input';
 
 const filterMap = {
   eq: '$eq',

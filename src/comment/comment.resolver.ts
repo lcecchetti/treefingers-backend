@@ -11,20 +11,20 @@ import { Comment } from './comment.entity';
 import { UserService } from 'src/user/user.service';
 import { StoryService } from 'src/story/story.service';
 import { User } from 'src/user/user.entity';
-import { CreateCommentPayload } from './dto/create-comment.payload';
-import { CreateCommentInput } from './dto/create-comment.input';
 import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
 import { Story } from 'src/story/story.entity';
-import { CommentConnection } from './dto/comment.connection';
-import { CommentFilterInput } from './dto/comment-filter.input';
 import { CommentConnectionArgs } from './args/comment-connection.args';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
 import { Like } from 'src/like/like.entity';
 import { LikeService } from 'src/like/like.service';
-import { LikeCommentPayload } from 'src/like/dto/like.payload';
-import { LikeCommentInput } from 'src/like/dto/like.input';
-import { DislikeCommentPayload } from 'src/like/dto/dislike.payload';
-import { DislikeCommentInput } from 'src/like/dto/dislike.input';
+import { CommentConnection } from './dto/comment-connection.dto';
+import { CommentFilterInput } from './inputs/comment-filter.input';
+import { CreateCommentPayload } from './payloads/create-comment.payload';
+import { CreateCommentInput } from './inputs/create-comment.input';
+import { LikeCommentPayload } from 'src/like/payloads/like.payload';
+import { LikeCommentInput } from 'src/like/inputs/like.input';
+import { DislikeCommentPayload } from 'src/like/payloads/dislike.payload';
+import { DislikeCommentInput } from 'src/like/inputs/dislike.input';
 
 @Resolver(() => Comment)
 export class CommentResolver {

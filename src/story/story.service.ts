@@ -3,12 +3,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Story, StoryDocument } from './story.entity';
 import { QueryService } from 'src/query/query.service';
 import { Model, UpdateWriteOpResult } from 'mongoose';
-import { StoryFilterInput } from './dto/story-filter.input';
-import { CreateStoryDataInput } from './dto/create-story.input';
-import { UpdateStoryDataInput } from './dto/update-story.input';
 import { StoryConnectionArgs } from './args/story-connection.args';
-import { StoryConnection } from './dto/story.connection';
-import { DeleteResultPayload } from 'src/query/args/delete-result.payload';
+import { StoryFilterInput } from './inputs/story-filter.input';
+import { CreateStoryDataInput } from './inputs/create-story.input';
+import { DeleteResultPayload } from 'src/query/payloads/delete-result.payload';
+import { UpdateStoryDataInput } from './inputs/update-story.input';
+import { StoryConnection } from './dto/story-connection.dto';
 
 @Injectable()
 export class StoryService {
