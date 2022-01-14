@@ -4,11 +4,15 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Like, LikeDocument } from './like.entity';
 import { QueryService } from 'src/query/query.service';
 import { LikeFilterInput } from './dto/like-filter.input';
-import { CreateLikeDataInput } from './dto/create-like.input';
 import { DeleteResultPayload } from 'src/query/args/delete-result.payload';
 import { StoryService } from 'src/story/story.service';
 import { CommentService } from 'src/comment/comment.service';
 import { UserService } from 'src/user/user.service';
+import {
+  LikeAuthorInput,
+  LikeCommentInput,
+  LikeStoryInput,
+} from './dto/like.input';
 
 @Injectable()
 export class LikeService {
@@ -30,7 +34,9 @@ export class LikeService {
       .lean();
   }
 
-  async createOne(data: CreateLikeDataInput): Promise<Like> {
+  async createOne(
+    data: LikeStoryInput | LikeCommentInput | LikeAuthorInput,
+  ): Promise<Like> {
     const like = await this.likeModel.create(data);
 
     if (!like) {

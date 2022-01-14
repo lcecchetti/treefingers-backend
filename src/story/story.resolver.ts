@@ -22,6 +22,10 @@ import { StringService } from 'src/utils/services/string.service';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
 import { Like } from 'src/like/like.entity';
 import { LikeService } from 'src/like/like.service';
+import { DislikeStoryPayload } from 'src/like/dto/dislike.payload';
+import { DislikeStoryInput } from 'src/like/dto/dislike.input';
+import { LikeStoryPayload } from 'src/like/dto/like.payload';
+import { LikeStoryInput } from 'src/like/dto/like.input';
 
 @Resolver(() => Story)
 export class StoryResolver {
@@ -58,6 +62,32 @@ export class StoryResolver {
       story: await this.storyService.createOne({
         ...data,
         author: currentUser._id,
+      }),
+    };
+  }
+
+  @Mutation(() => LikeStoryPayload)
+  async likeStory(
+    @Args('input') { story }: LikeStoryInput,
+    @GetCurrentUser() currentUser: CurrentUser,
+  ): Promise<LikeStoryPayload> {
+    return {
+      like: await this.likeService.createOne({
+        story,
+        user: currentUser._id,
+      }),
+    };
+  }
+
+  @Mutation(() => DislikeStoryPayload)
+  async dislikeStory(
+    @Args('input') { story }: DislikeStoryInput,
+    @GetCurrentUser() currentUser: CurrentUser,
+  ): Promise<DislikeStoryPayload> {
+    return {
+      like: await this.likeService.deleteOne({
+        story: { eq: story },
+        user: { eq: currentUser._id },
       }),
     };
   }

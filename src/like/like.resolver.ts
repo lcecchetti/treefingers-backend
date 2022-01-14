@@ -1,26 +1,13 @@
-import {
-  Resolver,
-  Query,
-  Args,
-  ResolveField,
-  Parent,
-  Mutation,
-} from '@nestjs/graphql';
+import { Resolver, Query, Args, ResolveField, Parent } from '@nestjs/graphql';
 import { LikeService } from './like.service';
 import { Like } from './like.entity';
 import { UserService } from 'src/user/user.service';
 import { StoryService } from 'src/story/story.service';
 import { User } from 'src/user/user.entity';
 import { Comment } from 'src/comment/comment.entity';
-import { CreateLikePayload } from './dto/create-like.payload';
-import { CreateLikeInput } from './dto/create-like.input';
-import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
 import { Story } from 'src/story/story.entity';
 import { CommentService } from 'src/comment/comment.service';
 import { LikeFilterInput } from './dto/like-filter.input';
-import { CurrentUser } from 'src/auth/dto/current-user.dto';
-import { DeleteLikePayload } from './dto/delete-like.payload';
-import { DeleteLikeInput } from './dto/delete-like.input';
 
 @Resolver(() => Like)
 export class LikeResolver {
@@ -37,32 +24,6 @@ export class LikeResolver {
     filter: LikeFilterInput,
   ): Promise<Like> {
     return this.likeService.findOne(filter);
-  }
-
-  @Mutation(() => CreateLikePayload)
-  async createLike(
-    @Args('input') { data }: CreateLikeInput,
-    @GetCurrentUser() currentUser: CurrentUser,
-  ): Promise<CreateLikePayload> {
-    return {
-      like: await this.likeService.createOne({
-        ...data,
-        user: currentUser._id,
-      }),
-    };
-  }
-
-  @Mutation(() => DeleteLikePayload)
-  async deleteLike(
-    @Args('input') { filter }: DeleteLikeInput,
-    @GetCurrentUser() currentUser: CurrentUser,
-  ): Promise<DeleteLikePayload> {
-    return {
-      like: await this.likeService.deleteOne({
-        ...filter,
-        user: { eq: currentUser._id },
-      }),
-    };
   }
 
   @ResolveField()
