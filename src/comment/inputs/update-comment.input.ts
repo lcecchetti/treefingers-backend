@@ -1,6 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { CommentFilterInput } from './comment-filter.input';
 import { CreateCommentDataInput } from './create-comment.input';
+import { FilterCommentInput } from './filter-comment.input';
 
 @InputType()
 export class UpdateCommentDataInput extends CreateCommentDataInput {}
@@ -10,6 +10,6 @@ export class UpdateCommentInput {
   @Field(() => UpdateCommentDataInput)
   data: UpdateCommentDataInput;
 
-  @Field(() => CommentFilterInput)
-  filter: CommentFilterInput;
+  @Field(() => FilterCommentInput)
+  filter: FilterCommentInput;
 }

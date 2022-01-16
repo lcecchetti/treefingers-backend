@@ -4,11 +4,11 @@ import { Story, StoryDocument } from './story.entity';
 import { QueryService } from 'src/query/query.service';
 import { Model, UpdateWriteOpResult } from 'mongoose';
 import { StoryConnectionArgs } from './args/story-connection.args';
-import { StoryFilterInput } from './inputs/story-filter.input';
 import { CreateStoryDataInput } from './inputs/create-story.input';
 import { DeleteResultPayload } from 'src/query/payloads/delete-result.payload';
 import { UpdateStoryDataInput } from './inputs/update-story.input';
 import { StoryConnection } from './dto/story-connection.dto';
+import { FilterStoryInput } from './inputs/filter-story.input';
 
 @Injectable()
 export class StoryService {
@@ -21,13 +21,13 @@ export class StoryService {
     return this.storyModel.findById(_id).lean();
   }
 
-  async findOne(filter?: StoryFilterInput): Promise<Story | null> {
+  async findOne(filter?: FilterStoryInput): Promise<Story | null> {
     return this.storyModel
       .findOne(this.queryService.gqlFilterToMongo(filter))
       .lean();
   }
 
-  async findMany(filter?: StoryFilterInput): Promise<Story[]> {
+  async findMany(filter?: FilterStoryInput): Promise<Story[]> {
     return this.storyModel
       .find(this.queryService.gqlFilterToMongo(filter))
       .lean();
@@ -37,24 +37,24 @@ export class StoryService {
     return this.storyModel.create(data);
   }
 
-  async count(filter?: StoryFilterInput): Promise<number> {
+  async count(filter?: FilterStoryInput): Promise<number> {
     return this.storyModel.count(this.queryService.gqlFilterToMongo(filter));
   }
 
-  async deleteOne(filter?: StoryFilterInput): Promise<Story | null> {
+  async deleteOne(filter?: FilterStoryInput): Promise<Story | null> {
     return this.storyModel
       .findOneAndDelete(this.queryService.gqlFilterToMongo(filter))
       .lean();
   }
 
-  async deleteMany(filter?: StoryFilterInput): Promise<DeleteResultPayload> {
+  async deleteMany(filter?: FilterStoryInput): Promise<DeleteResultPayload> {
     return this.storyModel.deleteMany(
       this.queryService.gqlFilterToMongo(filter),
     );
   }
 
   async updateOne(
-    filter?: StoryFilterInput,
+    filter?: FilterStoryInput,
     update?: UpdateStoryDataInput,
   ): Promise<UpdateWriteOpResult> {
     return this.storyModel.updateOne(
@@ -64,7 +64,7 @@ export class StoryService {
   }
 
   async updateMany(
-    filter?: StoryFilterInput,
+    filter?: FilterStoryInput,
     update?: UpdateStoryDataInput,
   ): Promise<UpdateWriteOpResult> {
     return this.storyModel.updateMany(

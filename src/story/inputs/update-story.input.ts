@@ -1,6 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { CreateStoryDataInput } from './create-story.input';
-import { StoryFilterInput } from './story-filter.input';
+import { FilterStoryInput } from './filter-story.input';
 
 @InputType()
 export class UpdateStoryDataInput extends CreateStoryDataInput {}
@@ -10,6 +10,6 @@ export class UpdateStoryInput {
   @Field(() => UpdateStoryDataInput)
   data: UpdateStoryDataInput;
 
-  @Field(() => StoryFilterInput)
-  filter: StoryFilterInput;
+  @Field(() => FilterStoryInput)
+  filter: FilterStoryInput;
 }

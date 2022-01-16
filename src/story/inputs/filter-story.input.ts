@@ -2,12 +2,12 @@ import { Field, InputType } from '@nestjs/graphql';
 import { FilterIdInput, FilterInput } from 'src/query/inputs/filter.input';
 
 @InputType()
-export class StoryFilterInput extends FilterInput {
-  @Field(() => [StoryFilterInput], { nullable: true })
-  and?: StoryFilterInput[];
+export class FilterStoryInput extends FilterInput {
+  @Field(() => [FilterStoryInput], { nullable: true })
+  and?: FilterStoryInput[];
 
-  @Field(() => [StoryFilterInput], { nullable: true })
-  or?: StoryFilterInput[];
+  @Field(() => [FilterStoryInput], { nullable: true })
+  or?: FilterStoryInput[];
 
   @Field(() => FilterIdInput, { nullable: true })
   author?: FilterIdInput;

@@ -6,7 +6,7 @@ import { QueryService } from 'src/query/query.service';
 import { StoryService } from 'src/story/story.service';
 import { CommentService } from 'src/comment/comment.service';
 import { UserService } from 'src/user/user.service';
-import { LikeFilterInput } from './inputs/like-filter.input';
+import { FilterLikeInput } from './inputs/filter-like.input';
 
 @Injectable()
 export class LikeService {
@@ -22,7 +22,7 @@ export class LikeService {
     return this.likeModel.findById(_id).lean();
   }
 
-  async findOne(filter?: LikeFilterInput): Promise<Like | null> {
+  async findOne(filter?: FilterLikeInput): Promise<Like | null> {
     return this.likeModel
       .findOne(this.queryService.gqlFilterToMongo(filter))
       .lean();
@@ -64,7 +64,7 @@ export class LikeService {
     return like;
   }
 
-  async count(filter?: LikeFilterInput): Promise<number> {
+  async count(filter?: FilterLikeInput): Promise<number> {
     return this.likeModel.count(this.queryService.gqlFilterToMongo(filter));
   }
 

@@ -14,7 +14,6 @@ import { User } from 'src/user/user.entity';
 import { Comment } from 'src/comment/comment.entity';
 import { Story } from 'src/story/story.entity';
 import { CommentService } from 'src/comment/comment.service';
-import { LikeFilterInput } from './inputs/like-filter.input';
 import { LikeCommentInput } from './inputs/like-comment';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
 import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
@@ -29,6 +28,7 @@ import { LikeCommentPayload } from './payloads/like-comment.payload';
 import { DislikeCommentPayload } from './payloads/dislike-comment.payload';
 import { LikeStoryPayload } from './payloads/like-story.payload';
 import { DislikeStoryPayload } from './payloads/dislike-story.payload';
+import { FilterLikeInput } from './inputs/filter-like.input';
 
 @Resolver(() => Like)
 export class LikeResolver {
@@ -42,7 +42,7 @@ export class LikeResolver {
   @Query(() => Like, { nullable: true })
   async like(
     @Args('filter', { nullable: true })
-    filter: LikeFilterInput,
+    filter: FilterLikeInput,
   ): Promise<Like> {
     return this.likeService.findOne(filter);
   }

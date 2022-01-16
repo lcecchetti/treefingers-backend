@@ -12,10 +12,10 @@ import { StoryService } from 'src/story/story.service';
 import { TagConnectionArgs } from './args/tag-connection.args';
 import { StoryConnectionArgs } from 'src/story/args/story-connection.args';
 import { TagConnection } from './dto/tag-connection.dto';
-import { TagFilterInput } from './inputs/tag-filter.input';
 import { CreateTagPayload } from './payloads/create-tag.payload';
 import { CreateTagInput } from './inputs/create-tag.input';
 import { StoryConnection } from 'src/story/dto/story-connection.dto';
+import { FilterTagInput } from './inputs/filter-tag.input';
 
 @Resolver(() => Tag)
 export class TagResolver {
@@ -35,7 +35,7 @@ export class TagResolver {
   @Query(() => Tag, { nullable: true })
   async tag(
     @Args('filter', { nullable: true })
-    filter: TagFilterInput,
+    filter: FilterTagInput,
   ): Promise<Tag> {
     return this.tagService.findOne(filter);
   }

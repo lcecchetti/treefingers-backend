@@ -2,7 +2,7 @@ import { Field, InputType } from '@nestjs/graphql';
 import { FilterIdInput, FilterInput } from 'src/query/inputs/filter.input';
 
 @InputType()
-export class LikeFilterInput extends FilterInput {
+export class FilterLikeInput extends FilterInput {
   @Field(() => FilterIdInput, { nullable: true })
   readonly story?: FilterIdInput;
 

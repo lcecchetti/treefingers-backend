@@ -1,9 +1,9 @@
 import { ArgsType, Field } from '@nestjs/graphql';
 import { ConnectionArgs } from 'src/query/args/connection.args';
-import { TagFilterInput } from '../inputs/tag-filter.input';
+import { FilterTagInput } from '../inputs/filter-tag.input';
 
 @ArgsType()
 export class TagConnectionArgs extends ConnectionArgs {
-  @Field(() => TagFilterInput, { nullable: true })
-  filter?: TagFilterInput;
+  @Field(() => FilterTagInput, { nullable: true })
+  filter?: FilterTagInput;
 }

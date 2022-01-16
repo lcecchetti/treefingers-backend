@@ -1,6 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { CreateUserDataInput } from './create-user.input';
-import { UserFilterInput } from './user-filter.input';
+import { FilterUserInput } from './filter-user.input';
 
 @InputType()
 export class UpdateUserDataInput extends CreateUserDataInput {}
@@ -10,6 +10,6 @@ export class UpdateUserInput {
   @Field(() => UpdateUserDataInput)
   data: UpdateUserDataInput;
 
-  @Field(() => UserFilterInput)
-  filter: UserFilterInput;
+  @Field(() => FilterUserInput)
+  filter: FilterUserInput;
 }

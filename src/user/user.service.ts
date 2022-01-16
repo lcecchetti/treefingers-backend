@@ -4,12 +4,12 @@ import { User, UserDocument } from './user.entity';
 import { QueryService } from 'src/query/query.service';
 import { Model } from 'mongoose';
 import { UserConnectionArgs } from './args/user-connection.args';
-import { UserFilterInput } from './inputs/user-filter.input';
 import { CreateUserDataInput } from './inputs/create-user.input';
 import { DeleteResultPayload } from 'src/query/payloads/delete-result.payload';
 import { UpdateUserDataInput } from './inputs/update-user.input';
 import { UpdateResultPayload } from 'src/query/payloads/update-result.payload';
 import { UserConnection } from './dto/user-connection.dto';
+import { FilterUserInput } from './inputs/filter-user.input';
 @Injectable()
 export class UserService {
   constructor(
@@ -21,13 +21,13 @@ export class UserService {
     return this.userModel.findById(_id).lean();
   }
 
-  async findOne(filter?: UserFilterInput): Promise<User | null> {
+  async findOne(filter?: FilterUserInput): Promise<User | null> {
     return this.userModel
       .findOne(this.queryService.gqlFilterToMongo(filter))
       .lean();
   }
 
-  async findMany(filter?: UserFilterInput): Promise<User[]> {
+  async findMany(filter?: FilterUserInput): Promise<User[]> {
     return this.userModel
       .find(this.queryService.gqlFilterToMongo(filter))
       .lean();
@@ -37,20 +37,20 @@ export class UserService {
     return this.userModel.create(data);
   }
 
-  async deleteOne(filter?: UserFilterInput): Promise<User | null> {
+  async deleteOne(filter?: FilterUserInput): Promise<User | null> {
     return this.userModel.findOneAndDelete(
       this.queryService.gqlFilterToMongo(filter),
     );
   }
 
-  async deleteMany(filter?: UserFilterInput): Promise<DeleteResultPayload> {
+  async deleteMany(filter?: FilterUserInput): Promise<DeleteResultPayload> {
     return this.userModel.deleteMany(
       this.queryService.gqlFilterToMongo(filter),
     );
   }
 
   async updateOne(
-    filter?: UserFilterInput,
+    filter?: FilterUserInput,
     update?: UpdateUserDataInput,
   ): Promise<User | null> {
     return this.userModel
@@ -59,7 +59,7 @@ export class UserService {
   }
 
   async updateMany(
-    filter?: UserFilterInput,
+    filter?: FilterUserInput,
     update?: UpdateUserDataInput,
   ): Promise<UpdateResultPayload> {
     return this.userModel.updateMany(

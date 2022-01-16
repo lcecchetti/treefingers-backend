@@ -4,11 +4,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { CommentDocument, Comment } from './comment.entity';
 import { QueryService } from 'src/query/query.service';
 import { CommentConnectionArgs } from './args/comment-connection.args';
-import { CommentFilterInput } from './inputs/comment-filter.input';
 import { CreateCommentDataInput } from './inputs/create-comment.input';
 import { UpdateCommentDataInput } from './inputs/update-comment.input';
 import { CommentConnection } from './dto/comment-connection.dto';
 import { DeleteResultPayload } from 'src/query/payloads/delete-result.payload';
+import { FilterCommentInput } from './inputs/filter-comment.input';
 
 @Injectable()
 export class CommentService {
@@ -21,13 +21,13 @@ export class CommentService {
     return this.commentModel.findById(_id).lean();
   }
 
-  async findOne(filter?: CommentFilterInput): Promise<Comment | null> {
+  async findOne(filter?: FilterCommentInput): Promise<Comment | null> {
     return this.commentModel
       .findOne(this.queryService.gqlFilterToMongo(filter))
       .lean();
   }
 
-  async findMany(filter?: CommentFilterInput): Promise<Comment[]> {
+  async findMany(filter?: FilterCommentInput): Promise<Comment[]> {
     return this.commentModel
       .find(this.queryService.gqlFilterToMongo(filter))
       .lean();
@@ -37,24 +37,24 @@ export class CommentService {
     return this.commentModel.create(data);
   }
 
-  async count(filter?: CommentFilterInput): Promise<number> {
+  async count(filter?: FilterCommentInput): Promise<number> {
     return this.commentModel.count(this.queryService.gqlFilterToMongo(filter));
   }
 
-  async deleteOne(filter?: CommentFilterInput): Promise<Comment | null> {
+  async deleteOne(filter?: FilterCommentInput): Promise<Comment | null> {
     return this.commentModel
       .findOneAndDelete(this.queryService.gqlFilterToMongo(filter))
       .lean();
   }
 
-  async deleteMany(filter?: CommentFilterInput): Promise<DeleteResultPayload> {
+  async deleteMany(filter?: FilterCommentInput): Promise<DeleteResultPayload> {
     return this.commentModel.deleteMany(
       this.queryService.gqlFilterToMongo(filter),
     );
   }
 
   async updateOne(
-    filter?: CommentFilterInput,
+    filter?: FilterCommentInput,
     update?: UpdateCommentDataInput,
   ): Promise<Comment | null> {
     return this.commentModel
@@ -63,7 +63,7 @@ export class CommentService {
   }
 
   async updateMany(
-    filter?: CommentFilterInput,
+    filter?: FilterCommentInput,
     update?: UpdateCommentDataInput,
   ): Promise<UpdateWriteOpResult> {
     return this.commentModel.updateMany(

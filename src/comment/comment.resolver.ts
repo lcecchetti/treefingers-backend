@@ -18,9 +18,9 @@ import { CurrentUser } from 'src/auth/dto/current-user.dto';
 import { Like } from 'src/like/like.entity';
 import { LikeService } from 'src/like/like.service';
 import { CommentConnection } from './dto/comment-connection.dto';
-import { CommentFilterInput } from './inputs/comment-filter.input';
 import { CreateCommentPayload } from './payloads/create-comment.payload';
 import { CreateCommentInput } from './inputs/create-comment.input';
+import { FilterCommentInput } from './inputs/filter-comment.input';
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -42,7 +42,7 @@ export class CommentResolver {
   @Query(() => Comment, { nullable: true })
   async comment(
     @Args('filter', { nullable: true })
-    filter: CommentFilterInput,
+    filter: FilterCommentInput,
   ): Promise<Comment> {
     return this.commentService.findOne(filter);
   }

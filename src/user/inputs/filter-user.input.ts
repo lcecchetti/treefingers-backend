@@ -2,12 +2,12 @@ import { Field, InputType } from '@nestjs/graphql';
 import { FilterInput, FilterStringInput } from 'src/query/inputs/filter.input';
 
 @InputType()
-export class UserFilterInput extends FilterInput {
-  @Field(() => [UserFilterInput], { nullable: true })
-  and?: [UserFilterInput];
+export class FilterUserInput extends FilterInput {
+  @Field(() => [FilterUserInput], { nullable: true })
+  and?: [FilterUserInput];
 
-  @Field(() => [UserFilterInput], { nullable: true })
-  or?: [UserFilterInput];
+  @Field(() => [FilterUserInput], { nullable: true })
+  or?: [FilterUserInput];
 
   @Field(() => FilterStringInput, { nullable: true })
   email?: FilterStringInput;

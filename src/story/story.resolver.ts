@@ -19,9 +19,9 @@ import { CurrentUser } from 'src/auth/dto/current-user.dto';
 import { Like } from 'src/like/like.entity';
 import { LikeService } from 'src/like/like.service';
 import { StoryConnection } from './dto/story-connection.dto';
-import { StoryFilterInput } from './inputs/story-filter.input';
 import { CreateStoryPayload } from './payloads/create-story.payload';
 import { CreateStoryInput } from './inputs/create-story.input';
+import { FilterStoryInput } from './inputs/filter-story.input';
 
 @Resolver(() => Story)
 export class StoryResolver {
@@ -44,7 +44,7 @@ export class StoryResolver {
   @Query(() => Story, { nullable: true })
   async story(
     @Args('filter', { nullable: true })
-    filter: StoryFilterInput,
+    filter: FilterStoryInput,
   ): Promise<Story> {
     return this.storyService.findOne(filter);
   }

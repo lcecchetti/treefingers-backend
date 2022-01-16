@@ -4,9 +4,9 @@ import { Tag, TagDocument } from './tag.entity';
 import { QueryService } from 'src/query/query.service';
 import { Model } from 'mongoose';
 import { TagConnectionArgs } from './args/tag-connection.args';
-import { TagFilterInput } from './inputs/tag-filter.input';
 import { CreateTagDataInput } from './inputs/create-tag.input';
 import { TagConnection } from './dto/tag-connection.dto';
+import { FilterTagInput } from './inputs/filter-tag.input';
 
 @Injectable()
 export class TagService {
@@ -19,13 +19,13 @@ export class TagService {
     return this.tagModel.findById(_id).lean();
   }
 
-  async findOne(filter?: TagFilterInput): Promise<Tag | null> {
+  async findOne(filter?: FilterTagInput): Promise<Tag | null> {
     return this.tagModel
       .findOne(this.queryService.gqlFilterToMongo(filter))
       .lean();
   }
 
-  async findMany(filter?: TagFilterInput): Promise<Tag[]> {
+  async findMany(filter?: FilterTagInput): Promise<Tag[]> {
     return this.tagModel
       .find(this.queryService.gqlFilterToMongo(filter))
       .lean();
@@ -35,7 +35,7 @@ export class TagService {
     return this.tagModel.create(data);
   }
 
-  async count(filter?: TagFilterInput): Promise<number> {
+  async count(filter?: FilterTagInput): Promise<number> {
     return this.tagModel.count(this.queryService.gqlFilterToMongo(filter));
   }
 

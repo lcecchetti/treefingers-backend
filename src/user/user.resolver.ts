@@ -10,8 +10,8 @@ import { CurrentUser } from 'src/auth/dto/current-user.dto';
 import { Like } from 'src/like/like.entity';
 import { LikeService } from 'src/like/like.service';
 import { UserConnection } from './dto/user-connection.dto';
-import { UserFilterInput } from './inputs/user-filter.input';
 import { StoryConnection } from 'src/story/dto/story-connection.dto';
+import { FilterUserInput } from './inputs/filter-user.input';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -33,7 +33,7 @@ export class UserResolver {
   @Query(() => User, { nullable: true })
   async user(
     @Args('filter', { nullable: true })
-    filter: UserFilterInput,
+    filter: FilterUserInput,
   ): Promise<User> {
     return this.userService.findOne(filter);
   }

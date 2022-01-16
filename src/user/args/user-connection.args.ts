@@ -1,9 +1,9 @@
 import { ArgsType, Field } from '@nestjs/graphql';
 import { ConnectionArgs } from 'src/query/args/connection.args';
-import { UserFilterInput } from '../inputs/user-filter.input';
+import { FilterUserInput } from '../inputs/filter-user.input';
 
 @ArgsType()
 export class UserConnectionArgs extends ConnectionArgs {
-  @Field(() => UserFilterInput, { nullable: true })
-  filter?: UserFilterInput;
+  @Field(() => FilterUserInput, { nullable: true })
+  filter?: FilterUserInput;
 }
