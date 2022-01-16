@@ -7,6 +7,12 @@ import { StoryService } from 'src/story/story.service';
 import { CommentService } from 'src/comment/comment.service';
 import { UserService } from 'src/user/user.service';
 import { FilterLikeInput } from './inputs/filter-like.input';
+import { LikeStoryInput } from './inputs/like-story.input';
+import { LikeCommentInput } from './inputs/like-comment';
+import { LikeAuthorInput } from './inputs/like-author.input';
+import { DislikeStoryInput } from './inputs/dislike-story.input';
+import { DislikeCommentInput } from './inputs/dislike.comment.input';
+import { DislikeAuthorInput } from './inputs/dislike-author.input';
 
 @Injectable()
 export class LikeService {
@@ -28,7 +34,7 @@ export class LikeService {
       .lean();
   }
 
-  async likeStory(story: string, user: string): Promise<Like> {
+  async likeStory({ story }: LikeStoryInput, user: string): Promise<Like> {
     const like = await this.likeModel.create({ story, user });
 
     if (!like) {
@@ -40,7 +46,10 @@ export class LikeService {
     return like;
   }
 
-  async likeComment(comment: string, user: string): Promise<Like> {
+  async likeComment(
+    { comment }: LikeCommentInput,
+    user: string,
+  ): Promise<Like> {
     const like = await this.likeModel.create({ comment, user });
 
     if (!like) {
@@ -52,7 +61,7 @@ export class LikeService {
     return like;
   }
 
-  async likeAuthor(author: string, user: string): Promise<Like> {
+  async likeAuthor({ author }: LikeAuthorInput, user: string): Promise<Like> {
     const like = await this.likeModel.create({ author, user });
 
     if (!like) {
@@ -68,7 +77,10 @@ export class LikeService {
     return this.likeModel.count(this.queryService.gqlFilterToMongo(filter));
   }
 
-  async dislikeStory(story: string, user: string): Promise<Like | null> {
+  async dislikeStory(
+    { story }: DislikeStoryInput,
+    user: string,
+  ): Promise<Like | null> {
     const like = await this.likeModel.findOneAndDelete({ story, user }).lean();
 
     if (!like) {
@@ -80,7 +92,10 @@ export class LikeService {
     return like;
   }
 
-  async dislikeComment(comment: string, user: string): Promise<Like | null> {
+  async dislikeComment(
+    { comment }: DislikeCommentInput,
+    user: string,
+  ): Promise<Like | null> {
     const like = await this.likeModel
       .findOneAndDelete({ comment, user })
       .lean();
@@ -94,7 +109,10 @@ export class LikeService {
     return like;
   }
 
-  async dislikeAuthor(author: string, user: string): Promise<Like | null> {
+  async dislikeAuthor(
+    { author }: DislikeAuthorInput,
+    user: string,
+  ): Promise<Like | null> {
     const like = await this.likeModel.findOneAndDelete({ author, user }).lean();
 
     if (!like) {

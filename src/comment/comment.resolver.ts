@@ -18,9 +18,9 @@ import { CurrentUser } from 'src/auth/dto/current-user.dto';
 import { Like } from 'src/like/like.entity';
 import { LikeService } from 'src/like/like.service';
 import { CommentConnection } from './dto/comment-connection.dto';
-import { CreateCommentPayload } from './payloads/create-comment.payload';
-import { CreateCommentInput } from './inputs/create-comment.input';
 import { FilterCommentInput } from './inputs/filter-comment.input';
+import { CommentStoryPayload } from './payloads/comment-story.payload';
+import { CommentStoryInput } from './inputs/comment-story.input';
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -47,16 +47,13 @@ export class CommentResolver {
     return this.commentService.findOne(filter);
   }
 
-  @Mutation(() => CreateCommentPayload)
-  async createComment(
-    @Args('input') { data }: CreateCommentInput,
+  @Mutation(() => CommentStoryPayload)
+  async commentStory(
+    @Args('input') input: CommentStoryInput,
     @GetCurrentUser() currentUser: CurrentUser,
-  ): Promise<CreateCommentPayload> {
+  ): Promise<CommentStoryPayload> {
     return {
-      comment: await this.commentService.createOne({
-        ...data,
-        user: currentUser._id,
-      }),
+      comment: await this.commentService.commentStory(input, currentUser._id),
     };
   }
 

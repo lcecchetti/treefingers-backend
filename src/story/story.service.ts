@@ -83,4 +83,11 @@ export class StoryService {
       { $inc: { likesCount: amount } },
     );
   }
+
+  async updateCommentsCount(story: string, amount: number) {
+    return await this.storyModel.updateOne(
+      { _id: story },
+      { $inc: { commentsCount: amount } },
+    );
+  }
 }
