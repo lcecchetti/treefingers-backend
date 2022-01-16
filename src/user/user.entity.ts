@@ -32,12 +32,15 @@ export class User {
 
   @Prop({
     maxlength: 31,
+    index: true,
   })
   @Field()
   username: string;
 
   @Prop({
-    maxlength: 31,
+    minlength: 2,
+    maxlength: 20,
+    index: true,
   })
   @Field({ nullable: true })
   pseudonym?: string;

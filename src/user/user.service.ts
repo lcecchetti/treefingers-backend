@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './user.entity';
 import { QueryService } from 'src/query/query.service';
@@ -10,6 +10,7 @@ import { UpdateUserDataInput } from './inputs/update-user.input';
 import { UpdateResultPayload } from 'src/query/payloads/update-result.payload';
 import { UserConnection } from './dto/user-connection.dto';
 import { FilterUserInput } from './inputs/filter-user.input';
+import slugify from 'slugify';
 @Injectable()
 export class UserService {
   constructor(
@@ -34,6 +35,26 @@ export class UserService {
   }
 
   async createOne(data: CreateUserDataInput): Promise<User> {
+    data.username = slugify(data.pseudonym, {
+      lower: true,
+    });
+
+    // check if user already exists
+    const existingEmail = await this.findOne({
+      email: { eq: data.email },
+    });
+    if (existingEmail) {
+      throw new ConflictException('Email already exists');
+    }
+
+    // check if user already exists
+    const existingUsername = await this.findOne({
+      username: { eq: data.username },
+    });
+    if (existingUsername) {
+      throw new ConflictException('Pseudonym already exists');
+    }
+
     return this.userModel.create(data);
   }
 

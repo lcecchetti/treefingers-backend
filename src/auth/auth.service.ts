@@ -8,6 +8,7 @@ import { LoginPayload } from './payloads/login.payload';
 import { JwtPayload } from './payloads/jwt.payload';
 import { RegisterInput } from './inputs/register.input';
 import { RegisterPayload } from './payloads/register.payload';
+import slugify from 'slugify';
 
 @Injectable()
 export class AuthService {
@@ -39,14 +40,6 @@ export class AuthService {
   }
 
   async register(registerInput: RegisterInput): Promise<RegisterPayload> {
-    // check if user already exists
-    const existingUser = await this.userService.findOne({
-      email: { eq: registerInput.email },
-    });
-    if (existingUser) {
-      throw new ConflictException('User already exists');
-    }
-
     // create user
     const encryptedPassword = await bcrypt.hash(registerInput.password, 10);
     const user = await this.userService.createOne({
