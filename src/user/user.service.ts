@@ -26,27 +26,25 @@ export class UserService {
   }
 
   async register(data: RegisterDataInput): Promise<User> {
-    data.username = slugify(data.pseudonym, {
-      lower: true,
-    });
-
     // check if user already exists
-    const existingEmail = await this.findOne({
-      email: { eq: data.email },
-    });
+    const existingEmail = await this.userModel.findOne({ email: data.email });
     if (existingEmail) {
       throw new ConflictException('Email already exists');
     }
 
     // check if user already exists
-    const existingUsername = await this.findOne({
-      username: { eq: data.username },
+    const username = slugify(data.pseudonym, {
+      lower: true,
     });
+    const existingUsername = await this.userModel.findOne({ username });
     if (existingUsername) {
       throw new ConflictException('Pseudonym already exists');
     }
 
-    return this.userModel.create(data);
+    return this.userModel.create({
+      ...data,
+      username,
+    });
   }
 
   async paginate(args: UserConnectionArgs): Promise<UserConnection> {
