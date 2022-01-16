@@ -2,14 +2,14 @@ import { Field, InputType } from '@nestjs/graphql';
 import { IsEmail, Length, MaxLength, MinLength } from 'class-validator';
 
 @InputType()
-export class RegisterDataInput {
+class RegisterDataInput {
   @Field()
   @IsEmail()
   readonly email: string;
 
   @Field()
   @MinLength(10)
-  readonly password: string;
+  password: string;
 
   @Field()
   @Length(2, 32)

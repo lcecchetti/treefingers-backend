@@ -7,7 +7,7 @@ import { UserConnectionArgs } from './args/user-connection.args';
 import { UserConnection } from './dto/user-connection.dto';
 import { FilterUserInput } from './inputs/filter-user.input';
 import slugify from 'slugify';
-import { RegisterDataInput } from 'src/auth/inputs/register.input';
+import { RegisterInput } from 'src/auth/inputs/register.input';
 @Injectable()
 export class UserService {
   constructor(
@@ -25,7 +25,7 @@ export class UserService {
       .lean();
   }
 
-  async register(data: RegisterDataInput): Promise<User> {
+  async register({ data }: RegisterInput): Promise<User> {
     // check if user already exists
     const existingEmail = await this.userModel.findOne({ email: data.email });
     if (existingEmail) {
@@ -55,6 +55,13 @@ export class UserService {
     return this.userModel.updateOne(
       { _id: author },
       { $inc: { likesCount: amount } },
+    );
+  }
+
+  async updateStoryCount(author: string, amount: number) {
+    return this.userModel.updateOne(
+      { _id: author },
+      { $inc: { storiesCount: amount } },
     );
   }
 }

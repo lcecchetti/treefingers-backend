@@ -42,8 +42,10 @@ export class AuthService {
     // create user
     const encryptedPassword = await bcrypt.hash(data.password, 10);
     const user = await this.userService.register({
-      ...data,
-      password: encryptedPassword,
+      data: {
+        ...data,
+        password: encryptedPassword,
+      },
     });
 
     // login user

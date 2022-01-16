@@ -4,15 +4,17 @@ import { Story, StoryDocument } from './story.entity';
 import { QueryService } from 'src/query/query.service';
 import { Model } from 'mongoose';
 import { StoryConnectionArgs } from './args/story-connection.args';
-import { CreateStoryDataInput } from './inputs/create-story.input';
+import { CreateStoryInput } from './inputs/create-story.input';
 import { StoryConnection } from './dto/story-connection.dto';
 import { FilterStoryInput } from './inputs/filter-story.input';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class StoryService {
   constructor(
     @InjectModel('Story') private storyModel: Model<StoryDocument>,
     private queryService: QueryService<Story, StoryDocument>,
+    private userService: UserService,
   ) {}
 
   async findById(_id: string): Promise<Story | null> {
@@ -25,12 +27,22 @@ export class StoryService {
       .lean();
   }
 
-  async createOne(data: CreateStoryDataInput): Promise<Story> {
-    return this.storyModel.create(data);
-  }
+  async create(
+    { data }: CreateStoryInput,
+    author: string,
+  ): Promise<Story | null> {
+    const story = this.storyModel.create({
+      ...data,
+      author,
+    });
 
-  async count(filter?: FilterStoryInput): Promise<number> {
-    return this.storyModel.count(this.queryService.gqlFilterToMongo(filter));
+    if (!story) {
+      return null;
+    }
+
+    this.userService.updateStoryCount(author, 1);
+
+    return story;
   }
 
   async paginate(args: StoryConnectionArgs): Promise<StoryConnection> {

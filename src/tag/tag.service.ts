@@ -4,7 +4,7 @@ import { Tag, TagDocument } from './tag.entity';
 import { QueryService } from 'src/query/query.service';
 import { Model } from 'mongoose';
 import { TagConnectionArgs } from './args/tag-connection.args';
-import { CreateTagDataInput } from './inputs/create-tag.input';
+import { CreateTagInput } from './inputs/create-tag.input';
 import { TagConnection } from './dto/tag-connection.dto';
 import { FilterTagInput } from './inputs/filter-tag.input';
 
@@ -31,12 +31,8 @@ export class TagService {
       .lean();
   }
 
-  async createOne(data: CreateTagDataInput): Promise<Tag> {
+  async create({ data }: CreateTagInput): Promise<Tag> {
     return this.tagModel.create(data);
-  }
-
-  async count(filter?: FilterTagInput): Promise<number> {
-    return this.tagModel.count(this.queryService.gqlFilterToMongo(filter));
   }
 
   async paginate(args: TagConnectionArgs): Promise<TagConnection> {

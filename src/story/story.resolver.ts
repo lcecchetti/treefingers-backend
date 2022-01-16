@@ -51,14 +51,11 @@ export class StoryResolver {
 
   @Mutation(() => CreateStoryPayload)
   async createStory(
-    @Args('input') { data }: CreateStoryInput,
+    @Args('input') input: CreateStoryInput,
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<CreateStoryPayload> {
     return {
-      story: await this.storyService.createOne({
-        ...data,
-        author: currentUser._id,
-      }),
+      story: await this.storyService.create(input, currentUser._id),
     };
   }
 

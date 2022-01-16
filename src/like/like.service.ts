@@ -73,10 +73,6 @@ export class LikeService {
     return like;
   }
 
-  async count(filter?: FilterLikeInput): Promise<number> {
-    return this.likeModel.count(this.queryService.gqlFilterToMongo(filter));
-  }
-
   async dislikeStory(
     { story }: DislikeStoryInput,
     user: string,

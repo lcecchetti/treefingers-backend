@@ -46,10 +46,6 @@ export class CommentService {
     return comment;
   }
 
-  async count(filter?: FilterCommentInput): Promise<number> {
-    return this.commentModel.count(this.queryService.gqlFilterToMongo(filter));
-  }
-
   async paginate(args: CommentConnectionArgs): Promise<CommentConnection> {
     return this.queryService.paginate(this.commentModel, args);
   }
