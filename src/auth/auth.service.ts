@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -8,7 +8,6 @@ import { LoginPayload } from './payloads/login.payload';
 import { JwtPayload } from './payloads/jwt.payload';
 import { RegisterInput } from './inputs/register.input';
 import { RegisterPayload } from './payloads/register.payload';
-import slugify from 'slugify';
 
 @Injectable()
 export class AuthService {
@@ -39,11 +38,11 @@ export class AuthService {
     };
   }
 
-  async register(registerInput: RegisterInput): Promise<RegisterPayload> {
+  async register({ data }: RegisterInput): Promise<RegisterPayload> {
     // create user
-    const encryptedPassword = await bcrypt.hash(registerInput.password, 10);
-    const user = await this.userService.createOne({
-      ...registerInput,
+    const encryptedPassword = await bcrypt.hash(data.password, 10);
+    const user = await this.userService.register({
+      ...data,
       password: encryptedPassword,
     });
 

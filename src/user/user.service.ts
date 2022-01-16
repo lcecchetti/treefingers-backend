@@ -4,13 +4,10 @@ import { User, UserDocument } from './user.entity';
 import { QueryService } from 'src/query/query.service';
 import { Model } from 'mongoose';
 import { UserConnectionArgs } from './args/user-connection.args';
-import { CreateUserDataInput } from './inputs/create-user.input';
-import { DeleteResultPayload } from 'src/query/payloads/delete-result.payload';
-import { UpdateUserDataInput } from './inputs/update-user.input';
-import { UpdateResultPayload } from 'src/query/payloads/update-result.payload';
 import { UserConnection } from './dto/user-connection.dto';
 import { FilterUserInput } from './inputs/filter-user.input';
 import slugify from 'slugify';
+import { RegisterDataInput } from 'src/auth/inputs/register.input';
 @Injectable()
 export class UserService {
   constructor(
@@ -28,13 +25,7 @@ export class UserService {
       .lean();
   }
 
-  async findMany(filter?: FilterUserInput): Promise<User[]> {
-    return this.userModel
-      .find(this.queryService.gqlFilterToMongo(filter))
-      .lean();
-  }
-
-  async createOne(data: CreateUserDataInput): Promise<User> {
+  async register(data: RegisterDataInput): Promise<User> {
     data.username = slugify(data.pseudonym, {
       lower: true,
     });
@@ -56,37 +47,6 @@ export class UserService {
     }
 
     return this.userModel.create(data);
-  }
-
-  async deleteOne(filter?: FilterUserInput): Promise<User | null> {
-    return this.userModel.findOneAndDelete(
-      this.queryService.gqlFilterToMongo(filter),
-    );
-  }
-
-  async deleteMany(filter?: FilterUserInput): Promise<DeleteResultPayload> {
-    return this.userModel.deleteMany(
-      this.queryService.gqlFilterToMongo(filter),
-    );
-  }
-
-  async updateOne(
-    filter?: FilterUserInput,
-    update?: UpdateUserDataInput,
-  ): Promise<User | null> {
-    return this.userModel
-      .findOneAndUpdate(this.queryService.gqlFilterToMongo(filter), update)
-      .lean();
-  }
-
-  async updateMany(
-    filter?: FilterUserInput,
-    update?: UpdateUserDataInput,
-  ): Promise<UpdateResultPayload> {
-    return this.userModel.updateMany(
-      this.queryService.gqlFilterToMongo(filter),
-      update,
-    );
   }
 
   async paginate(args: UserConnectionArgs): Promise<UserConnection> {
