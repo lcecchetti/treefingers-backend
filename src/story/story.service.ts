@@ -46,8 +46,19 @@ export class StoryService {
     return story;
   }
 
-  async paginate(args: StoryConnectionArgs): Promise<StoryConnection> {
-    return this.queryService.paginate(this.storyModel, args);
+  async paginate(
+    {
+      filter,
+      sort,
+      pagination,
+    }: StoryConnectionArgs = new StoryConnectionArgs(),
+  ): Promise<StoryConnection> {
+    return this.queryService.paginate(
+      this.storyModel,
+      this.queryService.gqlFilterToMongo(filter),
+      sort,
+      pagination,
+    );
   }
 
   async updateLikesCount(story: string, amount: number) {
