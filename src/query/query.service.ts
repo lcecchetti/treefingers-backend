@@ -2,7 +2,8 @@ import { FilterQuery, Model } from 'mongoose';
 import { ConnectionArgs } from './args/connection.args';
 import { IConnection } from './dto/pagination.dto';
 import { FilterInput } from './inputs/filter.input';
-import { SORT_DIRECTION } from './inputs/sort.input';
+import { PaginationInput } from './inputs/pagination.input';
+import { SortInput, SORT_DIRECTION } from './inputs/sort.input';
 
 const filterMap = {
   eq: '$eq',
@@ -13,6 +14,7 @@ const filterMap = {
   gt: '$gt',
   and: '$and',
   or: '$or',
+  like: '$like',
 };
 
 const encodeCursor = (cursor: string): string => {
@@ -34,7 +36,9 @@ const decodeCursor = (cursor: string): string => {
 export class QueryService<E, D> {
   async paginate(
     model: Model<D>,
-    { filter, sort, pagination }: ConnectionArgs = new ConnectionArgs(),
+    filter: any = {},
+    sort: any = new SortInput(),
+    pagination: PaginationInput = new PaginationInput(),
   ): Promise<IConnection<E>> {
     const result: IConnection<E> = {};
 
@@ -51,16 +55,13 @@ export class QueryService<E, D> {
     if (currentCursor) {
       filter._id =
         !sort._id || sort._id === SORT_DIRECTION.ASC
-          ? { gt: currentCursor }
-          : { lt: currentCursor };
+          ? { $gt: currentCursor }
+          : { $lt: currentCursor };
     }
-
-    // convert filter
-    const mongoFilter = this.gqlFilterToMongo(filter);
 
     // get nodes
     const nodes = await model
-      .find(mongoFilter, null, {
+      .find(filter, null, {
         sort,
         limit: pageSize,
         skip: pageSize * (currentPage - 1),
@@ -76,7 +77,7 @@ export class QueryService<E, D> {
     });
 
     // prepare page infos
-    const totalCount = await model.count(mongoFilter);
+    const totalCount = await model.count(filter);
     const pagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 1;
 
     result.pageInfo = {

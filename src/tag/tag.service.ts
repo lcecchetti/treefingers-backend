@@ -7,6 +7,7 @@ import { TagConnectionArgs } from './args/tag-connection.args';
 import { CreateTagInput } from './inputs/create-tag.input';
 import { TagConnection } from './dto/tag-connection.dto';
 import { FilterTagInput } from './inputs/filter-tag.input';
+import { SearchArgs } from 'src/search/args/search.args';
 
 @Injectable()
 export class TagService {
@@ -35,7 +36,23 @@ export class TagService {
     return this.tagModel.create(data);
   }
 
-  async paginate(args: TagConnectionArgs): Promise<TagConnection> {
-    return this.queryService.paginate(this.tagModel, args);
+  async paginate(
+    { filter, sort, pagination }: TagConnectionArgs = new TagConnectionArgs(),
+  ): Promise<TagConnection> {
+    return this.queryService.paginate(
+      this.tagModel,
+      this.queryService.gqlFilterToMongo(filter),
+      sort,
+      pagination,
+    );
+  }
+
+  async search({ query, pagination }: SearchArgs): Promise<TagConnection> {
+    return await this.queryService.paginate(
+      this.tagModel,
+      { $text: { $search: query } },
+      null,
+      pagination,
+    );
   }
 }

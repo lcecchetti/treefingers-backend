@@ -11,6 +11,7 @@ import { CommentModule } from './comment/comment.module';
 import { LikeModule } from './like/like.module';
 import { TagModule } from './tag/tag.module';
 import { UtilsModule } from './utils/utils.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { UtilsModule } from './utils/utils.module';
     CommentModule,
     LikeModule,
     TagModule,
+    SearchModule,
   ],
   providers: [AppService],
 })

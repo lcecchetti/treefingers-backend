@@ -8,6 +8,7 @@ import { CreateStoryInput } from './inputs/create-story.input';
 import { StoryConnection } from './dto/story-connection.dto';
 import { FilterStoryInput } from './inputs/filter-story.input';
 import { UserService } from 'src/user/user.service';
+import { SearchArgs } from 'src/search/args/search.args';
 
 @Injectable()
 export class StoryService {
@@ -60,6 +61,15 @@ export class StoryService {
     return await this.storyModel.updateOne(
       { _id: story },
       { $inc: { commentsCount: amount } },
+    );
+  }
+
+  async search({ query, pagination }: SearchArgs): Promise<StoryConnection> {
+    return await this.queryService.paginate(
+      this.storyModel,
+      { $text: { $search: query } },
+      null,
+      pagination,
     );
   }
 }

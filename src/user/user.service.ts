@@ -8,6 +8,7 @@ import { UserConnection } from './dto/user-connection.dto';
 import { FilterUserInput } from './inputs/filter-user.input';
 import slugify from 'slugify';
 import { RegisterInput } from 'src/auth/inputs/register.input';
+import { SearchArgs } from 'src/search/args/search.args';
 @Injectable()
 export class UserService {
   constructor(
@@ -47,8 +48,15 @@ export class UserService {
     });
   }
 
-  async paginate(args: UserConnectionArgs): Promise<UserConnection> {
-    return this.queryService.paginate(this.userModel, args);
+  async paginate(
+    { filter, sort, pagination }: UserConnectionArgs = new UserConnectionArgs(),
+  ): Promise<UserConnection> {
+    return this.queryService.paginate(
+      this.userModel,
+      this.queryService.gqlFilterToMongo(filter),
+      sort,
+      pagination,
+    );
   }
 
   async updateLikesCount(author: string, amount: number) {
@@ -62,6 +70,15 @@ export class UserService {
     return this.userModel.updateOne(
       { _id: author },
       { $inc: { storiesCount: amount } },
+    );
+  }
+
+  async search({ query, pagination }: SearchArgs): Promise<UserConnection> {
+    return await this.queryService.paginate(
+      this.userModel,
+      { $text: { $search: query } },
+      null,
+      pagination,
     );
   }
 }

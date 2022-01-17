@@ -46,8 +46,19 @@ export class CommentService {
     return comment;
   }
 
-  async paginate(args: CommentConnectionArgs): Promise<CommentConnection> {
-    return this.queryService.paginate(this.commentModel, args);
+  async paginate(
+    {
+      filter,
+      sort,
+      pagination,
+    }: CommentConnectionArgs = new CommentConnectionArgs(),
+  ): Promise<CommentConnection> {
+    return this.queryService.paginate(
+      this.commentModel,
+      this.queryService.gqlFilterToMongo(filter),
+      sort,
+      pagination,
+    );
   }
 
   async updateLikesCount(comment: string, amount: number) {

@@ -108,4 +108,8 @@ export class Story {
 }
 
 export type StoryDocument = Story & Document;
-export const StorySchema = SchemaFactory.createForClass(Story);
+const StorySchema = SchemaFactory.createForClass(Story);
+
+StorySchema.index({ title: 'text', content: 'text' });
+
+export { StorySchema };

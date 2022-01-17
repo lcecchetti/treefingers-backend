@@ -49,4 +49,8 @@ export class Tag {
 }
 
 export type TagDocument = Tag & Document;
-export const TagSchema = SchemaFactory.createForClass(Tag);
+const TagSchema = SchemaFactory.createForClass(Tag);
+
+TagSchema.index({ label: 'text' });
+
+export { TagSchema };
