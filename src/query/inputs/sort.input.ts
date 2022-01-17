@@ -8,7 +8,7 @@ export enum SORT_DIRECTION {
 @InputType()
 export class SortInput {
   @Field(() => SORT_DIRECTION, { nullable: true })
-  _id = SORT_DIRECTION.ASC;
+  _id: SORT_DIRECTION = SORT_DIRECTION.DESC;
 }
 
 registerEnumType(SORT_DIRECTION, { name: 'Direction' });

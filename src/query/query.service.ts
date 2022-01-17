@@ -1,5 +1,4 @@
 import { FilterQuery, Model } from 'mongoose';
-import { ConnectionArgs } from './args/connection.args';
 import { IConnection } from './dto/pagination.dto';
 import { FilterInput } from './inputs/filter.input';
 import { PaginationInput } from './inputs/pagination.input';
