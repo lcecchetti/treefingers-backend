@@ -9,7 +9,7 @@ export class SearchResults {
   stories: StoryConnection;
 
   @Field(() => UserConnection, { nullable: true })
-  users: UserConnection;
+  authors: UserConnection;
 
   @Field(() => TagConnection, { nullable: true })
   tags: TagConnection;

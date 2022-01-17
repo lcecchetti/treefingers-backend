@@ -19,7 +19,7 @@ export class SearchResolver {
   ): Promise<SearchResults> {
     return {
       stories: await this.storyService.search(args),
-      users: await this.userService.search(args),
+      authors: await this.userService.search(args),
       tags: await this.tagService.search(args),
     };
   }
