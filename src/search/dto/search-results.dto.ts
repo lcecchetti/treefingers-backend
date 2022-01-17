@@ -5,12 +5,12 @@ import { UserConnection } from 'src/user/dto/user-connection.dto';
 
 @ObjectType()
 export class SearchResults {
-  @Field(() => StoryConnection, { nullable: true })
+  @Field(() => StoryConnection)
   stories: StoryConnection;
 
-  @Field(() => UserConnection, { nullable: true })
+  @Field(() => UserConnection)
   authors: UserConnection;
 
-  @Field(() => TagConnection, { nullable: true })
+  @Field(() => TagConnection)
   tags: TagConnection;
 }
