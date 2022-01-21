@@ -18,6 +18,9 @@ class CreateStoryDataInput {
 
   @Field(() => ID, { nullable: true })
   readonly parent?: string;
+
+  @Field(() => [String], { nullable: true })
+  readonly tags?: string[] = [];
 }
 @InputType()
 export class CreateStoryInput {

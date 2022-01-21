@@ -8,6 +8,7 @@ import { CreateTagInput } from './inputs/create-tag.input';
 import { TagConnection } from './dto/tag-connection.dto';
 import { FilterTagInput } from './inputs/filter-tag.input';
 import { SearchArgs } from 'src/search/args/search.args';
+import slugify from 'slugify';
 
 @Injectable()
 export class TagService {
@@ -33,7 +34,38 @@ export class TagService {
   }
 
   async create({ data }: CreateTagInput): Promise<Tag> {
-    return this.tagModel.create(data);
+    const slug = slugify(data.label, {
+      lower: true,
+    });
+
+    return this.tagModel.create({
+      ...data,
+      slug,
+    });
+  }
+
+  async findOrCreate(label: string): Promise<Tag> {
+    const tag = await this.tagModel.findOne({ label });
+    if (tag) {
+      return tag;
+    }
+
+    return this.create({ data: { label } });
+  }
+
+  async prepareStoryTags(labels: string[] = []): Promise<Tag[]> {
+    return Promise.all(
+      labels.map(function async(label) {
+        return this.findOrCreate(label);
+      }, this),
+    );
+  }
+
+  async updateStoriesCount(tags: string[], amount: number) {
+    return this.tagModel.updateMany(
+      { label: { $in: tags } },
+      { $inc: { storiesCount: amount } },
+    );
   }
 
   async paginate(

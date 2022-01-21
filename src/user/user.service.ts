@@ -74,7 +74,7 @@ export class UserService {
   }
 
   async search({ query, pagination }: SearchArgs): Promise<UserConnection> {
-    return await this.queryService.paginate(
+    return this.queryService.paginate(
       this.userModel,
       { $text: { $search: query } },
       null,
