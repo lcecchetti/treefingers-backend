@@ -17,6 +17,7 @@ export class Tag {
   @Prop({
     required: true,
     index: true,
+    unique: true,
     minlength: 1,
     maxlength: 63,
   })
@@ -26,6 +27,7 @@ export class Tag {
   @Prop({
     required: true,
     index: true,
+    unique: true,
     minlength: 1,
     maxlength: 63,
   })
