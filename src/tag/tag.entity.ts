@@ -20,6 +20,8 @@ export class Tag {
     unique: true,
     minlength: 1,
     maxlength: 63,
+    lowercase: true,
+    trim: true,
   })
   @Field()
   label: string;
@@ -30,6 +32,8 @@ export class Tag {
     unique: true,
     minlength: 1,
     maxlength: 63,
+    lowercase: true,
+    trim: true,
   })
   @Field()
   slug: string;

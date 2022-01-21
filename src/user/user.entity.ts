@@ -21,6 +21,7 @@ export class User {
     validate: [isEmail, 'Please fill a valid email address'],
     index: true,
     unique: true,
+    trim: true,
   })
   @Field()
   email: string;
@@ -35,6 +36,8 @@ export class User {
     maxlength: 31,
     index: true,
     unique: true,
+    lowercase: true,
+    trim: true,
   })
   @Field()
   username: string;
@@ -44,12 +47,14 @@ export class User {
     maxlength: 20,
     index: true,
     unique: true,
+    trim: true,
   })
   @Field({ nullable: true })
   pseudonym?: string;
 
   @Prop({
     maxlength: 255,
+    trim: true,
   })
   @Field({ nullable: true })
   bio?: string;
