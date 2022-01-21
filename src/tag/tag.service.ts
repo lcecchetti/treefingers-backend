@@ -45,7 +45,11 @@ export class TagService {
   }
 
   async findOrCreate(label: string): Promise<Tag> {
-    const tag = await this.tagModel.findOne({ label });
+    const slug = slugify(label, {
+      lower: true,
+    });
+
+    const tag = await this.tagModel.findOne({ slug });
     if (tag) {
       return tag;
     }
