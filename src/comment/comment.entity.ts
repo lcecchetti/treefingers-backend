@@ -44,6 +44,7 @@ export class Comment {
   @Prop({
     min: 0,
     default: 0,
+    index: true,
   })
   @Field(() => Int, { defaultValue: 0 })
   likesCount: number;
