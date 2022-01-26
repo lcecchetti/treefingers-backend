@@ -1,12 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, SchemaTypes } from 'mongoose';
-import {
-  Field,
-  GraphQLISODateTime,
-  ID,
-  Int,
-  ObjectType,
-} from '@nestjs/graphql';
+import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
 import { Story } from 'src/story/story.entity';
 
@@ -40,14 +34,6 @@ export class Comment {
   })
   @Field(() => Story)
   story: Story;
-
-  @Prop({
-    min: 0,
-    default: 0,
-    index: true,
-  })
-  @Field(() => Int, { defaultValue: 0 })
-  likesCount: number;
 
   @Prop({ default: Date.now })
   @Field(() => GraphQLISODateTime)

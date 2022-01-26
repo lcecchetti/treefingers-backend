@@ -5,6 +5,7 @@ import {
   ResolveField,
   Parent,
   Mutation,
+  Int,
 } from '@nestjs/graphql';
 import { StoryService } from './story.service';
 import { Story, StoryDocument } from './story.entity';
@@ -22,6 +23,7 @@ import { StoryConnection } from './dto/story-connection.dto';
 import { CreateStoryPayload } from './payloads/create-story.payload';
 import { CreateStoryInput } from './inputs/create-story.input';
 import { FilterStoryInput } from './inputs/filter-story.input';
+import { CommentService } from 'src/comment/comment.service';
 
 @Resolver(() => Story)
 export class StoryResolver {
@@ -31,6 +33,7 @@ export class StoryResolver {
     private userService: UserService,
     private forestService: ForestService,
     private likeService: LikeService,
+    private commentService: CommentService,
   ) {}
 
   @Query(() => StoryConnection)
@@ -107,5 +110,20 @@ export class StoryResolver {
   @ResolveField(() => Forest)
   async forest(@Parent() story: Story): Promise<Forest> {
     return this.forestService.findById(story.forest._id);
+  }
+
+  @ResolveField(() => Int)
+  async likesCount(@Parent() story: Story): Promise<number> {
+    return this.likeService.count({ story: { eq: story._id } });
+  }
+
+  @ResolveField(() => Int)
+  async commentsCount(@Parent() story: Story): Promise<number> {
+    return this.commentService.count({ story: { eq: story._id } });
+  }
+
+  @ResolveField(() => Int)
+  async childrenCount(@Parent() story: Story): Promise<number> {
+    return this.storyService.count({ parent: { eq: story._id } });
   }
 }

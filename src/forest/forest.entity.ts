@@ -1,12 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, SchemaTypes } from 'mongoose';
-import {
-  Field,
-  GraphQLISODateTime,
-  ID,
-  Int,
-  ObjectType,
-} from '@nestjs/graphql';
+import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
 
 @Schema({ timestamps: true })
@@ -46,22 +40,6 @@ export class Forest {
   })
   @Field()
   about: string;
-
-  @Prop({
-    min: 0,
-    default: 0,
-    index: true,
-  })
-  @Field(() => Int, { defaultValue: 0 })
-  storiesCount: number;
-
-  @Prop({
-    min: 0,
-    default: 0,
-    index: true,
-  })
-  @Field(() => Int, { defaultValue: 0 })
-  likesCount?: number;
 
   @Prop({
     type: SchemaTypes.ObjectId,

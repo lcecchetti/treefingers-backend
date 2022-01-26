@@ -3,9 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Like, LikeDocument } from './like.entity';
 import { QueryService } from 'src/query/query.service';
-import { StoryService } from 'src/story/story.service';
-import { CommentService } from 'src/comment/comment.service';
-import { UserService } from 'src/user/user.service';
 import { FilterLikeInput } from './inputs/filter-like.input';
 import { LikeStoryInput } from './inputs/like-story.input';
 import { LikeCommentInput } from './inputs/like-comment';
@@ -15,17 +12,12 @@ import { DislikeCommentInput } from './inputs/dislike.comment.input';
 import { DislikeAuthorInput } from './inputs/dislike-author.input';
 import { DislikeForestInput } from './inputs/dislike-forest.input';
 import { LikeForestInput } from './inputs/like-forest.input';
-import { ForestService } from 'src/forest/forest.service';
 
 @Injectable()
 export class LikeService {
   constructor(
     @InjectModel('Like') private likeModel: Model<LikeDocument>,
     private queryService: QueryService<Like, LikeDocument>,
-    private storyService: StoryService,
-    private commentService: CommentService,
-    private userService: UserService,
-    private forestService: ForestService,
   ) {}
 
   async findById(_id: string): Promise<Like | null> {
@@ -39,115 +31,53 @@ export class LikeService {
   }
 
   async likeStory({ story }: LikeStoryInput, user: string): Promise<Like> {
-    const like = await this.likeModel.create({ story, user });
-
-    if (!like) {
-      return null;
-    }
-
-    await this.storyService.updateLikesCount(story, 1);
-
-    return like;
+    return this.likeModel.create({ story, user });
   }
 
   async likeComment(
     { comment }: LikeCommentInput,
     user: string,
   ): Promise<Like> {
-    const like = await this.likeModel.create({ comment, user });
-
-    if (!like) {
-      return null;
-    }
-
-    await this.commentService.updateLikesCount(comment, 1);
-
-    return like;
+    return await this.likeModel.create({ comment, user });
   }
 
   async likeAuthor({ author }: LikeAuthorInput, user: string): Promise<Like> {
-    const like = await this.likeModel.create({ author, user });
-
-    if (!like) {
-      return null;
-    }
-
-    await this.userService.updateLikesCount(author, 1);
-
-    return like;
+    return this.likeModel.create({ author, user });
   }
 
   async likeForest({ forest }: LikeForestInput, user: string): Promise<Like> {
-    const like = await this.likeModel.create({ forest, user });
-
-    if (!like) {
-      return null;
-    }
-
-    await this.forestService.updateLikesCount(forest, 1);
-
-    return like;
+    return await this.likeModel.create({ forest, user });
   }
 
   async dislikeStory(
     { story }: DislikeStoryInput,
     user: string,
   ): Promise<Like | null> {
-    const like = await this.likeModel.findOneAndDelete({ story, user }).lean();
-
-    if (!like) {
-      return null;
-    }
-
-    await this.storyService.updateLikesCount(like.story._id, -1);
-
-    return like;
+    return this.likeModel.findOneAndDelete({ story, user }).lean();
   }
 
   async dislikeComment(
     { comment }: DislikeCommentInput,
     user: string,
   ): Promise<Like | null> {
-    const like = await this.likeModel
-      .findOneAndDelete({ comment, user })
-      .lean();
-
-    if (!like) {
-      return null;
-    }
-
-    await this.commentService.updateLikesCount(like.comment._id, -1);
-
-    return like;
+    return this.likeModel.findOneAndDelete({ comment, user }).lean();
   }
 
   async dislikeAuthor(
     { author }: DislikeAuthorInput,
     user: string,
   ): Promise<Like | null> {
-    const like = await this.likeModel.findOneAndDelete({ author, user }).lean();
-
-    if (!like) {
-      return null;
-    }
-
-    await this.userService.updateLikesCount(like.author._id, -1);
-
-    return like;
+    return this.likeModel.findOneAndDelete({ author, user }).lean();;
   }
 
   async dislikeForest(
     { forest }: DislikeForestInput,
     user: string,
   ): Promise<Like | null> {
-    const like = await this.likeModel.findOneAndDelete({ forest, user }).lean();
+    return this.likeModel.findOneAndDelete({ forest, user }).lean();
+  }
 
-    if (!like) {
-      return null;
-    }
-
-    await this.forestService.updateLikesCount(like.forest._id, -1);
-
-    return like;
+  async count(filter?: FilterLikeInput): Promise<number> {
+    return this.likeModel.count(this.queryService.gqlFilterToMongo(filter));
   }
 }

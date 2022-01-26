@@ -1,4 +1,11 @@
-import { Resolver, Query, Args, ResolveField, Parent } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Args,
+  ResolveField,
+  Parent,
+  Int,
+} from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { StoryService } from 'src/story/story.service';
@@ -76,5 +83,15 @@ export class UserResolver {
   ): Promise<StoryConnection> {
     args.filter.author = { eq: user._id };
     return this.storyService.paginate(args);
+  }
+
+  @ResolveField(() => Int)
+  async likesCount(@Parent() user: User): Promise<number> {
+    return this.likeService.count({ author: { eq: user._id } });
+  }
+
+  @ResolveField(() => Int)
+  async storiesCount(@Parent() user: User): Promise<number> {
+    return this.storyService.count({ author: { eq: user._id } });
   }
 }

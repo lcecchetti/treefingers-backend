@@ -59,7 +59,7 @@ export class ForestService {
   }
 
   async search({ query, pagination }: SearchArgs): Promise<ForestConnection> {
-    return await this.queryService.paginate(
+    return this.queryService.paginate(
       this.forestModel,
       { $text: { $search: query } },
       null,
@@ -67,17 +67,7 @@ export class ForestService {
     );
   }
 
-  async updateLikesCount(forest: string, amount: number) {
-    return this.forestModel.updateOne(
-      { _id: forest },
-      { $inc: { likesCount: amount } },
-    );
-  }
-
-  async updateStoriesCount(forest: string, amount: number) {
-    return this.forestModel.updateOne(
-      { _id: forest },
-      { $inc: { storiesCount: amount } },
-    );
+  async count(filter?: FilterForestInput): Promise<number> {
+    return this.forestModel.count(this.queryService.gqlFilterToMongo(filter));
   }
 }

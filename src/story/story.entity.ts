@@ -60,38 +60,6 @@ export class Story {
   parent?: Story;
 
   @Prop({
-    min: 0,
-    default: 0,
-    index: true,
-  })
-  @Field(() => Int, { defaultValue: 0 })
-  likesCount: number;
-
-  @Prop({
-    min: 0,
-    default: 0,
-    index: true,
-  })
-  @Field(() => Int, { defaultValue: 0 })
-  commentsCount: number;
-
-  @Prop({
-    min: 0,
-    default: 0,
-    index: true,
-  })
-  @Field(() => Int, { defaultValue: 0 })
-  childrenCount: number;
-
-  @Prop({
-    min: 0,
-    default: 0,
-    index: true,
-  })
-  @Field(() => Int, { defaultValue: 0 })
-  descendentsCount: number;
-
-  @Prop({
     index: true,
     trim: true,
   })

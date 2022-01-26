@@ -7,14 +7,12 @@ import { CommentConnectionArgs } from './args/comment-connection.args';
 import { CommentConnection } from './dto/comment-connection.dto';
 import { FilterCommentInput } from './inputs/filter-comment.input';
 import { CommentStoryInput } from './inputs/comment-story.input';
-import { StoryService } from 'src/story/story.service';
 
 @Injectable()
 export class CommentService {
   constructor(
     @InjectModel('Comment') private commentModel: Model<CommentDocument>,
     private queryService: QueryService<Comment, CommentDocument>,
-    private storyService: StoryService,
   ) {}
 
   async findById(_id: string): Promise<Comment | null> {
@@ -31,19 +29,11 @@ export class CommentService {
     { story, data }: CommentStoryInput,
     user: string,
   ): Promise<Comment> {
-    const comment = await this.commentModel.create({
+    return this.commentModel.create({
       ...data,
       story,
       user,
     });
-
-    if (!comment) {
-      return null;
-    }
-
-    this.storyService.updateCommentsCount(story, 1);
-
-    return comment;
   }
 
   async paginate(
@@ -61,10 +51,7 @@ export class CommentService {
     );
   }
 
-  async updateLikesCount(comment: string, amount: number) {
-    return this.commentModel.updateOne(
-      { _id: comment },
-      { $inc: { likesCount: amount } },
-    );
+  async count(filter?: FilterCommentInput): Promise<number> {
+    return this.commentModel.count(this.queryService.gqlFilterToMongo(filter));
   }
 }

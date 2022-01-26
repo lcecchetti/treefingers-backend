@@ -59,20 +59,6 @@ export class UserService {
     );
   }
 
-  async updateLikesCount(author: string, amount: number) {
-    return this.userModel.updateOne(
-      { _id: author },
-      { $inc: { likesCount: amount } },
-    );
-  }
-
-  async updateStoriesCount(author: string, amount: number) {
-    return this.userModel.updateOne(
-      { _id: author },
-      { $inc: { storiesCount: amount } },
-    );
-  }
-
   async search({ query, pagination }: SearchArgs): Promise<UserConnection> {
     return this.queryService.paginate(
       this.userModel,
@@ -80,5 +66,9 @@ export class UserService {
       null,
       pagination,
     );
+  }
+
+  async count(filter?: FilterUserInput): Promise<number> {
+    return this.userModel.count(this.queryService.gqlFilterToMongo(filter));
   }
 }

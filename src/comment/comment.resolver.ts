@@ -5,6 +5,7 @@ import {
   ResolveField,
   Parent,
   Mutation,
+  Int,
 } from '@nestjs/graphql';
 import { CommentService } from './comment.service';
 import { Comment } from './comment.entity';
@@ -70,6 +71,11 @@ export class CommentResolver {
       comment: { eq: comment._id },
       user: { eq: currentUser._id },
     });
+  }
+
+  @ResolveField(() => Int)
+  async likesCount(@Parent() comment: Comment): Promise<number> {
+    return this.likeService.count({ comment: { eq: comment._id } });
   }
 
   @ResolveField()
