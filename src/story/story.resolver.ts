@@ -12,8 +12,8 @@ import { UserService } from 'src/user/user.service';
 import { User } from 'src/user/user.entity';
 import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
 import { StoryConnectionArgs } from './args/story-connection.args';
-import { Tag } from 'src/tag/tag.entity';
-import { TagService } from 'src/tag/tag.service';
+import { Forest } from 'src/forest/forest.entity';
+import { ForestService } from 'src/forest/forest.service';
 import { StringService } from 'src/utils/services/string.service';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
 import { Like } from 'src/like/like.entity';
@@ -29,7 +29,7 @@ export class StoryResolver {
     private stringService: StringService,
     private storyService: StoryService,
     private userService: UserService,
-    private tagService: TagService,
+    private forestService: ForestService,
     private likeService: LikeService,
   ) {}
 
@@ -104,12 +104,8 @@ export class StoryResolver {
     return this.storyService.paginate(args);
   }
 
-  @ResolveField(() => [Tag], { nullable: true })
-  async tags(@Parent() story: Story): Promise<Tag[]> {
-    // prepare tags
-    const tags = [];
-    story.tags?.forEach((tag) => tags.push(tag._id));
-
-    return this.tagService.findMany({ _id: { in: tags } });
+  @ResolveField(() => Forest)
+  async forest(@Parent() story: Story): Promise<Forest> {
+    return this.forestService.findById(story.forest._id);
   }
 }

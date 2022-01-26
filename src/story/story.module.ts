@@ -6,7 +6,7 @@ import { StorySchema } from './story.entity';
 import { UserModule } from 'src/user/user.module';
 import { LikeModule } from 'src/like/like.module';
 import { CommentModule } from 'src/comment/comment.module';
-import { TagModule } from 'src/tag/tag.module';
+import { ForestModule } from 'src/forest/forest.module';
 import { QueryModule } from 'src/query/query.module';
 
 @Module({
@@ -16,7 +16,7 @@ import { QueryModule } from 'src/query/query.module';
     forwardRef(() => UserModule),
     forwardRef(() => LikeModule),
     forwardRef(() => CommentModule),
-    forwardRef(() => TagModule),
+    forwardRef(() => ForestModule),
   ],
   providers: [StoryService, StoryResolver],
   exports: [StoryService],

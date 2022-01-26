@@ -4,14 +4,17 @@ import { FilterIdInput, FilterInput } from 'src/query/inputs/filter.input';
 @InputType()
 export class FilterLikeInput extends FilterInput {
   @Field(() => FilterIdInput, { nullable: true })
-  readonly story?: FilterIdInput;
+  readonly user?: FilterIdInput;
 
   @Field(() => FilterIdInput, { nullable: true })
-  readonly user?: FilterIdInput;
+  readonly story?: FilterIdInput;
 
   @Field(() => FilterIdInput, { nullable: true })
   readonly comment?: FilterIdInput;
 
   @Field(() => FilterIdInput, { nullable: true })
   readonly author?: FilterIdInput;
+
+  @Field(() => FilterIdInput, { nullable: true })
+  readonly forest?: FilterIdInput;
 }

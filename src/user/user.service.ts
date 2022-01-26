@@ -66,7 +66,7 @@ export class UserService {
     );
   }
 
-  async updateStoryCount(author: string, amount: number) {
+  async updateStoriesCount(author: string, amount: number) {
     return this.userModel.updateOne(
       { _id: author },
       { $inc: { storiesCount: amount } },

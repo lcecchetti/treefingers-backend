@@ -9,7 +9,7 @@ import { StoryConnection } from './dto/story-connection.dto';
 import { FilterStoryInput } from './inputs/filter-story.input';
 import { UserService } from 'src/user/user.service';
 import { SearchArgs } from 'src/search/args/search.args';
-import { TagService } from 'src/tag/tag.service';
+import { ForestService } from 'src/forest/forest.service';
 
 @Injectable()
 export class StoryService {
@@ -17,7 +17,7 @@ export class StoryService {
     @InjectModel('Story') private storyModel: Model<StoryDocument>,
     private queryService: QueryService<Story, StoryDocument>,
     private userService: UserService,
-    private tagService: TagService,
+    private forestService: ForestService,
   ) {}
 
   async findById(_id: string): Promise<Story | null> {
@@ -34,20 +34,17 @@ export class StoryService {
     { data }: CreateStoryInput,
     author: string,
   ): Promise<Story | null> {
-    const tags = await this.tagService.prepareStoryTags(data.tags);
-
     const story = await this.storyModel.create({
       ...data,
       author,
-      tags,
     });
 
     if (!story) {
       return null;
     }
 
-    await this.userService.updateStoryCount(author, 1);
-    await this.tagService.updateStoriesCount(data.tags, 1);
+    await this.userService.updateStoriesCount(author, 1);
+    await this.forestService.updateStoriesCount(data.forest, 1);
 
     return story;
   }

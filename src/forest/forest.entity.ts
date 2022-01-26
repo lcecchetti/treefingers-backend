@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, SchemaTypes } from 'mongoose';
 import {
   Field,
   GraphQLISODateTime,
@@ -7,10 +7,11 @@ import {
   Int,
   ObjectType,
 } from '@nestjs/graphql';
+import { User } from 'src/user/user.entity';
 
 @Schema({ timestamps: true })
 @ObjectType()
-export class Tag {
+export class Forest {
   @Field(() => ID)
   _id: string;
 
@@ -20,11 +21,10 @@ export class Tag {
     unique: true,
     minlength: 1,
     maxlength: 63,
-    lowercase: true,
     trim: true,
   })
   @Field()
-  label: string;
+  name: string;
 
   @Prop({
     required: true,
@@ -39,12 +39,37 @@ export class Tag {
   slug: string;
 
   @Prop({
+    required: true,
+    minlength: 1,
+    maxlength: 1024,
+    trim: true,
+  })
+  @Field()
+  about: string;
+
+  @Prop({
     min: 0,
     default: 0,
     index: true,
   })
   @Field(() => Int, { defaultValue: 0 })
   storiesCount: number;
+
+  @Prop({
+    min: 0,
+    default: 0,
+    index: true,
+  })
+  @Field(() => Int, { defaultValue: 0 })
+  likesCount?: number;
+
+  @Prop({
+    type: SchemaTypes.ObjectId,
+    ref: 'User',
+    index: true,
+  })
+  @Field(() => User)
+  owner: User;
 
   @Prop({ default: Date.now })
   @Field(() => GraphQLISODateTime)
@@ -55,9 +80,9 @@ export class Tag {
   updatedAt: Date;
 }
 
-export type TagDocument = Tag & Document;
-const TagSchema = SchemaFactory.createForClass(Tag);
+export type ForestDocument = Forest & Document;
+const ForestSchema = SchemaFactory.createForClass(Forest);
 
-TagSchema.index({ label: 'text' });
+ForestSchema.index({ name: 'text' });
 
-export { TagSchema };
+export { ForestSchema };

@@ -4,6 +4,7 @@ import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
 import { Story } from 'src/story/story.entity';
 import { Comment } from 'src/comment/comment.entity';
+import { Forest } from 'src/forest/forest.entity';
 
 @Schema({ timestamps: true })
 @ObjectType()
@@ -37,6 +38,14 @@ export class Like {
 
   @Prop({
     type: SchemaTypes.ObjectId,
+    ref: 'Forest',
+    index: true,
+  })
+  @Field(() => Forest, { nullable: true })
+  forest?: Forest;
+
+  @Prop({
+    type: SchemaTypes.ObjectId,
     ref: 'User',
     index: true,
     required: true,
@@ -59,15 +68,31 @@ const LikeSchema = SchemaFactory.createForClass(Like);
 
 LikeSchema.index(
   { user: 1, story: 1 },
-  { unique: true, partialFilterExpression: { comment: null, author: null } },
+  {
+    unique: true,
+    partialFilterExpression: { comment: null, author: null, forest: null },
+  },
 );
 LikeSchema.index(
   { user: 1, comment: 1 },
-  { unique: true, partialFilterExpression: { story: null, author: null } },
+  {
+    unique: true,
+    partialFilterExpression: { story: null, author: null, forest: null },
+  },
 );
 LikeSchema.index(
   { user: 1, author: 1 },
-  { unique: true, partialFilterExpression: { comment: null, story: null } },
+  {
+    unique: true,
+    partialFilterExpression: { comment: null, story: null, forest: null },
+  },
+);
+LikeSchema.index(
+  { user: 1, forest: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { comment: null, story: null, author: null },
+  },
 );
 
 export { LikeSchema };

@@ -9,7 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import config from './app.config';
 import { CommentModule } from './comment/comment.module';
 import { LikeModule } from './like/like.module';
-import { TagModule } from './tag/tag.module';
+import { ForestModule } from './forest/forest.module';
 import { UtilsModule } from './utils/utils.module';
 import { SearchModule } from './search/search.module';
 
@@ -37,7 +37,7 @@ import { SearchModule } from './search/search.module';
     AuthModule,
     CommentModule,
     LikeModule,
-    TagModule,
+    ForestModule,
     SearchModule,
   ],
   providers: [AppService],

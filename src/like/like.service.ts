@@ -13,6 +13,9 @@ import { LikeAuthorInput } from './inputs/like-author.input';
 import { DislikeStoryInput } from './inputs/dislike-story.input';
 import { DislikeCommentInput } from './inputs/dislike.comment.input';
 import { DislikeAuthorInput } from './inputs/dislike-author.input';
+import { DislikeForestInput } from './inputs/dislike-forest.input';
+import { LikeForestInput } from './inputs/like-forest.input';
+import { ForestService } from 'src/forest/forest.service';
 
 @Injectable()
 export class LikeService {
@@ -22,6 +25,7 @@ export class LikeService {
     private storyService: StoryService,
     private commentService: CommentService,
     private userService: UserService,
+    private forestService: ForestService,
   ) {}
 
   async findById(_id: string): Promise<Like | null> {
@@ -73,6 +77,18 @@ export class LikeService {
     return like;
   }
 
+  async likeForest({ forest }: LikeForestInput, user: string): Promise<Like> {
+    const like = await this.likeModel.create({ forest, user });
+
+    if (!like) {
+      return null;
+    }
+
+    await this.forestService.updateLikesCount(forest, 1);
+
+    return like;
+  }
+
   async dislikeStory(
     { story }: DislikeStoryInput,
     user: string,
@@ -116,6 +132,21 @@ export class LikeService {
     }
 
     await this.userService.updateLikesCount(like.author._id, -1);
+
+    return like;
+  }
+
+  async dislikeForest(
+    { forest }: DislikeForestInput,
+    user: string,
+  ): Promise<Like | null> {
+    const like = await this.likeModel.findOneAndDelete({ forest, user }).lean();
+
+    if (!like) {
+      return null;
+    }
+
+    await this.forestService.updateLikesCount(like.forest._id, -1);
 
     return like;
   }

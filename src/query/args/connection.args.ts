@@ -7,7 +7,7 @@ import { SortInput } from '../inputs/sort.input';
 @ArgsType()
 export class ConnectionArgs {
   @Field({ nullable: true })
-  readonly filter?: FilterInput;
+  readonly filter?: FilterInput = new FilterInput();
 
   @Field({ nullable: true })
   readonly sort?: SortInput = new SortInput();

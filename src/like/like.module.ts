@@ -7,6 +7,7 @@ import { UserModule } from 'src/user/user.module';
 import { StoryModule } from 'src/story/story.module';
 import { CommentModule } from 'src/comment/comment.module';
 import { QueryModule } from 'src/query/query.module';
+import { ForestModule } from 'src/forest/forest.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { QueryModule } from 'src/query/query.module';
     forwardRef(() => UserModule),
     forwardRef(() => StoryModule),
     forwardRef(() => CommentModule),
+    forwardRef(() => ForestModule),
   ],
   providers: [LikeService, LikeResolver],
   exports: [LikeService],

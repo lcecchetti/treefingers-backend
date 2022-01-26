@@ -8,7 +8,7 @@ import {
   ObjectType,
 } from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
-import { Tag } from 'src/tag/tag.entity';
+import { Forest } from 'src/forest/forest.entity';
 import { Like } from 'src/like/like.entity';
 
 @Schema({ timestamps: true })
@@ -92,12 +92,19 @@ export class Story {
   descendentsCount: number;
 
   @Prop({
-    type: [SchemaTypes.ObjectId],
-    ref: 'Tag',
     index: true,
-    default: null,
+    trim: true,
   })
-  tags?: Tag[];
+  @Field(() => [String], { nullable: true, defaultValue: [] })
+  tags: string[];
+
+  @Prop({
+    type: SchemaTypes.ObjectId,
+    ref: 'Forest',
+    index: true,
+    required: true,
+  })
+  forest: Forest;
 
   @Field(() => Like, { nullable: true })
   currentUserLike?: Like;

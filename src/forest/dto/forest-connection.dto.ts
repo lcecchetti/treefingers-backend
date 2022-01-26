@@ -1,6 +1,6 @@
 import { ObjectType } from '@nestjs/graphql';
 import { Paginated } from 'src/query/dto/pagination.dto';
-import { Tag } from '../tag.entity';
+import { Forest } from '../forest.entity';
 
 @ObjectType()
-export class TagConnection extends Paginated(Tag) {}
+export class ForestConnection extends Paginated(Forest) {}

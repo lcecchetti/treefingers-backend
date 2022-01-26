@@ -29,6 +29,12 @@ import { DislikeCommentPayload } from './payloads/dislike-comment.payload';
 import { LikeStoryPayload } from './payloads/like-story.payload';
 import { DislikeStoryPayload } from './payloads/dislike-story.payload';
 import { FilterLikeInput } from './inputs/filter-like.input';
+import { Forest } from 'src/forest/forest.entity';
+import { ForestService } from 'src/forest/forest.service';
+import { LikeForestPayload } from './payloads/like-forest.payload';
+import { LikeForestInput } from './inputs/like-forest.input';
+import { DislikeForestPayload } from './payloads/dislike-forest.payload';
+import { DislikeForestInput } from './inputs/dislike-forest.input';
 
 @Resolver(() => Like)
 export class LikeResolver {
@@ -37,6 +43,7 @@ export class LikeResolver {
     private commentService: CommentService,
     private userService: UserService,
     private storyService: StoryService,
+    private forestService: ForestService,
   ) {}
 
   @Query(() => Like, { nullable: true })
@@ -107,6 +114,26 @@ export class LikeResolver {
     };
   }
 
+  @Mutation(() => LikeForestPayload)
+  async likeForest(
+    @Args('input') input: LikeForestInput,
+    @GetCurrentUser() currentUser: CurrentUser,
+  ): Promise<LikeForestPayload> {
+    return {
+      like: await this.likeService.likeForest(input, currentUser._id),
+    };
+  }
+
+  @Mutation(() => DislikeForestPayload)
+  async dislikeForest(
+    @Args('input') input: DislikeForestInput,
+    @GetCurrentUser() currentUser: CurrentUser,
+  ): Promise<DislikeForestPayload> {
+    return {
+      like: await this.likeService.dislikeForest(input, currentUser._id),
+    };
+  }
+
   @ResolveField()
   async author(@Parent() like: Like): Promise<User> {
     return this.userService.findById(like.author?._id);
@@ -120,6 +147,11 @@ export class LikeResolver {
   @ResolveField()
   async comment(@Parent() like: Like): Promise<Comment> {
     return this.commentService.findById(like.comment?._id);
+  }
+
+  @ResolveField()
+  async forest(@Parent() like: Like): Promise<Forest> {
+    return this.forestService.findById(like.forest?._id);
   }
 
   @ResolveField()

@@ -1,6 +1,6 @@
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { StoryService } from 'src/story/story.service';
-import { TagService } from 'src/tag/tag.service';
+import { ForestService } from 'src/forest/forest.service';
 import { UserService } from 'src/user/user.service';
 import { SearchArgs } from './args/search.args';
 import { SearchResults } from './dto/search-results.dto';
@@ -10,7 +10,7 @@ export class SearchResolver {
   constructor(
     private storyService: StoryService,
     private userService: UserService,
-    private tagService: TagService,
+    private forestService: ForestService,
   ) {}
 
   @Query(() => SearchResults)
@@ -20,7 +20,7 @@ export class SearchResolver {
     return {
       stories: await this.storyService.search(args),
       authors: await this.userService.search(args),
-      tags: await this.tagService.search(args),
+      forests: await this.forestService.search(args),
     };
   }
 }
