@@ -70,9 +70,8 @@ export class Story {
     type: SchemaTypes.ObjectId,
     ref: 'Forest',
     index: true,
-    required: true,
   })
-  forest: Forest;
+  forest?: Forest;
 
   @Field(() => Like, { nullable: true })
   currentUserLike?: Like;

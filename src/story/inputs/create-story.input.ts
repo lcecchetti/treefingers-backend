@@ -22,8 +22,8 @@ class CreateStoryDataInput {
   @Field(() => [String], { nullable: true })
   readonly tags?: string[];
 
-  @Field(() => String)
-  readonly forest: string;
+  @Field(() => String, { nullable: true })
+  readonly forest?: string;
 }
 @InputType()
 export class CreateStoryInput {
