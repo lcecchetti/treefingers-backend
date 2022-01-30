@@ -7,6 +7,7 @@ import { CommentConnectionArgs } from './args/comment-connection.args';
 import { CommentConnection } from './dto/comment-connection.dto';
 import { FilterCommentInput } from './inputs/filter-comment.input';
 import { CommentStoryInput } from './inputs/comment-story.input';
+import { CommentForestInput } from './inputs/comment-forest.input';
 
 @Injectable()
 export class CommentService {
@@ -32,6 +33,17 @@ export class CommentService {
     return this.commentModel.create({
       ...data,
       story,
+      user,
+    });
+  }
+
+  async commentForest(
+    { forest, data }: CommentForestInput,
+    user: string,
+  ): Promise<Comment> {
+    return this.commentModel.create({
+      ...data,
+      forest,
       user,
     });
   }

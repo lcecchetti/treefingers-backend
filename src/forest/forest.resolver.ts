@@ -24,6 +24,7 @@ import { CurrentUser } from 'src/auth/dto/current-user.dto';
 import { Like } from 'src/like/like.entity';
 import { LikeService } from 'src/like/like.service';
 import { StringService } from 'src/utils/services/string.service';
+import { CommentService } from 'src/comment/comment.service';
 
 @Resolver(() => Forest)
 export class ForestResolver {
@@ -33,6 +34,7 @@ export class ForestResolver {
     private storyService: StoryService,
     private userService: UserService,
     private likeService: LikeService,
+    private commentService: CommentService,
   ) {}
 
   @Query(() => ForestConnection)
@@ -86,6 +88,11 @@ export class ForestResolver {
   @ResolveField(() => Int)
   async likesCount(@Parent() forest: Forest): Promise<number> {
     return this.likeService.count({ forest: { eq: forest._id } });
+  }
+
+  @ResolveField(() => Int)
+  async commentsCount(@Parent() forest: Forest): Promise<number> {
+    return this.commentService.count({ forest: { eq: forest._id } });
   }
 
   @ResolveField(() => Int)

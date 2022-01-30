@@ -8,8 +8,8 @@ export class CommentDataInput {
   readonly content: string;
 }
 
-@InputType()
-export class CommentInput {
+@InputType({ isAbstract: true })
+export abstract class CommentInput {
   @Field(() => CommentDataInput)
   data: CommentDataInput;
 }

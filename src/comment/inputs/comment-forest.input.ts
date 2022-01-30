@@ -2,7 +2,7 @@ import { Field, ID, InputType } from '@nestjs/graphql';
 import { CommentInput } from './comment.input';
 
 @InputType()
-export class CommentStoryInput extends CommentInput {
+export class CommentForestInput extends CommentInput {
   @Field(() => ID)
-  story: string;
+  forest: string;
 }

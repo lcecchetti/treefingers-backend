@@ -22,6 +22,10 @@ import { CommentConnection } from './dto/comment-connection.dto';
 import { FilterCommentInput } from './inputs/filter-comment.input';
 import { CommentStoryPayload } from './payloads/comment-story.payload';
 import { CommentStoryInput } from './inputs/comment-story.input';
+import { CommentForestPayload } from './payloads/comment-forest.payload';
+import { CommentForestInput } from './inputs/comment-forest.input';
+import { Forest } from 'src/forest/forest.entity';
+import { ForestService } from 'src/forest/forest.service';
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -30,6 +34,7 @@ export class CommentResolver {
     private userService: UserService,
     private storyService: StoryService,
     private likeService: LikeService,
+    private forestService: ForestService,
   ) {}
 
   @Query(() => CommentConnection)
@@ -55,6 +60,16 @@ export class CommentResolver {
   ): Promise<CommentStoryPayload> {
     return {
       comment: await this.commentService.commentStory(input, currentUser._id),
+    };
+  }
+
+  @Mutation(() => CommentForestPayload)
+  async commentForest(
+    @Args('input') input: CommentForestInput,
+    @GetCurrentUser() currentUser: CurrentUser,
+  ): Promise<CommentForestPayload> {
+    return {
+      comment: await this.commentService.commentForest(input, currentUser._id),
     };
   }
 
@@ -84,7 +99,20 @@ export class CommentResolver {
   }
 
   @ResolveField()
-  async story(@Parent() comment: Comment): Promise<Story> {
+  async story(@Parent() comment: Comment): Promise<Story | null> {
+    if (!comment.story) {
+      return null;
+    }
+
     return this.storyService.findById(comment.story._id);
+  }
+
+  @ResolveField()
+  async forest(@Parent() comment: Comment): Promise<Forest | null> {
+    if (!comment.forest) {
+      return null;
+    }
+
+    return this.forestService.findById(comment.forest._id);
   }
 }

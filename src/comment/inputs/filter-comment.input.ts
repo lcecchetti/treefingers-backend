@@ -13,5 +13,8 @@ export class FilterCommentInput extends FilterInput {
   story?: FilterIdInput;
 
   @Field(() => FilterIdInput, { nullable: true })
+  forest?: FilterIdInput;
+
+  @Field(() => FilterIdInput, { nullable: true })
   user?: FilterIdInput;
 }

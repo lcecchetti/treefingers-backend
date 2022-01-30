@@ -3,6 +3,7 @@ import { Document, SchemaTypes } from 'mongoose';
 import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
 import { Story } from 'src/story/story.entity';
+import { Forest } from 'src/forest/forest.entity';
 
 @Schema({ timestamps: true })
 @ObjectType()
@@ -32,8 +33,16 @@ export class Comment {
     ref: 'Story',
     index: true,
   })
-  @Field(() => Story)
-  story: Story;
+  @Field(() => Story, { nullable: true })
+  story?: Story;
+
+  @Prop({
+    type: SchemaTypes.ObjectId,
+    ref: 'Forest',
+    index: true,
+  })
+  @Field(() => Forest, { nullable: true })
+  forest?: Forest;
 
   @Prop({ default: Date.now })
   @Field(() => GraphQLISODateTime)
