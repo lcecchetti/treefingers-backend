@@ -44,10 +44,10 @@ export class FilterIntInput {
   @Field(() => Int, { nullable: true })
   ne?: number;
 
-  @Field(() => [Number], { nullable: true })
+  @Field(() => [Int], { nullable: true })
   in?: number[];
 
-  @Field(() => [Number], { nullable: true })
+  @Field(() => [Int], { nullable: true })
   nin?: number[];
 }
 
