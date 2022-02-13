@@ -17,13 +17,13 @@ import { Forest } from 'src/forest/forest.entity';
 import { ForestService } from 'src/forest/forest.service';
 import { StringService } from 'src/utils/services/string.service';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
-import { Like } from 'src/like/like.entity';
 import { LikeService } from 'src/like/like.service';
 import { StoryConnection } from './dto/story-connection.dto';
 import { CreateStoryPayload } from './payloads/create-story.payload';
 import { CreateStoryInput } from './inputs/create-story.input';
 import { FilterStoryInput } from './inputs/filter-story.input';
 import { CommentService } from 'src/comment/comment.service';
+import { CurrentUserData } from 'src/user/dto/current-user-data.dto';
 
 @Resolver(() => Story)
 export class StoryResolver {
@@ -62,19 +62,21 @@ export class StoryResolver {
     };
   }
 
-  @ResolveField(() => Like, { nullable: true })
-  async currentUserLike(
+  @ResolveField(() => CurrentUserData, { nullable: true })
+  async currentUserData(
     @GetCurrentUser() currentUser: CurrentUser,
     @Parent() story: Story,
-  ): Promise<Like | null> {
+  ): Promise<CurrentUserData | null> {
     if (!currentUser) {
       return null;
     }
 
-    return this.likeService.findOne({
-      story: { eq: story._id },
-      user: { eq: currentUser._id },
-    });
+    return {
+      like: await this.likeService.findOne({
+        story: { eq: story._id },
+        user: { eq: currentUser._id },
+      }),
+    };
   }
 
   @ResolveField(() => String)

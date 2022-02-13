@@ -16,7 +16,6 @@ import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
 import { Story } from 'src/story/story.entity';
 import { CommentConnectionArgs } from './args/comment-connection.args';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
-import { Like } from 'src/like/like.entity';
 import { LikeService } from 'src/like/like.service';
 import { CommentConnection } from './dto/comment-connection.dto';
 import { FilterCommentInput } from './inputs/filter-comment.input';
@@ -26,6 +25,7 @@ import { CommentForestPayload } from './payloads/comment-forest.payload';
 import { CommentForestInput } from './inputs/comment-forest.input';
 import { Forest } from 'src/forest/forest.entity';
 import { ForestService } from 'src/forest/forest.service';
+import { CurrentUserData } from 'src/user/dto/current-user-data.dto';
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -73,19 +73,21 @@ export class CommentResolver {
     };
   }
 
-  @ResolveField(() => Like, { nullable: true })
-  async currentUserLike(
+  @ResolveField(() => CurrentUserData, { nullable: true })
+  async currentUserData(
     @GetCurrentUser() currentUser: CurrentUser,
     @Parent() comment: Comment,
-  ): Promise<Like | null> {
+  ): Promise<CurrentUserData | null> {
     if (!currentUser) {
       return null;
     }
 
-    return this.likeService.findOne({
-      comment: { eq: comment._id },
-      user: { eq: currentUser._id },
-    });
+    return {
+      like: await this.likeService.findOne({
+        comment: { eq: comment._id },
+        user: { eq: currentUser._id },
+      }),
+    };
   }
 
   @ResolveField(() => Int)

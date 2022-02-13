@@ -14,11 +14,11 @@ import { StoryConnectionArgs } from 'src/story/args/story-connection.args';
 import { GetCurrentUser } from '../auth/decorators/get-current-user.decorator';
 import { StringService } from 'src/utils/services/string.service';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
-import { Like } from 'src/like/like.entity';
 import { LikeService } from 'src/like/like.service';
 import { UserConnection } from './dto/user-connection.dto';
 import { StoryConnection } from 'src/story/dto/story-connection.dto';
 import { FilterUserInput } from './inputs/filter-user.input';
+import { CurrentUserData } from './dto/current-user-data.dto';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -55,19 +55,21 @@ export class UserResolver {
     return this.userService.findById(currentUser._id);
   }
 
-  @ResolveField(() => Like, { nullable: true })
-  async currentUserLike(
+  @ResolveField(() => CurrentUserData, { nullable: true })
+  async currentUserData(
     @GetCurrentUser() currentUser: CurrentUser,
-    @Parent() author: User,
-  ): Promise<Like | null> {
+    @Parent() user: User,
+  ): Promise<CurrentUserData | null> {
     if (!currentUser) {
       return null;
     }
 
-    return this.likeService.findOne({
-      author: { eq: author._id },
-      user: { eq: currentUser._id },
-    });
+    return {
+      like: await this.likeService.findOne({
+        author: { eq: user._id },
+        user: { eq: currentUser._id },
+      }),
+    };
   }
 
   @ResolveField(() => String)

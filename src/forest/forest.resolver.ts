@@ -21,10 +21,10 @@ import { User } from 'src/user/user.entity';
 import { UserService } from 'src/user/user.service';
 import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
-import { Like } from 'src/like/like.entity';
 import { LikeService } from 'src/like/like.service';
 import { StringService } from 'src/utils/services/string.service';
 import { CommentService } from 'src/comment/comment.service';
+import { CurrentUserData } from 'src/user/dto/current-user-data.dto';
 
 @Resolver(() => Forest)
 export class ForestResolver {
@@ -70,19 +70,21 @@ export class ForestResolver {
     return this.userService.findById(forest.owner._id);
   }
 
-  @ResolveField(() => Like, { nullable: true })
-  async currentUserLike(
+  @ResolveField(() => CurrentUserData, { nullable: true })
+  async currentUserData(
     @GetCurrentUser() currentUser: CurrentUser,
     @Parent() forest: Forest,
-  ): Promise<Like | null> {
+  ): Promise<CurrentUserData | null> {
     if (!currentUser) {
       return null;
     }
 
-    return this.likeService.findOne({
-      forest: { eq: forest._id },
-      user: { eq: currentUser._id },
-    });
+    return {
+      like: await this.likeService.findOne({
+        forest: { eq: forest._id },
+        user: { eq: currentUser._id },
+      }),
+    };
   }
 
   @ResolveField(() => Int)
