@@ -49,22 +49,28 @@ export class UserService {
   }
 
   async paginate(
-    { filter, sort, pagination }: UserConnectionArgs = new UserConnectionArgs(),
+    {
+      filter,
+      ...connectionArgs
+    }: UserConnectionArgs = new UserConnectionArgs(),
   ): Promise<UserConnection> {
     return this.queryService.paginate(
       this.userModel,
       this.queryService.gqlFilterToMongo(filter),
-      sort,
-      pagination,
+      null,
+      connectionArgs,
     );
   }
 
-  async search({ query, pagination }: SearchArgs): Promise<UserConnection> {
+  async search({
+    query,
+    ...connectionArgs
+  }: SearchArgs): Promise<UserConnection> {
     return this.queryService.paginate(
       this.userModel,
       { $text: { $search: query } },
-      null,
-      pagination,
+      undefined,
+      connectionArgs,
     );
   }
 

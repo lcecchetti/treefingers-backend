@@ -1,7 +1,9 @@
+import { BadRequestException } from '@nestjs/common';
+import { Console } from 'console';
 import { FilterQuery, Model } from 'mongoose';
+import { ConnectionArgs } from './args/connection.args';
 import { IConnection } from './dto/pagination.dto';
 import { FilterInput } from './inputs/filter.input';
-import { PaginationInput } from './inputs/pagination.input';
 import { SortInput, SORT_DIRECTION } from './inputs/sort.input';
 
 const filterMap = {
@@ -37,33 +39,36 @@ export class QueryService<E, D> {
     model: Model<D>,
     filter: any = {},
     sort: any = new SortInput(),
-    pagination: PaginationInput = new PaginationInput(),
+    { first, last, before, after }: ConnectionArgs = new ConnectionArgs(),
   ): Promise<IConnection<E>> {
+    // only one couple of param should be provided per time
+    if ((first && last) || (before && after)) {
+      throw new BadRequestException('Provide only first/after or last/before');
+    }
+
     const result: IConnection<E> = {};
 
-    // prepare arguments
-    const { cursor, pageSize, currentPage } = pagination;
-
-    // validate inputs for cursor pagination
-    if (cursor && (Object.keys(sort).length > 1 || !sort._id)) {
-      throw new Error('Cursor pagination requires sorting only by _id');
-    }
-
     // prepare cursor filter
-    const currentCursor = decodeCursor(cursor);
-    if (currentCursor) {
+    if (after) {
+      const cursor = decodeCursor(after);
       filter._id =
-        !sort._id || sort._id === SORT_DIRECTION.ASC
-          ? { $gt: currentCursor }
-          : { $lt: currentCursor };
+        sort._id === SORT_DIRECTION.ASC ? { $gt: cursor } : { $lt: cursor };
     }
+    if (before) {
+      const cursor = decodeCursor(before);
+      filter._id =
+        sort._id === SORT_DIRECTION.ASC ? { $lt: cursor } : { $gt: cursor };
+    }
+
+    const totalCount = await model.count(filter);
 
     // get nodes
+    //@todo improve performances by removing skip and querying first item in reversed order
     const nodes = await model
       .find(filter, null, {
         sort,
-        limit: pageSize,
-        skip: pageSize * (currentPage - 1),
+        limit: first || last,
+        skip: last ? Math.max(totalCount - last, 0) : 0,
       })
       .lean();
 
@@ -75,26 +80,21 @@ export class QueryService<E, D> {
       };
     });
 
-    // prepare page infos
-    const totalCount = await model.count(filter);
-    const pagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 1;
-
+    // prepare page info
     result.pageInfo = {
-      totalCount,
-      pagesCount,
-      pageSize,
-      currentPage,
       startCursor: result.edges.slice(0, 1).pop()?.cursor,
       endCursor: result.edges.slice(-1).pop()?.cursor,
-      hasNextPage: currentPage < pagesCount,
+      hasPreviousPage: last ? totalCount > last : false,
+      hasNextPage: first ? totalCount > first : false,
+      totalCount,
     };
 
     return result;
   }
 
-  gqlFilterToMongo(gqlFilter: FilterInput): FilterQuery<D> | null {
+  gqlFilterToMongo(gqlFilter: FilterInput): FilterQuery<D> | undefined {
     if (!gqlFilter) {
-      return null;
+      return undefined;
     }
 
     // convert filters to string

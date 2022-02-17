@@ -1,19 +1,20 @@
-import { ArgsType, Field } from '@nestjs/graphql';
-import { Type } from 'class-transformer';
-import { ValidateNested } from 'class-validator';
-import { FilterInput } from '../inputs/filter.input';
-import { PaginationInput } from '../inputs/pagination.input';
-import { SortInput } from '../inputs/sort.input';
+import { ArgsType, Field, Int } from '@nestjs/graphql';
+import { IsOptional, Min } from 'class-validator';
 @ArgsType()
 export class ConnectionArgs {
-  @Field({ nullable: true })
-  readonly filter?: FilterInput = new FilterInput();
+  @Field(() => Int, { nullable: true })
+  @IsOptional()
+  @Min(1)
+  readonly first?: number;
+
+  @Field(() => Int, { nullable: true })
+  @IsOptional()
+  @Min(1)
+  readonly last?: number;
 
   @Field({ nullable: true })
-  readonly sort?: SortInput = new SortInput();
+  readonly before?: string;
 
   @Field({ nullable: true })
-  @ValidateNested()
-  @Type(() => PaginationInput)
-  readonly pagination?: PaginationInput = new PaginationInput();
+  readonly after?: string;
 }

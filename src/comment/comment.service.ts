@@ -52,14 +52,14 @@ export class CommentService {
     {
       filter,
       sort,
-      pagination,
+      ...connectionArgs
     }: CommentConnectionArgs = new CommentConnectionArgs(),
   ): Promise<CommentConnection> {
     return this.queryService.paginate(
       this.commentModel,
       this.queryService.gqlFilterToMongo(filter),
       sort,
-      pagination,
+      connectionArgs,
     );
   }
 

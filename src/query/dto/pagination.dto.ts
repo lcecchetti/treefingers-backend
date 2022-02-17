@@ -1,4 +1,4 @@
-import { Field, ObjectType, Int } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Type } from '@nestjs/common';
 
 interface Edge<T> {
@@ -11,23 +11,17 @@ class PageInfo {
   @Field()
   hasNextPage?: boolean;
 
+  @Field()
+  hasPreviousPage?: boolean;
+
   @Field({ nullable: true })
   startCursor?: string;
 
   @Field({ nullable: true })
   endCursor?: string;
 
-  @Field(() => Int)
+  @Field(() => Int, { nullable: true })
   totalCount?: number;
-
-  @Field(() => Int)
-  pagesCount?: number;
-
-  @Field(() => Int)
-  pageSize?: number;
-
-  @Field(() => Int)
-  currentPage?: number;
 }
 
 export interface IConnection<T> {

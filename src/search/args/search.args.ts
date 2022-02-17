@@ -1,11 +1,8 @@
 import { ArgsType, Field } from '@nestjs/graphql';
-import { PaginationInput } from 'src/query/inputs/pagination.input';
+import { ConnectionArgs } from 'src/query/args/connection.args';
 
 @ArgsType()
-export class SearchArgs {
-  @Field(() => PaginationInput, { nullable: true })
-  pagination?: PaginationInput = new PaginationInput();
-
+export class SearchArgs extends ConnectionArgs {
   @Field()
   query: string;
 }

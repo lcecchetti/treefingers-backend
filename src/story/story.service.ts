@@ -40,23 +40,26 @@ export class StoryService {
     {
       filter,
       sort,
-      pagination,
+      ...connectionArgs
     }: StoryConnectionArgs = new StoryConnectionArgs(),
   ): Promise<StoryConnection> {
     return this.queryService.paginate(
       this.storyModel,
       this.queryService.gqlFilterToMongo(filter),
       sort,
-      pagination,
+      connectionArgs,
     );
   }
 
-  async search({ query, pagination }: SearchArgs): Promise<StoryConnection> {
+  async search({
+    query,
+    ...connectionArgs
+  }: SearchArgs): Promise<StoryConnection> {
     return this.queryService.paginate(
       this.storyModel,
       { $text: { $search: query } },
-      null,
-      pagination,
+      undefined,
+      connectionArgs,
     );
   }
 

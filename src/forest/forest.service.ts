@@ -47,23 +47,26 @@ export class ForestService {
     {
       filter,
       sort,
-      pagination,
+      ...connectionArgs
     }: ForestConnectionArgs = new ForestConnectionArgs(),
   ): Promise<ForestConnection> {
     return this.queryService.paginate(
       this.forestModel,
       this.queryService.gqlFilterToMongo(filter),
       sort,
-      pagination,
+      connectionArgs,
     );
   }
 
-  async search({ query, pagination }: SearchArgs): Promise<ForestConnection> {
+  async search({
+    query,
+    ...connectionArgs
+  }: SearchArgs): Promise<ForestConnection> {
     return this.queryService.paginate(
       this.forestModel,
       { $text: { $search: query } },
-      null,
-      pagination,
+      undefined,
+      connectionArgs,
     );
   }
 
