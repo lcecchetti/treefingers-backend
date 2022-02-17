@@ -60,17 +60,16 @@ export class QueryService<E, D> {
         sort._id === SORT_DIRECTION.ASC ? { $lt: cursor } : { $gt: cursor };
     }
 
+    // get total query count
     const totalCount = await model.count(filter);
+
+    // prepare query options
+    const limit = first || last || 10;
+    const skip = last ? Math.max(totalCount - last, 0) : 0;
 
     // get nodes
     //@todo improve performances by removing skip and querying first item in reversed order
-    const nodes = await model
-      .find(filter, null, {
-        sort,
-        limit: first || last,
-        skip: last ? Math.max(totalCount - last, 0) : 0,
-      })
-      .lean();
+    const nodes = await model.find(filter, null, { sort, limit, skip }).lean();
 
     // build edges
     result.edges = nodes.map((node) => {
@@ -84,9 +83,8 @@ export class QueryService<E, D> {
     result.pageInfo = {
       startCursor: result.edges.slice(0, 1).pop()?.cursor,
       endCursor: result.edges.slice(-1).pop()?.cursor,
-      hasPreviousPage: last ? totalCount > last : false,
-      hasNextPage: first ? totalCount > first : false,
-      totalCount,
+      hasPreviousPage: last ? totalCount > limit : false,
+      hasNextPage: first ? totalCount > limit : false,
     };
 
     return result;
