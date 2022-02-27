@@ -1,5 +1,4 @@
 import { BadRequestException } from '@nestjs/common';
-import { Console } from 'console';
 import { FilterQuery, Model } from 'mongoose';
 import { ConnectionArgs } from './args/connection.args';
 import { IConnection } from './dto/pagination.dto';

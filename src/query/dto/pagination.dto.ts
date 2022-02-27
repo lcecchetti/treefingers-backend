@@ -19,9 +19,6 @@ class PageInfo {
 
   @Field({ nullable: true })
   endCursor?: string;
-
-  @Field(() => Int, { nullable: true })
-  totalCount?: number;
 }
 
 export interface IConnection<T> {

@@ -4,5 +4,5 @@ import { ConnectionArgs } from 'src/query/args/connection.args';
 @ArgsType()
 export class SearchArgs extends ConnectionArgs {
   @Field()
-  query: string;
+  readonly query: string;
 }

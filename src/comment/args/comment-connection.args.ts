@@ -6,8 +6,8 @@ import { FilterCommentInput } from '../inputs/filter-comment.input';
 @ArgsType()
 export class CommentConnectionArgs extends ConnectionArgs {
   @Field(() => FilterCommentInput, { nullable: true })
-  filter?: FilterCommentInput;
+  readonly filter?: FilterCommentInput;
 
-  @Field({ nullable: true })
+  @Field(() => SortInput, { nullable: true })
   readonly sort?: SortInput = new SortInput();
 }
