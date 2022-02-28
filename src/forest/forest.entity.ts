@@ -34,6 +34,7 @@ export class Forest {
 
   @Prop({
     required: true,
+    index: true,
     minlength: 1,
     maxlength: 1024,
     trim: true,
@@ -61,6 +62,6 @@ export class Forest {
 export type ForestDocument = Forest & Document;
 const ForestSchema = SchemaFactory.createForClass(Forest);
 
-ForestSchema.index({ name: 'text' });
+ForestSchema.index({ name: 'text', about: 'text' });
 
 export { ForestSchema };

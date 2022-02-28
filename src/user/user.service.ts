@@ -8,7 +8,6 @@ import { UserConnection } from './dto/user-connection.dto';
 import { FilterUserInput } from './inputs/filter-user.input';
 import slugify from 'slugify';
 import { RegisterInput } from 'src/auth/inputs/register.input';
-import { SearchArgs } from 'src/search/args/search.args';
 @Injectable()
 export class UserService {
   constructor(
@@ -49,29 +48,9 @@ export class UserService {
   }
 
   async paginate(
-    {
-      filter,
-      ...connectionArgs
-    }: UserConnectionArgs = new UserConnectionArgs(),
+    args: UserConnectionArgs = new UserConnectionArgs(),
   ): Promise<UserConnection> {
-    return this.queryService.paginate(
-      this.userModel,
-      this.queryService.gqlFilterToMongo(filter),
-      null,
-      connectionArgs,
-    );
-  }
-
-  async search({
-    query,
-    ...connectionArgs
-  }: SearchArgs): Promise<UserConnection> {
-    return this.queryService.paginate(
-      this.userModel,
-      { $text: { $search: query } },
-      undefined,
-      connectionArgs,
-    );
+    return this.queryService.paginate(this.userModel, args);
   }
 
   async count(filter?: FilterUserInput): Promise<number> {

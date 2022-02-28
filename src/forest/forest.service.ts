@@ -7,7 +7,6 @@ import { ForestConnectionArgs } from './args/forest-connection.args';
 import { CreateForestInput } from './inputs/create-forest.input';
 import { ForestConnection } from './dto/forest-connection.dto';
 import { FilterForestInput } from './inputs/filter-forest.input';
-import { SearchArgs } from 'src/search/args/search.args';
 import slugify from 'slugify';
 
 @Injectable()
@@ -44,30 +43,9 @@ export class ForestService {
   }
 
   async paginate(
-    {
-      filter,
-      sort,
-      ...connectionArgs
-    }: ForestConnectionArgs = new ForestConnectionArgs(),
+    args: ForestConnectionArgs = new ForestConnectionArgs(),
   ): Promise<ForestConnection> {
-    return this.queryService.paginate(
-      this.forestModel,
-      this.queryService.gqlFilterToMongo(filter),
-      sort,
-      connectionArgs,
-    );
-  }
-
-  async search({
-    query,
-    ...connectionArgs
-  }: SearchArgs): Promise<ForestConnection> {
-    return this.queryService.paginate(
-      this.forestModel,
-      { $text: { $search: query } },
-      undefined,
-      connectionArgs,
-    );
+    return this.queryService.paginate(this.forestModel, args);
   }
 
   async count(filter?: FilterForestInput): Promise<number> {

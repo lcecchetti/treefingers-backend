@@ -49,18 +49,9 @@ export class CommentService {
   }
 
   async paginate(
-    {
-      filter,
-      sort,
-      ...connectionArgs
-    }: CommentConnectionArgs = new CommentConnectionArgs(),
+    args: CommentConnectionArgs = new CommentConnectionArgs(),
   ): Promise<CommentConnection> {
-    return this.queryService.paginate(
-      this.commentModel,
-      this.queryService.gqlFilterToMongo(filter),
-      sort,
-      connectionArgs,
-    );
+    return this.queryService.paginate(this.commentModel, args);
   }
 
   async count(filter?: FilterCommentInput): Promise<number> {

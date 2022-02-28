@@ -28,12 +28,6 @@ export class FilterIdInput {
 
   @Field(() => [ID], { nullable: true })
   nin?: string[];
-
-  @Field(() => ID, { nullable: true })
-  gt?: string;
-
-  @Field(() => ID, { nullable: true })
-  lt?: string;
 }
 
 @InputType()
@@ -55,4 +49,7 @@ export class FilterIntInput {
 export class FilterInput {
   @Field(() => FilterIdInput, { nullable: true })
   _id?: FilterIdInput;
+
+  @Field(() => String, { nullable: true })
+  query?: string;
 }

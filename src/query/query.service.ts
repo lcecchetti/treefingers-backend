@@ -36,9 +36,14 @@ const decodeCursor = (cursor: string): string => {
 export class QueryService<E, D> {
   async paginate(
     model: Model<D>,
-    filter: any = {},
-    sort: any = new SortInput(),
-    { first, last, before, after }: ConnectionArgs = new ConnectionArgs(),
+    {
+      filter,
+      sort,
+      first,
+      last,
+      before,
+      after,
+    }: ConnectionArgs = new ConnectionArgs(),
   ): Promise<IConnection<E>> {
     // only one couple of param should be provided per time
     if ((first && last) || (before && after)) {
@@ -47,20 +52,22 @@ export class QueryService<E, D> {
 
     const result: IConnection<E> = {};
 
+    const mongoFilter: any = this.gqlFilterToMongo(filter);
+
     // prepare cursor filter
     if (after) {
       const cursor = decodeCursor(after);
-      filter._id =
+      mongoFilter._id =
         sort._id === SORT_DIRECTION.ASC ? { $gt: cursor } : { $lt: cursor };
     }
     if (before) {
       const cursor = decodeCursor(before);
-      filter._id =
+      mongoFilter._id =
         sort._id === SORT_DIRECTION.ASC ? { $lt: cursor } : { $gt: cursor };
     }
 
     // get total query count
-    const totalCount = await model.count(filter);
+    const totalCount = await model.count(mongoFilter);
 
     // prepare query options
     const limit = first || last || 10;
@@ -68,7 +75,9 @@ export class QueryService<E, D> {
 
     // get nodes
     //@todo improve performances by removing skip and querying first item in reversed order
-    const nodes = await model.find(filter, null, { sort, limit, skip }).lean();
+    const nodes = await model
+      .find(mongoFilter, null, { sort, limit, skip })
+      .lean();
 
     // build edges
     result.edges = nodes.map((node) => {
@@ -89,9 +98,9 @@ export class QueryService<E, D> {
     return result;
   }
 
-  gqlFilterToMongo(gqlFilter: FilterInput): FilterQuery<D> | undefined {
+  gqlFilterToMongo(gqlFilter: FilterInput): FilterQuery<D> {
     if (!gqlFilter) {
-      return undefined;
+      return {};
     }
 
     // convert filters to string
@@ -105,7 +114,14 @@ export class QueryService<E, D> {
       );
     });
 
-    // return parsed json object
-    return JSON.parse(filterString);
+    // restore filters object
+    const mongoFilter = JSON.parse(filterString);
+
+    // prepare search query
+    if (gqlFilter.query) {
+      mongoFilter.$text = { $search: gqlFilter.query };
+    }
+
+    return mongoFilter;
   }
 }

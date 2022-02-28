@@ -7,7 +7,6 @@ import { StoryConnectionArgs } from './args/story-connection.args';
 import { CreateStoryInput } from './inputs/create-story.input';
 import { StoryConnection } from './dto/story-connection.dto';
 import { FilterStoryInput } from './inputs/filter-story.input';
-import { SearchArgs } from 'src/search/args/search.args';
 
 @Injectable()
 export class StoryService {
@@ -37,30 +36,9 @@ export class StoryService {
   }
 
   async paginate(
-    {
-      filter,
-      sort,
-      ...connectionArgs
-    }: StoryConnectionArgs = new StoryConnectionArgs(),
+    args: StoryConnectionArgs = new StoryConnectionArgs(),
   ): Promise<StoryConnection> {
-    return this.queryService.paginate(
-      this.storyModel,
-      this.queryService.gqlFilterToMongo(filter),
-      sort,
-      connectionArgs,
-    );
-  }
-
-  async search({
-    query,
-    ...connectionArgs
-  }: SearchArgs): Promise<StoryConnection> {
-    return this.queryService.paginate(
-      this.storyModel,
-      { $text: { $search: query } },
-      undefined,
-      connectionArgs,
-    );
+    return this.queryService.paginate(this.storyModel, args);
   }
 
   async count(filter?: FilterStoryInput): Promise<number> {
