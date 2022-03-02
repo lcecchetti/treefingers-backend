@@ -56,81 +56,81 @@ export class LikeResolver {
 
   @Mutation(() => LikeCommentPayload)
   async likeComment(
-    @Args('input') input: LikeCommentInput,
+    @Args('input') { comment }: LikeCommentInput,
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<LikeCommentPayload> {
     return {
-      like: await this.likeService.likeComment(input, currentUser._id),
+      like: await this.likeService.likeComment(comment, currentUser._id),
     };
   }
 
   @Mutation(() => DislikeCommentPayload)
   async dislikeComment(
-    @Args('input') input: DislikeCommentInput,
+    @Args('input') { comment }: DislikeCommentInput,
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<DislikeCommentPayload> {
     return {
-      like: await this.likeService.dislikeComment(input, currentUser._id),
+      like: await this.likeService.dislikeComment(comment, currentUser._id),
     };
   }
 
   @Mutation(() => LikeStoryPayload)
   async likeStory(
-    @Args('input') input: LikeStoryInput,
+    @Args('input') { story }: LikeStoryInput,
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<LikeStoryPayload> {
     return {
-      like: await this.likeService.likeStory(input, currentUser._id),
+      like: await this.likeService.likeStory(story, currentUser._id),
     };
   }
 
   @Mutation(() => DislikeStoryPayload)
   async dislikeStory(
-    @Args('input') input: DislikeStoryInput,
+    @Args('input') { story }: DislikeStoryInput,
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<DislikeStoryPayload> {
     return {
-      like: await this.likeService.dislikeStory(input, currentUser._id),
+      like: await this.likeService.dislikeStory(story, currentUser._id),
     };
   }
 
   @Mutation(() => LikeAuthorPayload)
   async likeAuthor(
-    @Args('input') input: LikeAuthorInput,
+    @Args('input') { author }: LikeAuthorInput,
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<LikeAuthorPayload> {
     return {
-      like: await this.likeService.likeAuthor(input, currentUser._id),
+      like: await this.likeService.likeAuthor(author, currentUser._id),
     };
   }
 
   @Mutation(() => DislikeAuthorPayload)
   async dislikeAuthor(
-    @Args('input') input: DislikeAuthorInput,
+    @Args('input') { author }: DislikeAuthorInput,
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<DislikeAuthorPayload> {
     return {
-      like: await this.likeService.dislikeAuthor(input, currentUser._id),
+      like: await this.likeService.dislikeAuthor(author, currentUser._id),
     };
   }
 
   @Mutation(() => LikeForestPayload)
   async likeForest(
-    @Args('input') input: LikeForestInput,
+    @Args('input') { forest }: LikeForestInput,
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<LikeForestPayload> {
     return {
-      like: await this.likeService.likeForest(input, currentUser._id),
+      like: await this.likeService.likeForest(forest, currentUser._id),
     };
   }
 
   @Mutation(() => DislikeForestPayload)
   async dislikeForest(
-    @Args('input') input: DislikeForestInput,
+    @Args('input') { forest }: DislikeForestInput,
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<DislikeForestPayload> {
     return {
-      like: await this.likeService.dislikeForest(input, currentUser._id),
+      like: await this.likeService.dislikeForest(forest, currentUser._id),
     };
   }
 
