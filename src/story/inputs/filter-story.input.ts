@@ -20,4 +20,7 @@ export class FilterStoryInput extends FilterInput {
 
   @Field(() => FilterIdInput, { nullable: true })
   root?: FilterIdInput;
+
+  @Field(() => String, { nullable: true })
+  query?: string;
 }

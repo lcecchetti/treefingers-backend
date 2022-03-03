@@ -118,8 +118,9 @@ export class QueryService<E, D> {
     const mongoFilter = JSON.parse(filterString);
 
     // prepare search query
-    if (gqlFilter.query) {
-      mongoFilter.$text = { $search: gqlFilter.query };
+    if (mongoFilter.query) {
+      mongoFilter.$text = { $search: mongoFilter.query };
+      delete mongoFilter['query'];
     }
 
     return mongoFilter;

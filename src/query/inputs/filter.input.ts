@@ -49,7 +49,4 @@ export class FilterIntInput {
 export class FilterInput {
   @Field(() => FilterIdInput, { nullable: true })
   _id?: FilterIdInput;
-
-  @Field(() => String, { nullable: true })
-  query?: string;
 }

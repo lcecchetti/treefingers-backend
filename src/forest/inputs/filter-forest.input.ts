@@ -10,5 +10,8 @@ export class FilterForestInput extends FilterInput {
   or?: FilterForestInput[];
 
   @Field(() => FilterStringInput, { nullable: true })
-  readonly slug?: FilterStringInput;
+  slug?: FilterStringInput;
+
+  @Field(() => String, { nullable: true })
+  query?: string;
 }
