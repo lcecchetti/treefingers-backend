@@ -5,12 +5,14 @@ import { UserResolver } from './user.resolver';
 import { UserSchema } from './user.entity';
 import { StoryModule } from 'src/story/story.module';
 import { LikeModule } from 'src/like/like.module';
-import { QueryModule } from 'src/query/query.module';
+import { PaginationModule } from 'src/pagination/pagination.module';
+import { FilterModule } from 'src/filter/filter.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
-    QueryModule,
+    PaginationModule,
+    FilterModule,
     forwardRef(() => StoryModule),
     forwardRef(() => LikeModule),
     forwardRef(() => LikeModule),

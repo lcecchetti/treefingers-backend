@@ -1,15 +1,15 @@
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Like, LikeDocument } from './like.entity';
-import { QueryService } from 'src/query/query.service';
 import { FilterLikeInput } from './inputs/filter-like.input';
+import { FilterService } from 'src/filter/filter.service';
 
 @Injectable()
 export class LikeService {
   constructor(
     @InjectModel('Like') private likeModel: Model<LikeDocument>,
-    private queryService: QueryService<Like, LikeDocument>,
+    private filterService: FilterService<LikeDocument>,
   ) {}
 
   async findById(_id: string): Promise<Like | null> {
@@ -17,9 +17,7 @@ export class LikeService {
   }
 
   async findOne(filter?: FilterLikeInput): Promise<Like | null> {
-    return this.likeModel
-      .findOne(this.queryService.gqlFilterToMongo(filter))
-      .lean();
+    return this.likeModel.findOne(this.prepareFilter(filter)).lean();
   }
 
   async likeStory(story: string, user: string): Promise<Like> {
@@ -47,7 +45,7 @@ export class LikeService {
   }
 
   async dislikeAuthor(author: string, user: string): Promise<Like | null> {
-    return this.likeModel.findOneAndDelete({ author, user }).lean();;
+    return this.likeModel.findOneAndDelete({ author, user }).lean();
   }
 
   async dislikeForest(forest: string, user: string): Promise<Like | null> {
@@ -55,6 +53,10 @@ export class LikeService {
   }
 
   async count(filter?: FilterLikeInput): Promise<number> {
-    return this.likeModel.count(this.queryService.gqlFilterToMongo(filter));
+    return this.likeModel.count(this.prepareFilter(filter));
+  }
+
+  prepareFilter(filter: FilterLikeInput): FilterQuery<Comment> {
+    return this.filterService.prepareFilter(filter);
   }
 }

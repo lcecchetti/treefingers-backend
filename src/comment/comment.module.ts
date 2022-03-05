@@ -6,13 +6,15 @@ import { CommentSchema } from './comment.entity';
 import { UserModule } from 'src/user/user.module';
 import { StoryModule } from 'src/story/story.module';
 import { LikeModule } from 'src/like/like.module';
-import { QueryModule } from 'src/query/query.module';
 import { ForestModule } from 'src/forest/forest.module';
+import { PaginationModule } from 'src/pagination/pagination.module';
+import { FilterModule } from 'src/filter/filter.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'Comment', schema: CommentSchema }]),
-    QueryModule,
+    PaginationModule,
+    FilterModule,
     forwardRef(() => UserModule),
     forwardRef(() => StoryModule),
     forwardRef(() => LikeModule),

@@ -1,19 +1,21 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Forest, ForestDocument } from './forest.entity';
-import { QueryService } from 'src/query/query.service';
 import { FilterQuery, Model } from 'mongoose';
 import { ForestConnectionArgs } from './args/forest-connection.args';
 import { CreateForestInput } from './inputs/create-forest.input';
 import { ForestConnection } from './dto/forest-connection.dto';
 import { FilterForestInput } from './inputs/filter-forest.input';
 import slugify from 'slugify';
+import { PaginationService } from 'src/pagination/pagination.service';
+import { FilterService } from 'src/filter/filter.service';
 
 @Injectable()
 export class ForestService {
   constructor(
     @InjectModel('Forest') private forestModel: Model<ForestDocument>,
-    private queryService: QueryService<Forest, ForestDocument>,
+    private paginationService: PaginationService<Forest, ForestDocument>,
+    private filterService: FilterService<ForestDocument>,
   ) {}
 
   async findById(_id: string): Promise<Forest | null> {
@@ -21,9 +23,7 @@ export class ForestService {
   }
 
   async findOne(filter?: FilterForestInput): Promise<Forest | null> {
-    return this.forestModel
-      .findOne(this.queryService.gqlFilterToMongo(filter))
-      .lean();
+    return this.forestModel.findOne(this.prepareFilter(filter)).lean();
   }
 
   async create({ data }: CreateForestInput): Promise<Forest> {
@@ -49,24 +49,26 @@ export class ForestService {
       ...connectionArgs
     }: ForestConnectionArgs = new ForestConnectionArgs(),
   ): Promise<ForestConnection> {
-    const mongoFilter: FilterQuery<Forest> =
-      this.queryService.gqlFilterToMongo(filter);
-
-    // add search query condition if provided
-    if (filter.query) {
-      mongoFilter.$text = { $search: filter.query };
-      delete mongoFilter.query;
-    }
-
-    return this.queryService.paginate(
+    return this.paginationService.paginate(
       this.forestModel,
-      mongoFilter,
+      this.prepareFilter(filter),
       sort,
       connectionArgs,
     );
   }
 
   async count(filter?: FilterForestInput): Promise<number> {
-    return this.forestModel.count(this.queryService.gqlFilterToMongo(filter));
+    return this.forestModel.count(this.prepareFilter(filter));
+  }
+
+  prepareFilter({ query, ...filter }: FilterForestInput): FilterQuery<Comment> {
+    const preparedFilter = this.filterService.prepareFilter(filter);
+
+    // add search query condition if provided
+    if (query) {
+      preparedFilter.$text = { $search: query };
+    }
+
+    return preparedFilter;
   }
 }

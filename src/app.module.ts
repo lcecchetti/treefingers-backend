@@ -11,6 +11,8 @@ import { CommentModule } from './comment/comment.module';
 import { LikeModule } from './like/like.module';
 import { ForestModule } from './forest/forest.module';
 import { UtilsModule } from './utils/utils.module';
+import { FilterModule } from './filter/filter.module';
+import { PaginationModule } from './pagination/pagination.module';
 
 @Module({
   imports: [
@@ -37,6 +39,8 @@ import { UtilsModule } from './utils/utils.module';
     CommentModule,
     LikeModule,
     ForestModule,
+    FilterModule,
+    PaginationModule,
   ],
   providers: [AppService],
 })

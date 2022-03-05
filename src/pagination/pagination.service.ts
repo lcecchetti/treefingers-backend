@@ -1,20 +1,8 @@
 import { BadRequestException } from '@nestjs/common';
-import { FilterQuery, Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { ConnectionArgs } from './args/connection.args';
 import { IConnection } from './dto/pagination.dto';
-import { FilterInput } from './inputs/filter.input';
 import { SortInput, SORT_DIRECTION } from './inputs/sort.input';
-
-const filterMap = {
-  eq: '$eq',
-  ne: '$ne',
-  in: '$in',
-  nin: '$nin',
-  lt: '$lt',
-  gt: '$gt',
-  and: '$and',
-  or: '$or',
-};
 
 const encodeCursor = (cursor: string): string => {
   if (!cursor) {
@@ -32,7 +20,7 @@ const decodeCursor = (cursor: string): string => {
   return Buffer.from(String(cursor), 'base64').toString('ascii');
 };
 
-export class QueryService<E, D> {
+export class PaginationService<E, D> {
   async paginate(
     model: Model<D>,
     filter: any = {},
@@ -86,24 +74,5 @@ export class QueryService<E, D> {
     };
 
     return result;
-  }
-
-  gqlFilterToMongo(gqlFilter: FilterInput): FilterQuery<D> {
-    if (!gqlFilter) {
-      return {};
-    }
-
-    // convert filters to string
-    let filterString = JSON.stringify(gqlFilter);
-
-    // replace gql to mongo
-    Object.keys(filterMap).forEach((key) => {
-      filterString = filterString.replace(
-        new RegExp(`"${key}":`, 'g'),
-        `"${filterMap[key]}":`,
-      );
-    });
-
-    return JSON.parse(filterString);
   }
 }

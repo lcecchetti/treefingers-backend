@@ -7,12 +7,14 @@ import { UserModule } from 'src/user/user.module';
 import { LikeModule } from 'src/like/like.module';
 import { CommentModule } from 'src/comment/comment.module';
 import { ForestModule } from 'src/forest/forest.module';
-import { QueryModule } from 'src/query/query.module';
+import { PaginationModule } from 'src/pagination/pagination.module';
+import { FilterModule } from 'src/filter/filter.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'Story', schema: StorySchema }]),
-    QueryModule,
+    PaginationModule,
+    FilterModule,
     forwardRef(() => UserModule),
     forwardRef(() => LikeModule),
     forwardRef(() => CommentModule),

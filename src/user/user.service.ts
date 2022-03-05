@@ -1,18 +1,20 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './user.entity';
-import { QueryService } from 'src/query/query.service';
 import { FilterQuery, Model } from 'mongoose';
 import { UserConnectionArgs } from './args/user-connection.args';
 import { UserConnection } from './dto/user-connection.dto';
 import { FilterUserInput } from './inputs/filter-user.input';
 import slugify from 'slugify';
 import { RegisterInput } from 'src/auth/inputs/register.input';
+import { PaginationService } from 'src/pagination/pagination.service';
+import { FilterService } from 'src/filter/filter.service';
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel('User') private userModel: Model<UserDocument>,
-    private queryService: QueryService<User, UserDocument>,
+    private paginationService: PaginationService<User, UserDocument>,
+    private filterService: FilterService<UserDocument>,
   ) {}
 
   async findById(_id: string): Promise<User | null> {
@@ -20,9 +22,7 @@ export class UserService {
   }
 
   async findOne(filter?: FilterUserInput): Promise<User | null> {
-    return this.userModel
-      .findOne(this.queryService.gqlFilterToMongo(filter))
-      .lean();
+    return this.userModel.findOne(this.prepareFilter(filter)).lean();
   }
 
   async register({ data }: RegisterInput): Promise<User> {
@@ -54,24 +54,26 @@ export class UserService {
       ...connectionArgs
     }: UserConnectionArgs = new UserConnectionArgs(),
   ): Promise<UserConnection> {
-    const mongoFilter: FilterQuery<User> =
-      this.queryService.gqlFilterToMongo(filter);
-
-    // add search query condition if provided
-    if (filter.query) {
-      mongoFilter.$text = { $search: filter.query };
-      delete mongoFilter.query;
-    }
-
-    return this.queryService.paginate(
+    return this.paginationService.paginate(
       this.userModel,
-      this.queryService.gqlFilterToMongo(filter),
+      this.prepareFilter(filter),
       sort,
       connectionArgs,
     );
   }
 
   async count(filter?: FilterUserInput): Promise<number> {
-    return this.userModel.count(this.queryService.gqlFilterToMongo(filter));
+    return this.userModel.count(this.prepareFilter(filter));
+  }
+
+  prepareFilter({ query, ...filter }: FilterUserInput): FilterQuery<Comment> {
+    const preparedFilter = this.filterService.prepareFilter(filter);
+
+    // add search query condition if provided
+    if (query) {
+      preparedFilter.$text = { $search: query };
+    }
+
+    return preparedFilter;
   }
 }
