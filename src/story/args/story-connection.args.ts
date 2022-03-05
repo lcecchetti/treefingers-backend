@@ -6,7 +6,7 @@ import { FilterStoryInput } from '../inputs/filter-story.input';
 @ArgsType()
 export class StoryConnectionArgs extends ConnectionArgs {
   @Field(() => FilterStoryInput, { nullable: true })
-  readonly filter?: FilterStoryInput;
+  readonly filter?: FilterStoryInput = new FilterStoryInput();
 
   @Field(() => SortInput, { nullable: true })
   readonly sort?: SortInput = new SortInput();
