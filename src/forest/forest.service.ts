@@ -43,9 +43,37 @@ export class ForestService {
   }
 
   async paginate(
-    args: ForestConnectionArgs = new ForestConnectionArgs(),
+    {
+      filter,
+      sort,
+      ...connectionArgs
+    }: ForestConnectionArgs = new ForestConnectionArgs(),
   ): Promise<ForestConnection> {
-    return this.queryService.paginate(this.forestModel, args);
+    return this.queryService.paginate(
+      this.forestModel,
+      this.queryService.gqlFilterToMongo(filter),
+      sort,
+      connectionArgs,
+    );
+  }
+
+  async search(
+    query: string,
+    {
+      filter,
+      sort,
+      ...connectionArgs
+    }: ForestConnectionArgs = new ForestConnectionArgs(),
+  ): Promise<ForestConnection> {
+    return this.queryService.paginate(
+      this.forestModel,
+      {
+        ...this.queryService.gqlFilterToMongo(filter),
+        $text: { $search: query },
+      },
+      sort,
+      connectionArgs,
+    );
   }
 
   async count(filter?: FilterForestInput): Promise<number> {

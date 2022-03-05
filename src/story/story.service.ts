@@ -36,9 +36,37 @@ export class StoryService {
   }
 
   async paginate(
-    args: StoryConnectionArgs = new StoryConnectionArgs(),
+    {
+      filter,
+      sort,
+      ...connectionArgs
+    }: StoryConnectionArgs = new StoryConnectionArgs(),
   ): Promise<StoryConnection> {
-    return this.queryService.paginate(this.storyModel, args);
+    return this.queryService.paginate(
+      this.storyModel,
+      this.queryService.gqlFilterToMongo(filter),
+      sort,
+      connectionArgs,
+    );
+  }
+
+  async search(
+    query: string,
+    {
+      filter,
+      sort,
+      ...connectionArgs
+    }: StoryConnectionArgs = new StoryConnectionArgs(),
+  ): Promise<StoryConnection> {
+    return this.queryService.paginate(
+      this.storyModel,
+      {
+        ...this.queryService.gqlFilterToMongo(filter),
+        $text: { $search: query },
+      },
+      sort,
+      connectionArgs,
+    );
   }
 
   async count(filter?: FilterStoryInput): Promise<number> {

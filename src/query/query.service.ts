@@ -14,7 +14,6 @@ const filterMap = {
   gt: '$gt',
   and: '$and',
   or: '$or',
-  like: '$like',
 };
 
 const encodeCursor = (cursor: string): string => {
@@ -36,14 +35,9 @@ const decodeCursor = (cursor: string): string => {
 export class QueryService<E, D> {
   async paginate(
     model: Model<D>,
-    {
-      filter,
-      sort,
-      first,
-      last,
-      before,
-      after,
-    }: ConnectionArgs = new ConnectionArgs(),
+    filter: any = {},
+    sort: SortInput = new SortInput(),
+    { first, last, before, after }: ConnectionArgs = new ConnectionArgs(),
   ): Promise<IConnection<E>> {
     // only one couple of param should be provided per time
     if ((first && last) || (before && after)) {
@@ -52,22 +46,20 @@ export class QueryService<E, D> {
 
     const result: IConnection<E> = {};
 
-    const mongoFilter: any = this.gqlFilterToMongo(filter);
-
     // prepare cursor filter
     if (after) {
       const cursor = decodeCursor(after);
-      mongoFilter._id =
+      filter._id =
         sort._id === SORT_DIRECTION.ASC ? { $gt: cursor } : { $lt: cursor };
     }
     if (before) {
       const cursor = decodeCursor(before);
-      mongoFilter._id =
+      filter._id =
         sort._id === SORT_DIRECTION.ASC ? { $lt: cursor } : { $gt: cursor };
     }
 
     // get total query count
-    const totalCount = await model.count(mongoFilter);
+    const totalCount = await model.count(filter);
 
     // prepare query options
     const limit = first || last || 10;
@@ -75,9 +67,7 @@ export class QueryService<E, D> {
 
     // get nodes
     //@todo improve performances by removing skip and querying first item in reversed order
-    const nodes = await model
-      .find(mongoFilter, null, { sort, limit, skip })
-      .lean();
+    const nodes = await model.find(filter, null, { sort, limit, skip }).lean();
 
     // build edges
     result.edges = nodes.map((node) => {
@@ -114,15 +104,6 @@ export class QueryService<E, D> {
       );
     });
 
-    // restore filters object
-    const mongoFilter = JSON.parse(filterString);
-
-    // prepare search query
-    if (mongoFilter.query) {
-      mongoFilter.$text = { $search: mongoFilter.query };
-      delete mongoFilter['query'];
-    }
-
-    return mongoFilter;
+    return JSON.parse(filterString);
   }
 }

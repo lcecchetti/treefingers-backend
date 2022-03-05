@@ -39,7 +39,7 @@ export class CommentResolver {
 
   @Query(() => CommentConnection)
   async comments(
-    @Args({ nullable: true })
+    @Args()
     args: CommentConnectionArgs = new CommentConnectionArgs(),
   ): Promise<CommentConnection> {
     return this.commentService.paginate(args);

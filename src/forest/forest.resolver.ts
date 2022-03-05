@@ -39,10 +39,20 @@ export class ForestResolver {
 
   @Query(() => ForestConnection)
   async forests(
-    @Args({ nullable: true })
+    @Args()
     args: ForestConnectionArgs = new ForestConnectionArgs(),
   ): Promise<ForestConnection> {
     return this.forestService.paginate(args);
+  }
+
+  @Query(() => ForestConnection)
+  async searchForests(
+    @Args()
+    args: ForestConnectionArgs = new ForestConnectionArgs(),
+    @Args('query')
+    query: string,
+  ): Promise<ForestConnection> {
+    return this.forestService.search(query, args);
   }
 
   @Query(() => Forest, { nullable: true })

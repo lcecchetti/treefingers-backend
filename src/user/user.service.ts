@@ -48,9 +48,37 @@ export class UserService {
   }
 
   async paginate(
-    args: UserConnectionArgs = new UserConnectionArgs(),
+    {
+      filter,
+      sort,
+      ...connectionArgs
+    }: UserConnectionArgs = new UserConnectionArgs(),
   ): Promise<UserConnection> {
-    return this.queryService.paginate(this.userModel, args);
+    return this.queryService.paginate(
+      this.userModel,
+      this.queryService.gqlFilterToMongo(filter),
+      sort,
+      connectionArgs,
+    );
+  }
+
+  async search(
+    query: string,
+    {
+      filter,
+      sort,
+      ...connectionArgs
+    }: UserConnectionArgs = new UserConnectionArgs(),
+  ): Promise<UserConnection> {
+    return this.queryService.paginate(
+      this.userModel,
+      {
+        ...this.queryService.gqlFilterToMongo(filter),
+        $text: { $search: query },
+      },
+      sort,
+      connectionArgs,
+    );
   }
 
   async count(filter?: FilterUserInput): Promise<number> {

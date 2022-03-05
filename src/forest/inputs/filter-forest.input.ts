@@ -11,7 +11,4 @@ export class FilterForestInput extends FilterInput {
 
   @Field(() => FilterStringInput, { nullable: true })
   slug?: FilterStringInput;
-
-  @Field(() => String, { nullable: true })
-  query?: string;
 }

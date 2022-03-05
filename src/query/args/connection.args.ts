@@ -19,10 +19,4 @@ export class ConnectionArgs {
 
   @Field({ nullable: true })
   readonly after?: string;
-
-  @Field(() => FilterInput, { nullable: true })
-  readonly filter?: FilterInput = new FilterInput();
-
-  @Field(() => SortInput, { nullable: true })
-  readonly sort?: SortInput = new SortInput();
 }

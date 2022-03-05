@@ -14,7 +14,4 @@ export class FilterUserInput extends FilterInput {
 
   @Field(() => FilterStringInput, { nullable: true })
   username?: FilterStringInput;
-
-  @Field(() => String, { nullable: true })
-  query?: string;
 }

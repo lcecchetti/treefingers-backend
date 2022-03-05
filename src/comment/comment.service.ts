@@ -20,7 +20,9 @@ export class CommentService {
     return this.commentModel.findById(_id).lean();
   }
 
-  async findOne(filter?: FilterCommentInput): Promise<Comment | null> {
+  async findOne(
+    filter: FilterCommentInput = new FilterCommentInput(),
+  ): Promise<Comment | null> {
     return this.commentModel
       .findOne(this.queryService.gqlFilterToMongo(filter))
       .lean();
@@ -49,9 +51,18 @@ export class CommentService {
   }
 
   async paginate(
-    args: CommentConnectionArgs = new CommentConnectionArgs(),
+    {
+      filter,
+      sort,
+      ...connectionArgs
+    }: CommentConnectionArgs = new CommentConnectionArgs(),
   ): Promise<CommentConnection> {
-    return this.queryService.paginate(this.commentModel, args);
+    return this.queryService.paginate(
+      this.commentModel,
+      this.queryService.gqlFilterToMongo(filter),
+      sort,
+      connectionArgs,
+    );
   }
 
   async count(filter?: FilterCommentInput): Promise<number> {
