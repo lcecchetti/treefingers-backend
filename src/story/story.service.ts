@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Story, StoryDocument } from './story.entity';
 import { QueryService } from 'src/query/query.service';
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { StoryConnectionArgs } from './args/story-connection.args';
 import { CreateStoryInput } from './inputs/create-story.input';
 import { StoryConnection } from './dto/story-connection.dto';
@@ -42,28 +42,18 @@ export class StoryService {
       ...connectionArgs
     }: StoryConnectionArgs = new StoryConnectionArgs(),
   ): Promise<StoryConnection> {
+    const mongoFilter: FilterQuery<Story> =
+      this.queryService.gqlFilterToMongo(filter);
+
+    // add search query condition if provided
+    if (filter.query) {
+      mongoFilter.$text = { $search: filter.query };
+      delete mongoFilter.query;
+    }
+
     return this.queryService.paginate(
       this.storyModel,
       this.queryService.gqlFilterToMongo(filter),
-      sort,
-      connectionArgs,
-    );
-  }
-
-  async search(
-    query: string,
-    {
-      filter,
-      sort,
-      ...connectionArgs
-    }: StoryConnectionArgs = new StoryConnectionArgs(),
-  ): Promise<StoryConnection> {
-    return this.queryService.paginate(
-      this.storyModel,
-      {
-        ...this.queryService.gqlFilterToMongo(filter),
-        $text: { $search: query },
-      },
       sort,
       connectionArgs,
     );

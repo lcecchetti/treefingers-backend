@@ -37,16 +37,6 @@ export class UserResolver {
     return this.userService.paginate(args);
   }
 
-  @Query(() => UserConnection)
-  async searchUsers(
-    @Args()
-    args: UserConnectionArgs = new UserConnectionArgs(),
-    @Args('query')
-    query: string,
-  ): Promise<UserConnection> {
-    return this.userService.search(query, args);
-  }
-
   @Query(() => User, { nullable: true })
   async user(
     @Args('filter', { nullable: true })

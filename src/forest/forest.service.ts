@@ -2,7 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Forest, ForestDocument } from './forest.entity';
 import { QueryService } from 'src/query/query.service';
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { ForestConnectionArgs } from './args/forest-connection.args';
 import { CreateForestInput } from './inputs/create-forest.input';
 import { ForestConnection } from './dto/forest-connection.dto';
@@ -49,28 +49,18 @@ export class ForestService {
       ...connectionArgs
     }: ForestConnectionArgs = new ForestConnectionArgs(),
   ): Promise<ForestConnection> {
-    return this.queryService.paginate(
-      this.forestModel,
-      this.queryService.gqlFilterToMongo(filter),
-      sort,
-      connectionArgs,
-    );
-  }
+    const mongoFilter: FilterQuery<Forest> =
+      this.queryService.gqlFilterToMongo(filter);
 
-  async search(
-    query: string,
-    {
-      filter,
-      sort,
-      ...connectionArgs
-    }: ForestConnectionArgs = new ForestConnectionArgs(),
-  ): Promise<ForestConnection> {
+    // add search query condition if provided
+    if (filter.query) {
+      mongoFilter.$text = { $search: filter.query };
+      delete mongoFilter.query;
+    }
+
     return this.queryService.paginate(
       this.forestModel,
-      {
-        ...this.queryService.gqlFilterToMongo(filter),
-        $text: { $search: query },
-      },
+      mongoFilter,
       sort,
       connectionArgs,
     );

@@ -44,16 +44,6 @@ export class StoryResolver {
     return this.storyService.paginate(args);
   }
 
-  @Query(() => StoryConnection)
-  async searchStories(
-    @Args()
-    args: StoryConnectionArgs = new StoryConnectionArgs(),
-    @Args('query')
-    query: string,
-  ): Promise<StoryConnection> {
-    return this.storyService.search(query, args);
-  }
-
   @Query(() => Story, { nullable: true })
   async story(
     @Args('filter', { nullable: true })

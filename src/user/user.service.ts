@@ -2,7 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './user.entity';
 import { QueryService } from 'src/query/query.service';
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { UserConnectionArgs } from './args/user-connection.args';
 import { UserConnection } from './dto/user-connection.dto';
 import { FilterUserInput } from './inputs/filter-user.input';
@@ -54,28 +54,18 @@ export class UserService {
       ...connectionArgs
     }: UserConnectionArgs = new UserConnectionArgs(),
   ): Promise<UserConnection> {
+    const mongoFilter: FilterQuery<User> =
+      this.queryService.gqlFilterToMongo(filter);
+
+    // add search query condition if provided
+    if (filter.query) {
+      mongoFilter.$text = { $search: filter.query };
+      delete mongoFilter.query;
+    }
+
     return this.queryService.paginate(
       this.userModel,
       this.queryService.gqlFilterToMongo(filter),
-      sort,
-      connectionArgs,
-    );
-  }
-
-  async search(
-    query: string,
-    {
-      filter,
-      sort,
-      ...connectionArgs
-    }: UserConnectionArgs = new UserConnectionArgs(),
-  ): Promise<UserConnection> {
-    return this.queryService.paginate(
-      this.userModel,
-      {
-        ...this.queryService.gqlFilterToMongo(filter),
-        $text: { $search: query },
-      },
       sort,
       connectionArgs,
     );
