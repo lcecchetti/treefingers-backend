@@ -19,12 +19,8 @@ import { StoryConnection } from 'src/story/dto/story-connection.dto';
 import { FilterForestInput } from './inputs/filter-forest.input';
 import { User } from 'src/user/user.entity';
 import { UserService } from 'src/user/user.service';
-import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
-import { CurrentUser } from 'src/auth/dto/current-user.dto';
-import { LikeService } from 'src/like/like.service';
 import { StringService } from 'src/utils/services/string.service';
 import { CommentService } from 'src/comment/comment.service';
-import { CurrentUserData } from 'src/user/dto/current-user-data.dto';
 
 @Resolver(() => Forest)
 export class ForestResolver {
@@ -33,7 +29,6 @@ export class ForestResolver {
     private forestService: ForestService,
     private storyService: StoryService,
     private userService: UserService,
-    private likeService: LikeService,
     private commentService: CommentService,
   ) {}
 
@@ -68,28 +63,6 @@ export class ForestResolver {
   @ResolveField(() => User)
   async owner(@Parent() forest: Forest): Promise<User> {
     return this.userService.findById(forest.owner._id);
-  }
-
-  @ResolveField(() => CurrentUserData, { nullable: true })
-  async currentUserData(
-    @GetCurrentUser() currentUser: CurrentUser,
-    @Parent() forest: Forest,
-  ): Promise<CurrentUserData | null> {
-    if (!currentUser) {
-      return null;
-    }
-
-    return {
-      like: await this.likeService.findOne({
-        forest: { eq: forest._id },
-        user: { eq: currentUser._id },
-      }),
-    };
-  }
-
-  @ResolveField(() => Int)
-  async likesCount(@Parent() forest: Forest): Promise<number> {
-    return this.likeService.count({ forest: { eq: forest._id } });
   }
 
   @ResolveField(() => Int)

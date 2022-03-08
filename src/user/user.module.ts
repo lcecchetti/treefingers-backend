@@ -15,7 +15,6 @@ import { FilterModule } from 'src/filter/filter.module';
     FilterModule,
     forwardRef(() => StoryModule),
     forwardRef(() => LikeModule),
-    forwardRef(() => LikeModule),
   ],
   providers: [UserService, UserResolver],
   exports: [UserService],

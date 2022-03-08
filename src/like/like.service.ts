@@ -28,28 +28,12 @@ export class LikeService {
     return await this.likeModel.create({ comment, user });
   }
 
-  async likeAuthor(author: string, user: string): Promise<Like> {
-    return this.likeModel.create({ author, user });
-  }
-
-  async likeForest(forest: string, user: string): Promise<Like> {
-    return await this.likeModel.create({ forest, user });
-  }
-
   async dislikeStory(story: string, user: string): Promise<Like | null> {
     return this.likeModel.findOneAndDelete({ story, user }).lean();
   }
 
   async dislikeComment(comment: string, user: string): Promise<Like | null> {
     return this.likeModel.findOneAndDelete({ comment, user }).lean();
-  }
-
-  async dislikeAuthor(author: string, user: string): Promise<Like | null> {
-    return this.likeModel.findOneAndDelete({ author, user }).lean();
-  }
-
-  async dislikeForest(forest: string, user: string): Promise<Like | null> {
-    return this.likeModel.findOneAndDelete({ forest, user }).lean();
   }
 
   async count(filter?: FilterLikeInput): Promise<number> {

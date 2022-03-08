@@ -1,12 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import {
-  Field,
-  GraphQLISODateTime,
-  ID,
-  Int,
-  ObjectType,
-} from '@nestjs/graphql';
+import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
 import { isEmail } from 'class-validator';
 import { Like } from 'src/like/like.entity';
 
@@ -58,9 +52,6 @@ export class User {
   })
   @Field({ nullable: true })
   bio?: string;
-
-  @Field(() => Like, { nullable: true })
-  currentUserLike?: Like;
 
   @Prop({ default: Date.now })
   @Field(() => GraphQLISODateTime)

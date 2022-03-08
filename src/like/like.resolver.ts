@@ -20,21 +20,11 @@ import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
 import { DislikeCommentInput } from './inputs/dislike.comment.input';
 import { LikeStoryInput } from './inputs/like-story.input';
 import { DislikeStoryInput } from './inputs/dislike-story.input';
-import { LikeAuthorPayload } from './payloads/like-author.payload';
-import { LikeAuthorInput } from './inputs/like-author.input';
-import { DislikeAuthorPayload } from './payloads/dislike-author.payload';
-import { DislikeAuthorInput } from './inputs/dislike-author.input';
 import { LikeCommentPayload } from './payloads/like-comment.payload';
 import { DislikeCommentPayload } from './payloads/dislike-comment.payload';
 import { LikeStoryPayload } from './payloads/like-story.payload';
 import { DislikeStoryPayload } from './payloads/dislike-story.payload';
 import { FilterLikeInput } from './inputs/filter-like.input';
-import { Forest } from 'src/forest/forest.entity';
-import { ForestService } from 'src/forest/forest.service';
-import { LikeForestPayload } from './payloads/like-forest.payload';
-import { LikeForestInput } from './inputs/like-forest.input';
-import { DislikeForestPayload } from './payloads/dislike-forest.payload';
-import { DislikeForestInput } from './inputs/dislike-forest.input';
 
 @Resolver(() => Like)
 export class LikeResolver {
@@ -43,7 +33,6 @@ export class LikeResolver {
     private commentService: CommentService,
     private userService: UserService,
     private storyService: StoryService,
-    private forestService: ForestService,
   ) {}
 
   @Query(() => Like, { nullable: true })
@@ -94,51 +83,6 @@ export class LikeResolver {
     };
   }
 
-  @Mutation(() => LikeAuthorPayload)
-  async likeAuthor(
-    @Args('input') { author }: LikeAuthorInput,
-    @GetCurrentUser() currentUser: CurrentUser,
-  ): Promise<LikeAuthorPayload> {
-    return {
-      like: await this.likeService.likeAuthor(author, currentUser._id),
-    };
-  }
-
-  @Mutation(() => DislikeAuthorPayload)
-  async dislikeAuthor(
-    @Args('input') { author }: DislikeAuthorInput,
-    @GetCurrentUser() currentUser: CurrentUser,
-  ): Promise<DislikeAuthorPayload> {
-    return {
-      like: await this.likeService.dislikeAuthor(author, currentUser._id),
-    };
-  }
-
-  @Mutation(() => LikeForestPayload)
-  async likeForest(
-    @Args('input') { forest }: LikeForestInput,
-    @GetCurrentUser() currentUser: CurrentUser,
-  ): Promise<LikeForestPayload> {
-    return {
-      like: await this.likeService.likeForest(forest, currentUser._id),
-    };
-  }
-
-  @Mutation(() => DislikeForestPayload)
-  async dislikeForest(
-    @Args('input') { forest }: DislikeForestInput,
-    @GetCurrentUser() currentUser: CurrentUser,
-  ): Promise<DislikeForestPayload> {
-    return {
-      like: await this.likeService.dislikeForest(forest, currentUser._id),
-    };
-  }
-
-  @ResolveField()
-  async author(@Parent() like: Like): Promise<User> {
-    return this.userService.findById(like.author?._id);
-  }
-
   @ResolveField()
   async story(@Parent() like: Like): Promise<Story> {
     return this.storyService.findById(like.story?._id);
@@ -147,11 +91,6 @@ export class LikeResolver {
   @ResolveField()
   async comment(@Parent() like: Like): Promise<Comment> {
     return this.commentService.findById(like.comment?._id);
-  }
-
-  @ResolveField()
-  async forest(@Parent() like: Like): Promise<Forest> {
-    return this.forestService.findById(like.forest?._id);
   }
 
   @ResolveField()
