@@ -23,6 +23,7 @@ import { CreateStoryPayload } from './payloads/create-story.payload';
 import { CreateStoryInput } from './inputs/create-story.input';
 import { FilterStoryInput } from './inputs/filter-story.input';
 import { CommentService } from 'src/comment/comment.service';
+import { Like } from 'src/like/like.entity';
 
 @Resolver(() => Story)
 export class StoryResolver {
@@ -61,20 +62,20 @@ export class StoryResolver {
     };
   }
 
-  @ResolveField(() => Boolean)
-  async currentUserLikes(
+  @ResolveField(() => Like, { nullable: true })
+  async currentUserLike(
     @GetCurrentUser() currentUser: CurrentUser,
     @Parent() story: Story,
-  ): Promise<boolean> {
+  ): Promise<Like | null> {
     if (!currentUser) {
-      return false;
+      return null;
     }
 
-    return !!(await this.likeService.findOne({
+    return this.likeService.findOne({
       entity: { eq: story._id },
       entityType: { eq: 'Story' },
       user: { eq: currentUser._id },
-    }));
+    });
   }
 
   @ResolveField(() => String)

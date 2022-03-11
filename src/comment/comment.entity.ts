@@ -12,6 +12,7 @@ import { Story } from 'src/story/story.entity';
 import { Forest } from 'src/forest/forest.entity';
 import { Likeable } from 'src/like/interfaces/likeable.interface';
 import { LikeableEntityType } from 'src/like/enums/likeable-entity-type.enum';
+import { Like } from 'src/like/like.entity';
 
 @Schema({ timestamps: true })
 @ObjectType({
@@ -59,8 +60,8 @@ export class Comment implements Likeable {
   @Field(() => Int)
   likesCount: number;
 
-  @Field(() => Boolean)
-  currentUserLikes: boolean;
+  @Field(() => Like, { nullable: true })
+  currentUserLike: Like;
 
   @Prop({ default: Date.now })
   @Field(() => GraphQLISODateTime)

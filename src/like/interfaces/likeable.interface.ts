@@ -2,6 +2,7 @@ import { Field, ID, Int, InterfaceType } from '@nestjs/graphql';
 import { Story } from 'src/story/story.entity';
 import { Comment } from 'src/comment/comment.entity';
 import { LikeableEntityType } from '../enums/likeable-entity-type.enum';
+import { Like } from '../like.entity';
 
 @InterfaceType({
   resolveType(likeable) {
@@ -23,6 +24,6 @@ export abstract class Likeable {
   @Field(() => Int)
   likesCount: number;
 
-  @Field(() => Boolean)
-  currentUserLikes: boolean;
+  @Field(() => Like, { nullable: true })
+  currentUserLike: Like;
 }

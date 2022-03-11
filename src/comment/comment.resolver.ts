@@ -25,6 +25,7 @@ import { CommentForestPayload } from './payloads/comment-forest.payload';
 import { CommentForestInput } from './inputs/comment-forest.input';
 import { Forest } from 'src/forest/forest.entity';
 import { ForestService } from 'src/forest/forest.service';
+import { Like } from 'src/like/like.entity';
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -72,20 +73,20 @@ export class CommentResolver {
     };
   }
 
-  @ResolveField(() => Boolean)
-  async currentUserLikes(
+  @ResolveField(() => Like, { nullable: true })
+  async currentUserLike(
     @GetCurrentUser() currentUser: CurrentUser,
     @Parent() comment: Comment,
-  ): Promise<boolean> {
+  ): Promise<Like | null> {
     if (!currentUser) {
-      return false;
+      return null;
     }
 
-    return !!(await this.likeService.findOne({
+    return this.likeService.findOne({
       entity: { eq: comment._id },
       entityType: { eq: 'Comment' },
       user: { eq: currentUser._id },
-    }));
+    });
   }
 
   @ResolveField(() => Int)
