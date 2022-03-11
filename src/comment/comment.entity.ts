@@ -8,8 +8,6 @@ import {
   ObjectType,
 } from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
-import { Story } from 'src/story/story.entity';
-import { Forest } from 'src/forest/forest.entity';
 import { Likeable } from 'src/like/interfaces/likeable.interface';
 import { LikeableEntityType } from 'src/like/enums/likeable-entity-type.enum';
 import { Like } from 'src/like/like.entity';
@@ -28,7 +26,6 @@ export class Comment implements Likeable {
 
   @Prop({
     required: true,
-    index: true,
     minlength: 1,
     maxlength: 511,
   })
