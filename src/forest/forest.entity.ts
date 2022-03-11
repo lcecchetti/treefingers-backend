@@ -1,13 +1,25 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, SchemaTypes } from 'mongoose';
-import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
+import {
+  Field,
+  GraphQLISODateTime,
+  ID,
+  Int,
+  ObjectType,
+} from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
+import { Commentable } from 'src/comment/interfaces/commentable.interface';
+import { CommentableEntityType } from 'src/comment/enums/commentable-entity-type.enum';
 
 @Schema({ timestamps: true })
-@ObjectType()
-export class Forest {
+@ObjectType({
+  implements: () => [Commentable],
+})
+export class Forest implements Commentable {
   @Field(() => ID)
   _id: string;
+
+  commentableEntityType: CommentableEntityType;
 
   @Prop({
     required: true,
@@ -49,6 +61,9 @@ export class Forest {
   })
   @Field(() => User)
   owner: User;
+
+  @Field(() => Int)
+  commentsCount: number;
 
   @Prop({ default: Date.now })
   @Field(() => GraphQLISODateTime)

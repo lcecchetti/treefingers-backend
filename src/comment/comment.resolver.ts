@@ -18,14 +18,14 @@ import { CommentConnectionArgs } from './args/comment-connection.args';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
 import { LikeService } from 'src/like/like.service';
 import { CommentConnection } from './dto/comment-connection.dto';
-import { FilterCommentInput } from './inputs/filter-comment.input';
-import { CommentStoryPayload } from './payloads/comment-story.payload';
-import { CommentStoryInput } from './inputs/comment-story.input';
-import { CommentForestPayload } from './payloads/comment-forest.payload';
-import { CommentForestInput } from './inputs/comment-forest.input';
 import { Forest } from 'src/forest/forest.entity';
 import { ForestService } from 'src/forest/forest.service';
 import { Like } from 'src/like/like.entity';
+import { CommentInput } from './inputs/comment.input';
+import { CommentPayload } from './payloads/comment.payload';
+import { Commentable } from './interfaces/commentable.interface';
+import { CommentableEntityType } from './enums/commentable-entity-type.enum';
+import { LikeableEntityType } from 'src/like/enums/likeable-entity-type.enum';
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -45,31 +45,13 @@ export class CommentResolver {
     return this.commentService.paginate(args);
   }
 
-  @Query(() => Comment, { nullable: true })
+  @Mutation(() => CommentPayload)
   async comment(
-    @Args('filter', { nullable: true })
-    filter: FilterCommentInput,
-  ): Promise<Comment> {
-    return this.commentService.findOne(filter);
-  }
-
-  @Mutation(() => CommentStoryPayload)
-  async commentStory(
-    @Args('input') input: CommentStoryInput,
+    @Args('input') input: CommentInput,
     @GetCurrentUser() currentUser: CurrentUser,
-  ): Promise<CommentStoryPayload> {
+  ): Promise<CommentPayload> {
     return {
-      comment: await this.commentService.commentStory(input, currentUser._id),
-    };
-  }
-
-  @Mutation(() => CommentForestPayload)
-  async commentForest(
-    @Args('input') input: CommentForestInput,
-    @GetCurrentUser() currentUser: CurrentUser,
-  ): Promise<CommentForestPayload> {
-    return {
-      comment: await this.commentService.commentForest(input, currentUser._id),
+      comment: await this.commentService.comment(input, currentUser._id),
     };
   }
 
@@ -84,7 +66,7 @@ export class CommentResolver {
 
     return this.likeService.findOne({
       entity: { eq: comment._id },
-      entityType: { eq: 'Comment' },
+      entityType: LikeableEntityType.Comment,
       user: { eq: currentUser._id },
     });
   }
@@ -93,7 +75,7 @@ export class CommentResolver {
   async likesCount(@Parent() comment: Comment): Promise<number> {
     return this.likeService.count({
       entity: { eq: comment._id },
-      entityType: { eq: 'Comment' },
+      entityType: LikeableEntityType.Comment,
     });
   }
 
@@ -103,20 +85,18 @@ export class CommentResolver {
   }
 
   @ResolveField()
-  async story(@Parent() comment: Comment): Promise<Story | null> {
-    if (!comment.story) {
-      return null;
+  async entity(@Parent() comment: Comment): Promise<Commentable> {
+    let entity;
+    switch (comment.entityType) {
+      case CommentableEntityType.Story:
+        entity = await this.storyService.findById(comment.entity._id);
+        break;
+      case CommentableEntityType.Forest:
+        entity = await this.forestService.findById(comment.entity._id);
+        break;
     }
 
-    return this.storyService.findById(comment.story._id);
-  }
-
-  @ResolveField()
-  async forest(@Parent() comment: Comment): Promise<Forest | null> {
-    if (!comment.forest) {
-      return null;
-    }
-
-    return this.forestService.findById(comment.forest._id);
+    entity.commentableEntityType = comment.entityType;
+    return entity;
   }
 }

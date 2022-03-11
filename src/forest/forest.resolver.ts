@@ -21,6 +21,7 @@ import { User } from 'src/user/user.entity';
 import { UserService } from 'src/user/user.service';
 import { StringService } from 'src/utils/services/string.service';
 import { CommentService } from 'src/comment/comment.service';
+import { CommentableEntityType } from 'src/comment/enums/commentable-entity-type.enum';
 
 @Resolver(() => Forest)
 export class ForestResolver {
@@ -67,7 +68,10 @@ export class ForestResolver {
 
   @ResolveField(() => Int)
   async commentsCount(@Parent() forest: Forest): Promise<number> {
-    return this.commentService.count({ forest: { eq: forest._id } });
+    return this.commentService.count({
+      entity: { eq: forest._id },
+      entityType: CommentableEntityType.Forest,
+    });
   }
 
   @ResolveField(() => Int)

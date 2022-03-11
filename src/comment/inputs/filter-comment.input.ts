@@ -1,5 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { FilterIdInput, FilterInput } from 'src/filter/inputs/filter.input';
+import { CommentableEntityType } from '../enums/commentable-entity-type.enum';
 
 @InputType()
 export class FilterCommentInput extends FilterInput {
@@ -13,8 +14,8 @@ export class FilterCommentInput extends FilterInput {
   story?: FilterIdInput;
 
   @Field(() => FilterIdInput, { nullable: true })
-  forest?: FilterIdInput;
+  entity?: FilterIdInput;
 
-  @Field(() => FilterIdInput, { nullable: true })
-  user?: FilterIdInput;
+  @Field(() => CommentableEntityType, { nullable: true })
+  entityType?: CommentableEntityType;
 }

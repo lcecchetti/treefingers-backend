@@ -24,6 +24,8 @@ import { CreateStoryInput } from './inputs/create-story.input';
 import { FilterStoryInput } from './inputs/filter-story.input';
 import { CommentService } from 'src/comment/comment.service';
 import { Like } from 'src/like/like.entity';
+import { CommentableEntityType } from 'src/comment/enums/commentable-entity-type.enum';
+import { LikeableEntityType } from 'src/like/enums/likeable-entity-type.enum';
 
 @Resolver(() => Story)
 export class StoryResolver {
@@ -73,7 +75,7 @@ export class StoryResolver {
 
     return this.likeService.findOne({
       entity: { eq: story._id },
-      entityType: { eq: 'Story' },
+      entityType: LikeableEntityType.Story,
       user: { eq: currentUser._id },
     });
   }
@@ -117,13 +119,16 @@ export class StoryResolver {
   async likesCount(@Parent() story: Story): Promise<number> {
     return this.likeService.count({
       entity: { eq: story._id },
-      entityType: { eq: 'Story' },
+      entityType: LikeableEntityType.Story,
     });
   }
 
   @ResolveField(() => Int)
   async commentsCount(@Parent() story: Story): Promise<number> {
-    return this.commentService.count({ story: { eq: story._id } });
+    return this.commentService.count({
+      entity: { eq: story._id },
+      entityType: CommentableEntityType.Story,
+    });
   }
 
   @ResolveField(() => Int)

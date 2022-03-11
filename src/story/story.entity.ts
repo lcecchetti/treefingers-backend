@@ -12,16 +12,19 @@ import { Forest } from 'src/forest/forest.entity';
 import { Likeable } from 'src/like/interfaces/likeable.interface';
 import { LikeableEntityType } from 'src/like/enums/likeable-entity-type.enum';
 import { Like } from 'src/like/like.entity';
+import { Commentable } from 'src/comment/interfaces/commentable.interface';
+import { CommentableEntityType } from 'src/comment/enums/commentable-entity-type.enum';
 
 @Schema({ timestamps: true })
 @ObjectType({
-  implements: () => [Likeable],
+  implements: () => [Likeable, Commentable],
 })
-export class Story implements Likeable {
+export class Story implements Likeable, Commentable {
   @Field(() => ID)
   _id: string;
 
   likeableEntityType: LikeableEntityType;
+  commentableEntityType: CommentableEntityType;
 
   @Prop({
     required: true,
@@ -78,6 +81,9 @@ export class Story implements Likeable {
     index: true,
   })
   forest?: Forest;
+
+  @Field(() => Int)
+  commentsCount: number;
 
   @Field(() => Int)
   likesCount: number;

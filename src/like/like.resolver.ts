@@ -17,8 +17,8 @@ import { DislikeInput } from './inputs/dislike.input';
 import { DislikePayload } from './payloads/dislike.payload';
 import { StoryService } from 'src/story/story.service';
 import { CommentService } from 'src/comment/comment.service';
-import { LikeableEntityType } from './enums/likeable-entity-type.enum';
 import { Likeable } from './interfaces/likeable.interface';
+import { LikeableEntityType } from './enums/likeable-entity-type.enum';
 
 @Resolver(() => Like)
 export class LikeResolver {

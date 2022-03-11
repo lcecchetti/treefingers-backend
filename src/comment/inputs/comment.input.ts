@@ -1,11 +1,18 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 import { MaxLength } from 'class-validator';
+import { CommentableEntityType } from '../enums/commentable-entity-type.enum';
 
 @InputType()
 export class CommentDataInput {
   @Field()
   @MaxLength(255)
-  readonly content: string;
+  content: string;
+
+  @Field(() => ID)
+  entity: string;
+
+  @Field(() => CommentableEntityType)
+  entityType: CommentableEntityType;
 }
 
 @InputType({ isAbstract: true })

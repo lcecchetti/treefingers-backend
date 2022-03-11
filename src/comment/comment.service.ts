@@ -5,10 +5,9 @@ import { CommentDocument, Comment } from './comment.entity';
 import { CommentConnectionArgs } from './args/comment-connection.args';
 import { CommentConnection } from './dto/comment-connection.dto';
 import { FilterCommentInput } from './inputs/filter-comment.input';
-import { CommentStoryInput } from './inputs/comment-story.input';
-import { CommentForestInput } from './inputs/comment-forest.input';
 import { PaginationService } from 'src/pagination/pagination.service';
 import { FilterService } from 'src/filter/filter.service';
+import { CommentInput } from './inputs/comment.input';
 
 @Injectable()
 export class CommentService {
@@ -28,24 +27,9 @@ export class CommentService {
     return this.commentModel.findOne(this.prepareFilter(filter)).lean();
   }
 
-  async commentStory(
-    { story, data }: CommentStoryInput,
-    user: string,
-  ): Promise<Comment> {
+  async comment({ data }: CommentInput, user: string): Promise<Comment> {
     return this.commentModel.create({
       ...data,
-      story,
-      user,
-    });
-  }
-
-  async commentForest(
-    { forest, data }: CommentForestInput,
-    user: string,
-  ): Promise<Comment> {
-    return this.commentModel.create({
-      ...data,
-      forest,
       user,
     });
   }
