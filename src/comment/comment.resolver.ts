@@ -13,12 +13,10 @@ import { UserService } from 'src/user/user.service';
 import { StoryService } from 'src/story/story.service';
 import { User } from 'src/user/user.entity';
 import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
-import { Story } from 'src/story/story.entity';
 import { CommentConnectionArgs } from './args/comment-connection.args';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
 import { LikeService } from 'src/like/like.service';
 import { CommentConnection } from './dto/comment-connection.dto';
-import { Forest } from 'src/forest/forest.entity';
 import { ForestService } from 'src/forest/forest.service';
 import { Like } from 'src/like/like.entity';
 import { CommentInput } from './inputs/comment.input';
@@ -46,12 +44,12 @@ export class CommentResolver {
   }
 
   @Mutation(() => CommentPayload)
-  async comment(
+  async submitComment(
     @Args('input') input: CommentInput,
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<CommentPayload> {
     return {
-      comment: await this.commentService.comment(input, currentUser._id),
+      comment: await this.commentService.create(input, currentUser._id),
     };
   }
 

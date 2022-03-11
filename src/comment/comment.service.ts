@@ -27,7 +27,7 @@ export class CommentService {
     return this.commentModel.findOne(this.prepareFilter(filter)).lean();
   }
 
-  async comment({ data }: CommentInput, user: string): Promise<Comment> {
+  async create({ data }: CommentInput, user: string): Promise<Comment> {
     return this.commentModel.create({
       ...data,
       user,
