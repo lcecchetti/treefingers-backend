@@ -23,7 +23,6 @@ export class Forest implements Commentable {
 
   @Prop({
     required: true,
-    index: true,
     unique: true,
     minlength: 1,
     maxlength: 63,
@@ -46,7 +45,6 @@ export class Forest implements Commentable {
 
   @Prop({
     required: true,
-    index: true,
     minlength: 1,
     maxlength: 1024,
     trim: true,

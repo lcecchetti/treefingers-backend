@@ -2,7 +2,6 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
 import { isEmail } from 'class-validator';
-import { Like } from 'src/like/like.entity';
 
 @Schema({ timestamps: true })
 @ObjectType()

@@ -28,7 +28,6 @@ export class Story implements Likeable, Commentable {
 
   @Prop({
     required: true,
-    index: true,
     minlength: 1,
     maxlength: 255,
   })
@@ -37,7 +36,6 @@ export class Story implements Likeable, Commentable {
 
   @Prop({
     required: true,
-    index: true,
   })
   @Field()
   content: string;
