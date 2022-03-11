@@ -2,8 +2,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, SchemaTypes } from 'mongoose';
 import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
-import { Story } from 'src/story/story.entity';
-import { Comment } from 'src/comment/comment.entity';
+import { Likeable } from './interfaces/likeable.interface';
+import { LikeableEntityType } from './enums/likeable-entity-type.enum';
 
 @Schema({ timestamps: true })
 @ObjectType()
@@ -12,20 +12,21 @@ export class Like {
   _id: string;
 
   @Prop({
+    required: true,
     type: SchemaTypes.ObjectId,
-    ref: 'Story',
+    refPath: 'entityType',
     index: true,
   })
-  @Field(() => Story, { nullable: true })
-  story?: Story;
+  @Field(() => Likeable)
+  entity: Likeable;
 
   @Prop({
-    type: SchemaTypes.ObjectId,
-    ref: 'Comment',
-    index: true,
+    type: String,
+    required: true,
+    enum: LikeableEntityType,
   })
-  @Field(() => Comment, { nullable: true })
-  comment?: Comment;
+  @Field(() => LikeableEntityType)
+  entityType: LikeableEntityType;
 
   @Prop({
     type: SchemaTypes.ObjectId,
@@ -50,17 +51,9 @@ export type LikeDocument = Like & Document;
 const LikeSchema = SchemaFactory.createForClass(Like);
 
 LikeSchema.index(
-  { user: 1, story: 1 },
+  { user: 1, entity: 1, entityType: 1 },
   {
     unique: true,
-    partialFilterExpression: { comment: null },
-  },
-);
-LikeSchema.index(
-  { user: 1, comment: 1 },
-  {
-    unique: true,
-    partialFilterExpression: { story: null },
   },
 );
 

@@ -1,15 +1,27 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, SchemaTypes } from 'mongoose';
-import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
+import {
+  Field,
+  GraphQLISODateTime,
+  ID,
+  Int,
+  ObjectType,
+} from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
 import { Story } from 'src/story/story.entity';
 import { Forest } from 'src/forest/forest.entity';
+import { Likeable } from 'src/like/interfaces/likeable.interface';
+import { LikeableEntityType } from 'src/like/enums/likeable-entity-type.enum';
 
 @Schema({ timestamps: true })
-@ObjectType()
-export class Comment {
+@ObjectType({
+  implements: () => [Likeable],
+})
+export class Comment implements Likeable {
   @Field(() => ID)
   _id: string;
+
+  likeableEntityType: LikeableEntityType;
 
   @Prop({
     required: true,
@@ -43,6 +55,12 @@ export class Comment {
   })
   @Field(() => Forest, { nullable: true })
   forest?: Forest;
+
+  @Field(() => Int)
+  likesCount: number;
+
+  @Field(() => Boolean)
+  currentUserLikes: boolean;
 
   @Prop({ default: Date.now })
   @Field(() => GraphQLISODateTime)

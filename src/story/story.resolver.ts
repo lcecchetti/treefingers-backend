@@ -23,7 +23,6 @@ import { CreateStoryPayload } from './payloads/create-story.payload';
 import { CreateStoryInput } from './inputs/create-story.input';
 import { FilterStoryInput } from './inputs/filter-story.input';
 import { CommentService } from 'src/comment/comment.service';
-import { CurrentUserData } from 'src/user/dto/current-user-data.dto';
 
 @Resolver(() => Story)
 export class StoryResolver {
@@ -62,21 +61,20 @@ export class StoryResolver {
     };
   }
 
-  @ResolveField(() => CurrentUserData, { nullable: true })
-  async currentUserData(
+  @ResolveField(() => Boolean)
+  async currentUserLikes(
     @GetCurrentUser() currentUser: CurrentUser,
     @Parent() story: Story,
-  ): Promise<CurrentUserData | null> {
+  ): Promise<boolean> {
     if (!currentUser) {
-      return null;
+      return false;
     }
 
-    return {
-      like: await this.likeService.findOne({
-        story: { eq: story._id },
-        user: { eq: currentUser._id },
-      }),
-    };
+    return !!(await this.likeService.findOne({
+      entity: { eq: story._id },
+      entityType: { eq: 'Story' },
+      user: { eq: currentUser._id },
+    }));
   }
 
   @ResolveField(() => String)
@@ -116,7 +114,10 @@ export class StoryResolver {
 
   @ResolveField(() => Int)
   async likesCount(@Parent() story: Story): Promise<number> {
-    return this.likeService.count({ story: { eq: story._id } });
+    return this.likeService.count({
+      entity: { eq: story._id },
+      entityType: { eq: 'Story' },
+    });
   }
 
   @ResolveField(() => Int)

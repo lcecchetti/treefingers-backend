@@ -1,8 +1,5 @@
-import { Field, ObjectType } from '@nestjs/graphql';
-import { Like } from '../like.entity';
+import { ObjectType } from '@nestjs/graphql';
+import { LikePayload } from './like.payload';
 
-@ObjectType({ isAbstract: true })
-export class DislikePayload {
-  @Field(() => Like, { nullable: true })
-  readonly like?: Like;
-}
+@ObjectType()
+export class DislikePayload extends LikePayload {}

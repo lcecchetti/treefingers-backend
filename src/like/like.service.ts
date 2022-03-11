@@ -4,6 +4,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Like, LikeDocument } from './like.entity';
 import { FilterLikeInput } from './inputs/filter-like.input';
 import { FilterService } from 'src/filter/filter.service';
+import { LikeInput } from './inputs/like.input';
+import { DislikeInput } from './inputs/dislike.input';
 
 @Injectable()
 export class LikeService {
@@ -20,20 +22,15 @@ export class LikeService {
     return this.likeModel.findOne(this.prepareFilter(filter)).lean();
   }
 
-  async likeStory(story: string, user: string): Promise<Like> {
-    return this.likeModel.create({ story, user });
+  async like({ entity, entityType }: LikeInput, user: string): Promise<Like> {
+    return this.likeModel.create({ entity, entityType, user });
   }
 
-  async likeComment(comment: string, user: string): Promise<Like> {
-    return await this.likeModel.create({ comment, user });
-  }
-
-  async dislikeStory(story: string, user: string): Promise<Like | null> {
-    return this.likeModel.findOneAndDelete({ story, user }).lean();
-  }
-
-  async dislikeComment(comment: string, user: string): Promise<Like | null> {
-    return this.likeModel.findOneAndDelete({ comment, user }).lean();
+  async dislike(
+    { entity, entityType }: DislikeInput,
+    user: string,
+  ): Promise<Like | null> {
+    return this.likeModel.findOneAndDelete({ entity, entityType, user }).lean();
   }
 
   async count(filter?: FilterLikeInput): Promise<number> {
