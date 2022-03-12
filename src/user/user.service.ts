@@ -5,7 +5,6 @@ import { FilterQuery, Model } from 'mongoose';
 import { UserConnectionArgs } from './args/user-connection.args';
 import { UserConnection } from './dto/user-connection.dto';
 import { FilterUserInput } from './inputs/filter-user.input';
-import slugify from 'slugify';
 import { RegisterInput } from 'src/auth/inputs/register.input';
 import { PaginationService } from 'src/pagination/pagination.service';
 import { FilterService } from 'src/filter/filter.service';
@@ -32,19 +31,14 @@ export class UserService {
       throw new ConflictException('Email already exists');
     }
 
-    // check if user already exists
-    const username = slugify(data.pseudonym, {
-      lower: true,
+    const existingUsername = await this.userModel.findOne({
+      username: data.username,
     });
-    const existingUsername = await this.userModel.findOne({ username });
     if (existingUsername) {
-      throw new ConflictException('Pseudonym already exists');
+      throw new ConflictException('Username already exists');
     }
 
-    return this.userModel.create({
-      ...data,
-      username,
-    });
+    return this.userModel.create(data);
   }
 
   async paginate(

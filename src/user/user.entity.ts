@@ -29,21 +29,10 @@ export class User {
     maxlength: 31,
     index: true,
     unique: true,
-    lowercase: true,
     trim: true,
   })
   @Field()
   username: string;
-
-  @Prop({
-    minlength: 2,
-    maxlength: 20,
-    index: true,
-    unique: true,
-    trim: true,
-  })
-  @Field({ nullable: true })
-  pseudonym?: string;
 
   @Prop({
     maxlength: 255,
@@ -64,6 +53,6 @@ export class User {
 export type UserDocument = User & Document;
 const UserSchema = SchemaFactory.createForClass(User);
 
-UserSchema.index({ pseudonym: 'text', username: 'text', bio: 'text' });
+UserSchema.index({ username: 'text', bio: 'text' });
 
 export { UserSchema };

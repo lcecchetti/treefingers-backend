@@ -6,5 +6,8 @@ export class CurrentUser {
   _id: string;
 
   @Field()
+  username: string;
+
+  @Field()
   email: string;
 }
