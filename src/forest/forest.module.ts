@@ -8,6 +8,7 @@ import { UserModule } from 'src/user/user.module';
 import { CommentModule } from 'src/comment/comment.module';
 import { PaginationModule } from 'src/pagination/pagination.module';
 import { FilterModule } from 'src/filter/filter.module';
+import { MembershipModule } from 'src/membership/membership.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { FilterModule } from 'src/filter/filter.module';
     forwardRef(() => StoryModule),
     forwardRef(() => UserModule),
     forwardRef(() => CommentModule),
+    forwardRef(() => MembershipModule),
   ],
   providers: [ForestService, ForestResolver],
   exports: [ForestService],

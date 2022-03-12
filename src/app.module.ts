@@ -13,6 +13,7 @@ import { ForestModule } from './forest/forest.module';
 import { UtilsModule } from './utils/utils.module';
 import { FilterModule } from './filter/filter.module';
 import { PaginationModule } from './pagination/pagination.module';
+import { MembershipModule } from './membership/membership.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { PaginationModule } from './pagination/pagination.module';
     ForestModule,
     FilterModule,
     PaginationModule,
+    MembershipModule,
   ],
   providers: [AppService],
 })
