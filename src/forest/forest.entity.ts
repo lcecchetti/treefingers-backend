@@ -24,24 +24,25 @@ export class Forest implements Commentable {
   @Prop({
     required: true,
     unique: true,
-    minlength: 1,
-    maxlength: 63,
+    minlength: 2,
+    maxlength: 32,
     trim: true,
+    match: [
+      /^[a-zA-Z0-9-_]+$/,
+      'Only letters, numbers, dots, hyphens and dashes',
+    ],
   })
   @Field()
   name: string;
 
   @Prop({
     required: true,
-    index: true,
-    unique: true,
-    minlength: 1,
-    maxlength: 63,
-    lowercase: true,
+    minlength: 2,
+    maxlength: 128,
     trim: true,
   })
   @Field()
-  slug: string;
+  title: string;
 
   @Prop({
     required: true,
@@ -75,6 +76,6 @@ export class Forest implements Commentable {
 export type ForestDocument = Forest & Document;
 const ForestSchema = SchemaFactory.createForClass(Forest);
 
-ForestSchema.index({ name: 'text', about: 'text' });
+ForestSchema.index({ name: 'text', title: 'text', about: 'text' });
 
 export { ForestSchema };

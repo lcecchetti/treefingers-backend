@@ -10,7 +10,7 @@ export class FilterForestInput extends FilterInput {
   or?: FilterForestInput[];
 
   @Field(() => FilterStringInput, { nullable: true })
-  slug?: FilterStringInput;
+  name?: FilterStringInput;
 
   @Field(() => String, { nullable: true })
   query?: string;

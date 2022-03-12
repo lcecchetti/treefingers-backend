@@ -1,11 +1,16 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { Length } from 'class-validator';
+import { Length, Matches } from 'class-validator';
 
 @InputType()
 class CreateForestDataInput {
   @Field()
-  @Length(1, 63)
+  @Length(1, 32)
+  @Matches(/^[a-zA-Z0-9-_]+$/)
   readonly name: string;
+
+  @Field()
+  @Length(1, 63)
+  readonly title: string;
 
   @Field()
   @Length(1, 512)

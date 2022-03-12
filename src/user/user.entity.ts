@@ -30,6 +30,10 @@ export class User {
     index: true,
     unique: true,
     trim: true,
+    match: [
+      /^[a-zA-Z0-9-_]+$/,
+      'Only letters, numbers, dots, hyphens and dashes',
+    ],
   })
   @Field()
   username: string;

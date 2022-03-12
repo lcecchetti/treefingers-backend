@@ -28,18 +28,12 @@ export class ForestService {
 
   async create({ data }: CreateForestInput): Promise<Forest> {
     // check if forest already exists
-    const slug = slugify(data.name, {
-      lower: true,
-    });
-    const existingSlug = await this.forestModel.findOne({ slug });
-    if (existingSlug) {
+    const existingName = await this.forestModel.findOne({ name });
+    if (existingName) {
       throw new ConflictException('Forest with same name already exists');
     }
 
-    return this.forestModel.create({
-      ...data,
-      slug,
-    });
+    return this.forestModel.create(data);
   }
 
   async paginate(
