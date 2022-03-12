@@ -112,7 +112,7 @@ export class ForestResolver {
 
     return this.membershipService.findOne({
       forest: { eq: forest._id },
-      user: { eq: currentUser._id },
+      member: { eq: currentUser._id },
     });
   }
 }

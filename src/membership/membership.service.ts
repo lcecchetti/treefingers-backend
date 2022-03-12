@@ -23,22 +23,22 @@ export class MembershipService {
     return this.membershipModel.findOne(this.prepareFilter(filter)).lean();
   }
 
-  async join({ forest }: JoinInput, user: string): Promise<Membership> {
-    return this.membershipModel.create({ forest, user });
+  async join({ forest }: JoinInput, member: string): Promise<Membership> {
+    return this.membershipModel.create({ forest, member });
   }
 
   async leave(
     { forest }: LeaveInput,
-    user: string,
+    member: string,
   ): Promise<Membership | null> {
-    return this.membershipModel.findOneAndDelete({ forest, user }).lean();
+    return this.membershipModel.findOneAndDelete({ forest, member }).lean();
   }
 
   async count(filter?: FilterMembershipInput): Promise<number> {
     return this.membershipModel.count(this.prepareFilter(filter));
   }
 
-  prepareFilter(filter: FilterMembershipInput): FilterQuery<Comment> {
+  prepareFilter(filter: FilterMembershipInput): FilterQuery<Membership> {
     return this.filterService.prepareFilter(filter);
   }
 }

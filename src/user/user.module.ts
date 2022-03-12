@@ -7,6 +7,7 @@ import { StoryModule } from 'src/story/story.module';
 import { LikeModule } from 'src/like/like.module';
 import { PaginationModule } from 'src/pagination/pagination.module';
 import { FilterModule } from 'src/filter/filter.module';
+import { FollowershipModule } from 'src/followership/followership.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { FilterModule } from 'src/filter/filter.module';
     FilterModule,
     forwardRef(() => StoryModule),
     forwardRef(() => LikeModule),
+    forwardRef(() => FollowershipModule),
   ],
   providers: [UserService, UserResolver],
   exports: [UserService],

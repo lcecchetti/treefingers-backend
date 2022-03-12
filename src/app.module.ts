@@ -14,6 +14,7 @@ import { UtilsModule } from './utils/utils.module';
 import { FilterModule } from './filter/filter.module';
 import { PaginationModule } from './pagination/pagination.module';
 import { MembershipModule } from './membership/membership.module';
+import { FollowershipModule } from './followership/followership.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { MembershipModule } from './membership/membership.module';
     FilterModule,
     PaginationModule,
     MembershipModule,
+    FollowershipModule,
   ],
   providers: [AppService],
 })

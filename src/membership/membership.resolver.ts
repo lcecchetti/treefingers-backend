@@ -47,8 +47,8 @@ export class MembershipResolver {
   }
 
   @ResolveField()
-  async user(@Parent() membership: Membership): Promise<User> {
-    return this.userService.findById(membership.user._id);
+  async member(@Parent() membership: Membership): Promise<User> {
+    return this.userService.findById(membership.member._id);
   }
 
   @ResolveField()

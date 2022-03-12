@@ -17,6 +17,8 @@ import { CurrentUser } from 'src/auth/dto/current-user.dto';
 import { UserConnection } from './dto/user-connection.dto';
 import { StoryConnection } from 'src/story/dto/story-connection.dto';
 import { FilterUserInput } from './inputs/filter-user.input';
+import { Followership } from 'src/followership/followership.entity';
+import { FollowershipService } from 'src/followership/followership.service';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -24,6 +26,7 @@ export class UserResolver {
     private stringService: StringService,
     private userService: UserService,
     private storyService: StoryService,
+    private followershipService: FollowershipService,
   ) {}
 
   @Query(() => UserConnection)
@@ -70,5 +73,27 @@ export class UserResolver {
   @ResolveField(() => Int)
   async storiesCount(@Parent() user: User): Promise<number> {
     return this.storyService.count({ author: { eq: user._id } });
+  }
+
+  @ResolveField(() => Followership, { nullable: true })
+  async currentUserFollowership(
+    @GetCurrentUser() currentUser: CurrentUser,
+    @Parent() user: User,
+  ): Promise<Followership | null> {
+    if (!currentUser) {
+      return null;
+    }
+
+    return this.followershipService.findOne({
+      user: { eq: user._id },
+      follower: { eq: currentUser._id },
+    });
+  }
+
+  @ResolveField(() => Int)
+  async followersCount(@Parent() user: User): Promise<number> {
+    return this.followershipService.count({
+      user: { eq: user._id },
+    });
   }
 }
