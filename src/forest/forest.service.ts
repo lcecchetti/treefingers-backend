@@ -6,7 +6,6 @@ import { ForestConnectionArgs } from './args/forest-connection.args';
 import { CreateForestInput } from './inputs/create-forest.input';
 import { ForestConnection } from './dto/forest-connection.dto';
 import { FilterForestInput } from './inputs/filter-forest.input';
-import slugify from 'slugify';
 import { PaginationService } from 'src/pagination/pagination.service';
 import { FilterService } from 'src/filter/filter.service';
 
