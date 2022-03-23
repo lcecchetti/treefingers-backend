@@ -37,15 +37,6 @@ export class Forest implements Commentable {
 
   @Prop({
     required: true,
-    minlength: 2,
-    maxlength: 128,
-    trim: true,
-  })
-  @Field()
-  title: string;
-
-  @Prop({
-    required: true,
     minlength: 1,
     maxlength: 1024,
     trim: true,
@@ -76,6 +67,6 @@ export class Forest implements Commentable {
 export type ForestDocument = Forest & Document;
 const ForestSchema = SchemaFactory.createForClass(Forest);
 
-ForestSchema.index({ name: 'text', title: 'text', about: 'text' });
+ForestSchema.index({ name: 'text', about: 'text' });
 
 export { ForestSchema };

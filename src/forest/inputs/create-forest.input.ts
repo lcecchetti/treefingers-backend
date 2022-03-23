@@ -9,10 +9,6 @@ class CreateForestDataInput {
   readonly name: string;
 
   @Field()
-  @Length(1, 63)
-  readonly title: string;
-
-  @Field()
   @Length(1, 512)
   readonly about: string;
 }

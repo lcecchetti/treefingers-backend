@@ -27,7 +27,7 @@ export class ForestService {
 
   async create({ data }: CreateForestInput): Promise<Forest> {
     // check if forest already exists
-    const existingName = await this.forestModel.findOne({ name });
+    const existingName = await this.forestModel.findOne({ name: data.name });
     if (existingName) {
       throw new ConflictException('Forest with same name already exists');
     }
