@@ -29,8 +29,17 @@ export class StoryService {
     { data }: CreateStoryInput,
     author: string,
   ): Promise<Story | null> {
+    // populate parent based fields
+    let root;
+    if (data.parent) {
+      const parent = await this.findById(data.parent);
+      root = parent.root || parent._id;
+      data.forest = parent.forest._id;
+    }
+
     return this.storyModel.create({
       ...data,
+      root,
       author,
     });
   }

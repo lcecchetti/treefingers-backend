@@ -14,16 +14,13 @@ class CreateStoryDataInput {
   readonly content: string;
 
   @Field(() => ID, { nullable: true })
-  readonly root?: string;
-
-  @Field(() => ID, { nullable: true })
   readonly parent?: string;
 
   @Field(() => [String], { nullable: true })
   readonly tags?: string[];
 
   @Field(() => String, { nullable: true })
-  readonly forest?: string;
+  forest?: string;
 }
 @InputType()
 export class CreateStoryInput {
