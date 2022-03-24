@@ -110,9 +110,9 @@ export class StoryResolver {
     return this.storyService.paginate(args);
   }
 
-  @ResolveField(() => Forest)
+  @ResolveField(() => Forest, { nullable: true })
   async forest(@Parent() story: Story): Promise<Forest> {
-    return this.forestService.findById(story.forest._id);
+    return this.forestService.findById(story.forest?._id);
   }
 
   @ResolveField(() => Int)

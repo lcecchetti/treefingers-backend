@@ -34,7 +34,7 @@ export class StoryService {
     if (data.parent) {
       const parent = await this.findById(data.parent);
       root = parent.root || parent._id;
-      data.forest = parent.forest?._id;
+      data.forest = undefined;
     }
 
     return this.storyModel.create({
