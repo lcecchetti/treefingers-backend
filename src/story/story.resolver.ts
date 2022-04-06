@@ -26,6 +26,8 @@ import { CommentService } from 'src/comment/comment.service';
 import { Like } from 'src/like/like.entity';
 import { CommentableEntityType } from 'src/comment/enums/commentable-entity-type.enum';
 import { LikeableEntityType } from 'src/like/enums/likeable-entity-type.enum';
+import { UseGuards } from '@nestjs/common';
+import { IsAuthenticated } from 'src/auth/guards/is-authenticated.guard';
 
 @Resolver(() => Story)
 export class StoryResolver {
@@ -54,6 +56,7 @@ export class StoryResolver {
     return this.storyService.findOne(filter);
   }
 
+  @UseGuards(IsAuthenticated)
   @Mutation(() => CreateStoryPayload)
   async createStory(
     @Args('input') input: CreateStoryInput,

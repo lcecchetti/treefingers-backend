@@ -26,6 +26,8 @@ import { Membership } from 'src/membership/membership.entity';
 import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
 import { MembershipService } from 'src/membership/membership.service';
+import { UseGuards } from '@nestjs/common';
+import { IsAuthenticated } from 'src/auth/guards/is-authenticated.guard';
 
 @Resolver(() => Forest)
 export class ForestResolver {
@@ -54,6 +56,7 @@ export class ForestResolver {
     return this.forestService.findOne(filter);
   }
 
+  @UseGuards(IsAuthenticated)
   @Mutation(() => CreateForestPayload)
   async createForest(
     @Args('input') input: CreateForestInput,

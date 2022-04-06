@@ -24,6 +24,8 @@ import { CommentPayload } from './payloads/comment.payload';
 import { Commentable } from './interfaces/commentable.interface';
 import { CommentableEntityType } from './enums/commentable-entity-type.enum';
 import { LikeableEntityType } from 'src/like/enums/likeable-entity-type.enum';
+import { UseGuards } from '@nestjs/common';
+import { IsAuthenticated } from 'src/auth/guards/is-authenticated.guard';
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -43,6 +45,7 @@ export class CommentResolver {
     return this.commentService.paginate(args);
   }
 
+  @UseGuards(IsAuthenticated)
   @Mutation(() => CommentPayload)
   async submitComment(
     @Args('input') input: CommentInput,
