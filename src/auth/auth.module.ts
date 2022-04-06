@@ -7,6 +7,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthResolver } from './auth.resolver';
 import { ConfigService } from '@nestjs/config';
+import { IsAuthenticatedGuard } from './guards/is-authenticated.guard';
 
 @Module({
   imports: [
@@ -21,7 +22,13 @@ import { ConfigService } from '@nestjs/config';
       inject: [ConfigService],
     }),
   ],
-  providers: [AuthService, AuthResolver, LocalStrategy, JwtStrategy],
+  providers: [
+    AuthService,
+    AuthResolver,
+    LocalStrategy,
+    JwtStrategy,
+    IsAuthenticatedGuard,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}

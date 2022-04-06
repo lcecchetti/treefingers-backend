@@ -1,12 +1,14 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtAuthGuard } from './jwt-auth.guard';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { GqlExecutionContext } from '@nestjs/graphql';
+import { Observable } from 'rxjs';
 
 @Injectable()
-export class IsAuthenticated extends JwtAuthGuard {
-  handleRequest(err, user, info) {
-    if (err || !user) {
-      throw err || new UnauthorizedException();
-    }
-    return super.handleRequest(err, user, info);
+export class IsAuthenticatedGuard implements CanActivate {
+  canActivate(
+    context: ExecutionContext,
+  ): boolean | Promise<boolean> | Observable<boolean> {
+    const ctx = GqlExecutionContext.create(context);
+    const req = ctx.getContext().req;
+    return !!req.user;
   }
 }

@@ -8,7 +8,7 @@ import {
 } from '@nestjs/graphql';
 import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
-import { IsAuthenticated } from 'src/auth/guards/is-authenticated.guard';
+import { IsAuthenticatedGuard } from 'src/auth/guards/is-authenticated.guard';
 import { User } from 'src/user/user.entity';
 import { UserService } from 'src/user/user.service';
 import { Followership } from './followership.entity';
@@ -25,7 +25,7 @@ export class FollowershipResolver {
     private userService: UserService,
   ) {}
 
-  @UseGuards(IsAuthenticated)
+  @UseGuards(IsAuthenticatedGuard)
   @Mutation(() => FollowPayload)
   async follow(
     @Args('input') input: FollowInput,
@@ -39,7 +39,7 @@ export class FollowershipResolver {
     };
   }
 
-  @UseGuards(IsAuthenticated)
+  @UseGuards(IsAuthenticatedGuard)
   @Mutation(() => UnfollowPayload)
   async unfollow(
     @Args('input') input: UnfollowInput,

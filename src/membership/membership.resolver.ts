@@ -8,7 +8,7 @@ import {
 } from '@nestjs/graphql';
 import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
-import { IsAuthenticated } from 'src/auth/guards/is-authenticated.guard';
+import { IsAuthenticatedGuard } from 'src/auth/guards/is-authenticated.guard';
 import { Forest } from 'src/forest/forest.entity';
 import { ForestService } from 'src/forest/forest.service';
 import { User } from 'src/user/user.entity';
@@ -28,7 +28,7 @@ export class MembershipResolver {
     private userService: UserService,
   ) {}
 
-  @UseGuards(IsAuthenticated)
+  @UseGuards(IsAuthenticatedGuard)
   @Mutation(() => JoinPayload)
   async join(
     @Args('input') input: JoinInput,
@@ -39,7 +39,7 @@ export class MembershipResolver {
     };
   }
 
-  @UseGuards(IsAuthenticated)
+  @UseGuards(IsAuthenticatedGuard)
   @Mutation(() => LeavePayload)
   async leave(
     @Args('input') input: LeaveInput,

@@ -20,7 +20,7 @@ import { CommentService } from 'src/comment/comment.service';
 import { Likeable } from './interfaces/likeable.interface';
 import { LikeableEntityType } from './enums/likeable-entity-type.enum';
 import { UseGuards } from '@nestjs/common';
-import { IsAuthenticated } from 'src/auth/guards/is-authenticated.guard';
+import { IsAuthenticatedGuard } from 'src/auth/guards/is-authenticated.guard';
 
 @Resolver(() => Like)
 export class LikeResolver {
@@ -31,7 +31,7 @@ export class LikeResolver {
     private storyService: StoryService,
   ) {}
 
-  @UseGuards(IsAuthenticated)
+  @UseGuards(IsAuthenticatedGuard)
   @Mutation(() => LikePayload)
   async like(
     @Args('input') input: LikeInput,
@@ -42,7 +42,7 @@ export class LikeResolver {
     };
   }
 
-  @UseGuards(IsAuthenticated)
+  @UseGuards(IsAuthenticatedGuard)
   @Mutation(() => DislikePayload)
   async dislike(
     @Args('input') input: DislikeInput,
