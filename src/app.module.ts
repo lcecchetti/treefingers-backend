@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -15,6 +15,8 @@ import { FilterModule } from './filter/filter.module';
 import { PaginationModule } from './pagination/pagination.module';
 import { MembershipModule } from './membership/membership.module';
 import { FollowershipModule } from './followership/followership.module';
+import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -46,6 +48,16 @@ import { FollowershipModule } from './followership/followership.module';
     MembershipModule,
     FollowershipModule,
   ],
-  providers: [AppService],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_PIPE,
+      useClass: ValidationPipe,
+    },
+    AppService,
+  ],
 })
 export class AppModule {}
