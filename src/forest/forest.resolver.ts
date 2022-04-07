@@ -60,8 +60,9 @@ export class ForestResolver {
   @UseGuards(IsAuthenticatedGuard)
   async createForest(
     @Args('input') input: CreateForestInput,
+    @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<CreateForestPayload> {
-    return { forest: await this.forestService.create(input) };
+    return { forest: await this.forestService.create(input, currentUser._id) };
   }
 
   @ResolveField(() => String)

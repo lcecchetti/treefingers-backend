@@ -25,14 +25,14 @@ export class ForestService {
     return this.forestModel.findOne(this.prepareFilter(filter)).lean();
   }
 
-  async create({ data }: CreateForestInput): Promise<Forest> {
+  async create({ data }: CreateForestInput, user: string): Promise<Forest> {
     // check if forest already exists
     const existingName = await this.forestModel.findOne({ name: data.name });
     if (existingName) {
       throw new ConflictException('Forest with same name already exists');
     }
 
-    return this.forestModel.create(data);
+    return this.forestModel.create({ ...data, owner: user });
   }
 
   async paginate(
