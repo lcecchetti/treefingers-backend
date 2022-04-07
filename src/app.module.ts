@@ -17,6 +17,7 @@ import { MembershipModule } from './membership/membership.module';
 import { FollowershipModule } from './followership/followership.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { APP_GUARD, APP_PIPE } from '@nestjs/core';
+import { ComplexityPlugin } from './graphql/complexity.plugin';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { APP_GUARD, APP_PIPE } from '@nestjs/core';
       useClass: ValidationPipe,
     },
     AppService,
+    ComplexityPlugin,
   ],
 })
 export class AppModule {}
