@@ -71,8 +71,8 @@ export class ForestResolver {
   }
 
   @ResolveField(() => User)
-  async owner(@Parent() forest: Forest): Promise<User> {
-    return this.userService.findById(forest.owner._id);
+  async founder(@Parent() forest: Forest): Promise<User> {
+    return this.userService.findById(forest.founder._id);
   }
 
   @ResolveField(() => Int)

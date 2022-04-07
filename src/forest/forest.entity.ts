@@ -50,7 +50,7 @@ export class Forest implements Commentable {
     index: true,
   })
   @Field(() => User)
-  owner: User;
+  founder: User;
 
   @Field(() => Int)
   commentsCount: number;

@@ -32,7 +32,7 @@ export class ForestService {
       throw new ConflictException('Forest with same name already exists');
     }
 
-    return this.forestModel.create({ ...data, owner: user });
+    return this.forestModel.create({ ...data, founder: user });
   }
 
   async paginate(
