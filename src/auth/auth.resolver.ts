@@ -13,8 +13,8 @@ import { RegisterInput } from './inputs/register.input';
 export class AuthResolver {
   constructor(private authService: AuthService) {}
 
-  @UseGuards(LocalAuthGuard)
   @Mutation(() => LoginPayload)
+  @UseGuards(LocalAuthGuard)
   async login(
     @GetCurrentUser() currentUser: CurrentUser,
     @Args('input') input: LoginInput,

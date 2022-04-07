@@ -25,8 +25,8 @@ export class FollowershipResolver {
     private userService: UserService,
   ) {}
 
-  @UseGuards(IsAuthenticatedGuard)
   @Mutation(() => FollowPayload)
+  @UseGuards(IsAuthenticatedGuard)
   async follow(
     @Args('input') input: FollowInput,
     @GetCurrentUser() currentUser: CurrentUser,
@@ -39,8 +39,8 @@ export class FollowershipResolver {
     };
   }
 
-  @UseGuards(IsAuthenticatedGuard)
   @Mutation(() => UnfollowPayload)
+  @UseGuards(IsAuthenticatedGuard)
   async unfollow(
     @Args('input') input: UnfollowInput,
     @GetCurrentUser() currentUser: CurrentUser,

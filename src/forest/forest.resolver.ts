@@ -56,8 +56,8 @@ export class ForestResolver {
     return this.forestService.findOne(filter);
   }
 
-  @UseGuards(IsAuthenticatedGuard)
   @Mutation(() => CreateForestPayload)
+  @UseGuards(IsAuthenticatedGuard)
   async createForest(
     @Args('input') input: CreateForestInput,
   ): Promise<CreateForestPayload> {

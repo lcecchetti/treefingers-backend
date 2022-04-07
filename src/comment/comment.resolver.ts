@@ -45,8 +45,8 @@ export class CommentResolver {
     return this.commentService.paginate(args);
   }
 
-  @UseGuards(IsAuthenticatedGuard)
   @Mutation(() => CommentPayload)
+  @UseGuards(IsAuthenticatedGuard)
   async submitComment(
     @Args('input') input: CommentInput,
     @GetCurrentUser() currentUser: CurrentUser,

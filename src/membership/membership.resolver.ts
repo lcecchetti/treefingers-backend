@@ -28,8 +28,8 @@ export class MembershipResolver {
     private userService: UserService,
   ) {}
 
-  @UseGuards(IsAuthenticatedGuard)
   @Mutation(() => JoinPayload)
+  @UseGuards(IsAuthenticatedGuard)
   async join(
     @Args('input') input: JoinInput,
     @GetCurrentUser() currentUser: CurrentUser,
@@ -39,8 +39,8 @@ export class MembershipResolver {
     };
   }
 
-  @UseGuards(IsAuthenticatedGuard)
   @Mutation(() => LeavePayload)
+  @UseGuards(IsAuthenticatedGuard)
   async leave(
     @Args('input') input: LeaveInput,
     @GetCurrentUser() currentUser: CurrentUser,

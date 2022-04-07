@@ -31,8 +31,8 @@ export class LikeResolver {
     private storyService: StoryService,
   ) {}
 
-  @UseGuards(IsAuthenticatedGuard)
   @Mutation(() => LikePayload)
+  @UseGuards(IsAuthenticatedGuard)
   async like(
     @Args('input') input: LikeInput,
     @GetCurrentUser() currentUser: CurrentUser,
@@ -42,8 +42,8 @@ export class LikeResolver {
     };
   }
 
-  @UseGuards(IsAuthenticatedGuard)
   @Mutation(() => DislikePayload)
+  @UseGuards(IsAuthenticatedGuard)
   async dislike(
     @Args('input') input: DislikeInput,
     @GetCurrentUser() currentUser: CurrentUser,
