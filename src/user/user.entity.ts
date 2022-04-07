@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
 import { isEmail } from 'class-validator';
+import { isPrivateMiddleware } from './middleware/is-private.middleware';
 
 @Schema({ timestamps: true })
 @ObjectType()
@@ -16,7 +17,7 @@ export class User {
     unique: true,
     trim: true,
   })
-  @Field()
+  @Field({ middleware: [isPrivateMiddleware] })
   email: string;
 
   @Prop({
@@ -46,11 +47,11 @@ export class User {
   bio?: string;
 
   @Prop({ default: Date.now })
-  @Field(() => GraphQLISODateTime)
+  @Field(() => GraphQLISODateTime, { middleware: [isPrivateMiddleware] })
   createdAt: Date;
 
   @Prop({ default: Date.now })
-  @Field(() => GraphQLISODateTime)
+  @Field(() => GraphQLISODateTime, { middleware: [isPrivateMiddleware] })
   updatedAt: Date;
 }
 

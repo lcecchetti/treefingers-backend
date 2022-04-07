@@ -48,7 +48,7 @@ export class UserResolver {
   @Query(() => User, { nullable: true })
   async currentUser(
     @GetCurrentUser() currentUser: CurrentUser,
-  ): Promise<User | null> {
+  ): Promise<CurrentUser | null> {
     if (!currentUser) {
       return null;
     }
