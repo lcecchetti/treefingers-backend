@@ -65,7 +65,10 @@ export class UserService {
 
     // add search query condition if provided
     if (query) {
-      preparedFilter.$text = { $search: query };
+      preparedFilter.$or = [
+        { $text: { $search: query } },
+        { username: { $regex: query, $options: 'i' } },
+      ];
     }
 
     return preparedFilter;

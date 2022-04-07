@@ -59,7 +59,10 @@ export class ForestService {
 
     // add search query condition if provided
     if (query) {
-      preparedFilter.$text = { $search: query };
+      preparedFilter.$or = [
+        { $text: { $search: query } },
+        { name: { $regex: query, $options: 'i' } },
+      ];
     }
 
     return preparedFilter;
