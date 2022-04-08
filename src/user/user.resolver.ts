@@ -85,7 +85,7 @@ export class UserResolver {
     }
 
     return this.followershipService.findOne({
-      user: { eq: user._id },
+      followed: { eq: user._id },
       follower: { eq: currentUser._id },
     });
   }
@@ -93,7 +93,7 @@ export class UserResolver {
   @ResolveField(() => Int)
   async followersCount(@Parent() user: User): Promise<number> {
     return this.followershipService.count({
-      user: { eq: user._id },
+      followed: { eq: user._id },
     });
   }
 }

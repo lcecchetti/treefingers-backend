@@ -4,7 +4,7 @@ import { FilterIdInput, FilterInput } from 'src/filter/inputs/filter.input';
 @InputType()
 export class FilterFollowershipInput extends FilterInput {
   @Field(() => FilterIdInput, { nullable: true })
-  readonly user?: FilterIdInput;
+  readonly followed?: FilterIdInput;
 
   @Field(() => FilterIdInput, { nullable: true })
   readonly follower?: FilterIdInput;

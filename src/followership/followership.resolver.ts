@@ -54,8 +54,8 @@ export class FollowershipResolver {
   }
 
   @ResolveField()
-  async user(@Parent() followership: Followership): Promise<User> {
-    return this.userService.findById(followership.user._id);
+  async followed(@Parent() followership: Followership): Promise<User> {
+    return this.userService.findById(followership.followed._id);
   }
 
   @ResolveField()

@@ -16,7 +16,7 @@ export class Followership {
     required: true,
   })
   @Field(() => User)
-  user: User;
+  followed: User;
 
   @Prop({
     type: SchemaTypes.ObjectId,
