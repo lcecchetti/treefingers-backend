@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Forest, ForestDocument } from './forest.entity';
 import { FilterQuery, Model } from 'mongoose';
 import { ForestConnectionArgs } from './args/forest-connection.args';
-import { CreateForestDataInput, CreateForestInput } from './inputs/create-forest.input';
+import { CreateForestDataInput } from './inputs/create-forest.input';
 import { ForestConnection } from './dto/forest-connection.dto';
 import { FilterForestInput } from './inputs/filter-forest.input';
 import { PaginationService } from 'src/pagination/pagination.service';

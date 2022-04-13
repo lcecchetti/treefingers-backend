@@ -64,7 +64,10 @@ export class StoryService {
 
     // add search query condition if provided
     if (query) {
-      preparedFilter.$text = { $search: query };
+      preparedFilter.$or = [
+        { $text: { $search: query } },
+        { tags: { $regex: query, $options: 'i' } },
+      ];
     }
 
     return preparedFilter;
