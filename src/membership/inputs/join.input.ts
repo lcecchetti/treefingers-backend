@@ -4,4 +4,6 @@ import { Field, ID, InputType } from '@nestjs/graphql';
 export class JoinInput {
   @Field(() => ID)
   forest: string;
+
+  member: string;
 }

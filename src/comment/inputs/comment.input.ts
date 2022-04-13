@@ -13,6 +13,8 @@ export class CommentDataInput {
 
   @Field(() => CommentableEntityType)
   entityType: CommentableEntityType;
+
+  user: string;
 }
 
 @InputType({ isAbstract: true })

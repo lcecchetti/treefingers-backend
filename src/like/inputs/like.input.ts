@@ -8,4 +8,6 @@ export class LikeInput {
 
   @Field(() => LikeableEntityType)
   entityType: LikeableEntityType;
+
+  user: string;
 }

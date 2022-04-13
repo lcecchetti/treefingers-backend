@@ -32,10 +32,10 @@ export class FollowershipResolver {
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<FollowPayload> {
     return {
-      followership: await this.followershipService.follow(
-        input,
-        currentUser._id,
-      ),
+      followership: await this.followershipService.follow({
+        ...input,
+        follower: currentUser._id,
+      }),
     };
   }
 
@@ -46,10 +46,10 @@ export class FollowershipResolver {
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<UnfollowPayload> {
     return {
-      followership: await this.followershipService.unfollow(
-        input,
-        currentUser._id,
-      ),
+      followership: await this.followershipService.unfollow({
+        ...input,
+        follower: currentUser._id,
+      }),
     };
   }
 

@@ -59,11 +59,14 @@ export class StoryResolver {
   @UseGuards(IsAuthenticatedGuard)
   @Mutation(() => CreateStoryPayload)
   async createStory(
-    @Args('input') input: CreateStoryInput,
+    @Args('input') { data }: CreateStoryInput,
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<CreateStoryPayload> {
     return {
-      story: await this.storyService.create(input, currentUser._id),
+      story: await this.storyService.create({
+        ...data,
+        author: currentUser._id,
+      }),
     };
   }
 

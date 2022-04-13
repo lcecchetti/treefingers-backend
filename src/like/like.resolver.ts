@@ -38,7 +38,10 @@ export class LikeResolver {
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<LikePayload> {
     return {
-      like: await this.likeService.like(input, currentUser._id),
+      like: await this.likeService.like({
+        ...input,
+        user: currentUser._id,
+      }),
     };
   }
 
@@ -49,7 +52,10 @@ export class LikeResolver {
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<DislikePayload> {
     return {
-      like: await this.likeService.dislike(input, currentUser._id),
+      like: await this.likeService.dislike({
+        ...input,
+        user: currentUser._id,
+      }),
     };
   }
 

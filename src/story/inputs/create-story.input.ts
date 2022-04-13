@@ -2,7 +2,7 @@ import { Field, ID, InputType } from '@nestjs/graphql';
 import { MaxLength, MinLength } from 'class-validator';
 
 @InputType()
-class CreateStoryDataInput {
+export class CreateStoryDataInput {
   @Field()
   @MinLength(1)
   @MaxLength(255)
@@ -21,6 +21,8 @@ class CreateStoryDataInput {
 
   @Field(() => String, { nullable: true })
   forest?: string;
+
+  author: string;
 }
 @InputType()
 export class CreateStoryInput {

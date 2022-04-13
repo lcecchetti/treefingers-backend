@@ -22,15 +22,12 @@ export class LikeService {
     return this.likeModel.findOne(this.prepareFilter(filter)).lean();
   }
 
-  async like({ entity, entityType }: LikeInput, user: string): Promise<Like> {
-    return this.likeModel.create({ entity, entityType, user });
+  async like(input: LikeInput): Promise<Like> {
+    return this.likeModel.create(input);
   }
 
-  async dislike(
-    { entity, entityType }: DislikeInput,
-    user: string,
-  ): Promise<Like | null> {
-    return this.likeModel.findOneAndDelete({ entity, entityType, user }).lean();
+  async dislike(input: DislikeInput): Promise<Like | null> {
+    return this.likeModel.findOneAndDelete(input).lean();
   }
 
   async count(filter?: FilterLikeInput): Promise<number> {

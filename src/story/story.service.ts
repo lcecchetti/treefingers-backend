@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Story, StoryDocument } from './story.entity';
 import { FilterQuery, Model } from 'mongoose';
 import { StoryConnectionArgs } from './args/story-connection.args';
-import { CreateStoryInput } from './inputs/create-story.input';
+import { CreateStoryDataInput } from './inputs/create-story.input';
 import { StoryConnection } from './dto/story-connection.dto';
 import { FilterStoryInput } from './inputs/filter-story.input';
 import { PaginationService } from 'src/pagination/pagination.service';
@@ -25,10 +25,7 @@ export class StoryService {
     return this.storyModel.findOne(this.prepareFilter(filter)).lean();
   }
 
-  async create(
-    { data }: CreateStoryInput,
-    author: string,
-  ): Promise<Story | null> {
+  async create(data: CreateStoryDataInput): Promise<Story | null> {
     // populate parent based fields
     let root;
     if (data.parent) {
@@ -40,7 +37,6 @@ export class StoryService {
     return this.storyModel.create({
       ...data,
       root,
-      author,
     });
   }
 

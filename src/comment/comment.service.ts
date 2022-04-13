@@ -7,7 +7,7 @@ import { CommentConnection } from './dto/comment-connection.dto';
 import { FilterCommentInput } from './inputs/filter-comment.input';
 import { PaginationService } from 'src/pagination/pagination.service';
 import { FilterService } from 'src/filter/filter.service';
-import { CommentInput } from './inputs/comment.input';
+import { CommentDataInput } from './inputs/comment.input';
 
 @Injectable()
 export class CommentService {
@@ -27,11 +27,8 @@ export class CommentService {
     return this.commentModel.findOne(this.prepareFilter(filter)).lean();
   }
 
-  async create({ data }: CommentInput, user: string): Promise<Comment> {
-    return this.commentModel.create({
-      ...data,
-      user,
-    });
+  async create(data: CommentDataInput): Promise<Comment> {
+    return this.commentModel.create(data);
   }
 
   async paginate(

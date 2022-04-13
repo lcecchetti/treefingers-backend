@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Forest, ForestDocument } from './forest.entity';
 import { FilterQuery, Model } from 'mongoose';
 import { ForestConnectionArgs } from './args/forest-connection.args';
-import { CreateForestInput } from './inputs/create-forest.input';
+import { CreateForestDataInput, CreateForestInput } from './inputs/create-forest.input';
 import { ForestConnection } from './dto/forest-connection.dto';
 import { FilterForestInput } from './inputs/filter-forest.input';
 import { PaginationService } from 'src/pagination/pagination.service';
@@ -25,14 +25,14 @@ export class ForestService {
     return this.forestModel.findOne(this.prepareFilter(filter)).lean();
   }
 
-  async create({ data }: CreateForestInput, user: string): Promise<Forest> {
+  async create(data: CreateForestDataInput): Promise<Forest> {
     // check if forest already exists
     const existingName = await this.forestModel.findOne({ name: data.name });
     if (existingName) {
       throw new ConflictException('Forest with same name already exists');
     }
 
-    return this.forestModel.create({ ...data, founder: user });
+    return this.forestModel.create(data);
   }
 
   async paginate(

@@ -48,11 +48,14 @@ export class CommentResolver {
   @Mutation(() => CommentPayload)
   @UseGuards(IsAuthenticatedGuard)
   async submitComment(
-    @Args('input') input: CommentInput,
+    @Args('input') { data }: CommentInput,
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<CommentPayload> {
     return {
-      comment: await this.commentService.create(input, currentUser._id),
+      comment: await this.commentService.create({
+        ...data,
+        user: currentUser._id,
+      }),
     };
   }
 

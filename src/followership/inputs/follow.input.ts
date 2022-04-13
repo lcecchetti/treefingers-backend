@@ -4,4 +4,6 @@ import { Field, ID, InputType } from '@nestjs/graphql';
 export class FollowInput {
   @Field(() => ID)
   followed: string;
+
+  follower: string;
 }

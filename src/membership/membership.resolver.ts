@@ -35,7 +35,10 @@ export class MembershipResolver {
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<JoinPayload> {
     return {
-      membership: await this.membershipService.join(input, currentUser._id),
+      membership: await this.membershipService.join({
+        ...input,
+        member: currentUser._id,
+      }),
     };
   }
 
@@ -46,7 +49,10 @@ export class MembershipResolver {
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<LeavePayload> {
     return {
-      membership: await this.membershipService.leave(input, currentUser._id),
+      membership: await this.membershipService.leave({
+        ...input,
+        member: currentUser._id,
+      }),
     };
   }
 

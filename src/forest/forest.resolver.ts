@@ -59,10 +59,15 @@ export class ForestResolver {
   @Mutation(() => CreateForestPayload)
   @UseGuards(IsAuthenticatedGuard)
   async createForest(
-    @Args('input') input: CreateForestInput,
+    @Args('input') { data }: CreateForestInput,
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<CreateForestPayload> {
-    return { forest: await this.forestService.create(input, currentUser._id) };
+    return {
+      forest: await this.forestService.create({
+        ...data,
+        founder: currentUser._id,
+      }),
+    };
   }
 
   @ResolveField(() => String)

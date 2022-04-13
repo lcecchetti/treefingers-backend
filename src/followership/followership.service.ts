@@ -25,20 +25,12 @@ export class FollowershipService {
     return this.followershipModel.findOne(this.prepareFilter(filter)).lean();
   }
 
-  async follow(
-    { followed }: FollowInput,
-    follower: string,
-  ): Promise<Followership> {
-    return this.followershipModel.create({ followed, follower });
+  async follow(input: FollowInput): Promise<Followership> {
+    return this.followershipModel.create(input);
   }
 
-  async unfollow(
-    { followed }: UnfollowInput,
-    follower: string,
-  ): Promise<Followership | null> {
-    return this.followershipModel
-      .findOneAndDelete({ followed, follower })
-      .lean();
+  async unfollow(input: UnfollowInput): Promise<Followership | null> {
+    return this.followershipModel.findOneAndDelete(input).lean();
   }
 
   async count(filter?: FilterFollowershipInput): Promise<number> {
