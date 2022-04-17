@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 
 @InputType()
-class RegisterDataInput {
+export class RegisterDataInput {
   @Field()
   @IsEmail()
   readonly email: string;

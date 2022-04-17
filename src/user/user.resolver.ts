@@ -5,6 +5,7 @@ import {
   ResolveField,
   Parent,
   Int,
+  Mutation,
 } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { User } from './user.entity';
@@ -19,6 +20,10 @@ import { StoryConnection } from 'src/story/dto/story-connection.dto';
 import { FilterUserInput } from './inputs/filter-user.input';
 import { Followership } from 'src/followership/followership.entity';
 import { FollowershipService } from 'src/followership/followership.service';
+import { IsAuthenticatedGuard } from 'src/auth/guards/is-authenticated.guard';
+import { UseGuards } from '@nestjs/common';
+import { EditUserPayload } from './payloads/edit-user.payload';
+import { EditUserInput } from './inputs/edit-user.input';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -53,6 +58,17 @@ export class UserResolver {
       return null;
     }
     return this.userService.findById(currentUser._id);
+  }
+
+  @UseGuards(IsAuthenticatedGuard)
+  @Mutation(() => EditUserPayload)
+  async editUser(
+    @Args('input') { data }: EditUserInput,
+    @GetCurrentUser() currentUser: CurrentUser,
+  ): Promise<EditUserPayload> {
+    return {
+      user: await this.userService.edit(currentUser._id, data),
+    };
   }
 
   @ResolveField(() => String)

@@ -24,8 +24,8 @@ export class AuthResolver {
 
   @Mutation(() => RegisterPayload)
   async register(
-    @Args('input') input: RegisterInput,
+    @Args('input') { data }: RegisterInput,
   ): Promise<RegisterPayload> {
-    return this.authService.register(input);
+    return this.authService.register(data);
   }
 }

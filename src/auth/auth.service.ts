@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -6,12 +6,13 @@ import { User } from 'src/user/user.entity';
 import { CurrentUser } from './dto/current-user.dto';
 import { LoginPayload } from './payloads/login.payload';
 import { JwtPayload } from './payloads/jwt.payload';
-import { RegisterInput } from './inputs/register.input';
+import { RegisterDataInput } from './inputs/register.input';
 import { RegisterPayload } from './payloads/register.payload';
 
 @Injectable()
 export class AuthService {
   constructor(
+    @Inject(forwardRef(() => UserService))
     private userService: UserService,
     private jwtService: JwtService,
   ) {}
@@ -39,17 +40,19 @@ export class AuthService {
     };
   }
 
-  async register({ data }: RegisterInput): Promise<RegisterPayload> {
+  async register(data: RegisterDataInput): Promise<RegisterPayload> {
     // create user
-    const encryptedPassword = await bcrypt.hash(data.password, 10);
+    const encryptedPassword = await this.encryptPassword(data.password);
     const user = await this.userService.register({
-      data: {
-        ...data,
-        password: encryptedPassword,
-      },
+      ...data,
+      password: encryptedPassword,
     });
 
     // login user
     return this.login(user);
+  }
+
+  async encryptPassword(password: string): Promise<string> {
+    return bcrypt.hash(password, 10);
   }
 }
