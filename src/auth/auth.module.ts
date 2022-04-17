@@ -15,7 +15,6 @@ import { IsAuthenticatedGuard } from './guards/is-authenticated.guard';
     PassportModule,
     JwtModule.registerAsync({
       useFactory: async (configService: ConfigService) => ({
-        //@todo swap to private/public keys
         secret: configService.get<string>('jwt.secret'),
         expiresIn: configService.get<string>('jwt.expiration'),
       }),
