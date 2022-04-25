@@ -6,11 +6,13 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from 'src/user/user.module';
 import { FilterModule } from 'src/filter/filter.module';
 import { MembershipSchema } from './membership.entity';
+import { ForestSchema } from 'src/forest/forest.entity';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: 'Membership', schema: MembershipSchema },
+      { name: 'Forest', schema: ForestSchema },
     ]),
     FilterModule,
     forwardRef(() => UserModule),

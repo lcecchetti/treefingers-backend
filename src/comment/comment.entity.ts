@@ -58,7 +58,13 @@ export class Comment implements Likeable {
   @Field(() => CommentableEntityType)
   entityType: CommentableEntityType;
 
-  @Field(() => Int)
+  @Prop({
+    required: true,
+    index: true,
+    min: 0,
+    default: 0,
+  })
+  @Field(() => Int, { defaultValue: 0 })
   likesCount: number;
 
   @Field(() => Like, { nullable: true })

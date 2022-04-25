@@ -1,6 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
+import {
+  Field,
+  GraphQLISODateTime,
+  ID,
+  Int,
+  ObjectType,
+} from '@nestjs/graphql';
 import { isEmail } from 'class-validator';
 import { isPrivateMiddleware } from './middleware/is-private.middleware';
 
@@ -45,6 +51,33 @@ export class User {
   })
   @Field({ nullable: true })
   bio?: string;
+
+  @Prop({
+    required: true,
+    index: true,
+    min: 0,
+    default: 0,
+  })
+  @Field(() => Int, { defaultValue: 0 })
+  likesCount: number;
+
+  @Prop({
+    required: true,
+    index: true,
+    min: 0,
+    default: 0,
+  })
+  @Field(() => Int, { defaultValue: 0 })
+  storiesCount: number;
+
+  @Prop({
+    required: true,
+    index: true,
+    min: 0,
+    default: 0,
+  })
+  @Field(() => Int, { defaultValue: 0 })
+  followersCount: number;
 
   @Prop({ default: Date.now })
   @Field(() => GraphQLISODateTime, { middleware: [isPrivateMiddleware] })

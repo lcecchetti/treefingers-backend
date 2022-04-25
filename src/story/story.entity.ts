@@ -80,11 +80,41 @@ export class Story implements Likeable, Commentable {
   })
   forest?: Forest;
 
-  @Field(() => Int)
+  @Prop({
+    required: true,
+    index: true,
+    min: 0,
+    default: 0,
+  })
+  @Field(() => Int, { defaultValue: 0 })
   commentsCount: number;
 
-  @Field(() => Int)
+  @Prop({
+    required: true,
+    index: true,
+    min: 0,
+    default: 0,
+  })
+  @Field(() => Int, { defaultValue: 0 })
   likesCount: number;
+
+  @Prop({
+    required: true,
+    index: true,
+    min: 0,
+    default: 0,
+  })
+  @Field(() => Int, { defaultValue: 0 })
+  descendentsCount: number;
+
+  @Prop({
+    required: true,
+    index: true,
+    min: 0,
+    default: 0,
+  })
+  @Field(() => Int, { defaultValue: 0 })
+  childrenCount: number;
 
   @Field(() => Like, { nullable: true })
   currentUserLike: Like;

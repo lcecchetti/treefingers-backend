@@ -5,7 +5,6 @@ import {
   ResolveField,
   Parent,
   Mutation,
-  Int,
 } from '@nestjs/graphql';
 import { ForestService } from './forest.service';
 import { Forest } from './forest.entity';
@@ -20,7 +19,6 @@ import { User } from 'src/user/user.entity';
 import { UserService } from 'src/user/user.service';
 import { StringService } from 'src/utils/services/string.service';
 import { CommentService } from 'src/comment/comment.service';
-import { CommentableEntityType } from 'src/comment/enums/commentable-entity-type.enum';
 import { ForestConnection } from './dto/forest-connection.dto';
 import { Membership } from 'src/membership/membership.entity';
 import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
@@ -78,26 +76,6 @@ export class ForestResolver {
   @ResolveField(() => User)
   async founder(@Parent() forest: Forest): Promise<User> {
     return this.userService.findById(forest.founder._id);
-  }
-
-  @ResolveField(() => Int)
-  async commentsCount(@Parent() forest: Forest): Promise<number> {
-    return this.commentService.count({
-      entity: { eq: forest._id },
-      entityType: CommentableEntityType.Forest,
-    });
-  }
-
-  @ResolveField(() => Int)
-  async storiesCount(@Parent() forest: Forest): Promise<number> {
-    return this.storyService.count({ forest: { eq: forest._id } });
-  }
-
-  @ResolveField(() => Int)
-  async membersCount(@Parent() forest: Forest): Promise<number> {
-    return this.membershipService.count({
-      forest: { eq: forest._id },
-    });
   }
 
   @ResolveField(() => StoryConnection)

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import { FilterService } from 'src/filter/filter.service';
+import { ForestDocument } from 'src/forest/forest.entity';
 import { FilterMembershipInput } from './inputs/filter-membership.input';
 import { JoinInput } from './inputs/join.input';
 import { LeaveInput } from './inputs/leave.input';
@@ -12,6 +13,8 @@ export class MembershipService {
   constructor(
     @InjectModel('Membership')
     private membershipModel: Model<MembershipDocument>,
+    @InjectModel('Forest')
+    private forestModel: Model<ForestDocument>,
     private filterService: FilterService<MembershipDocument>,
   ) {}
 
@@ -24,11 +27,28 @@ export class MembershipService {
   }
 
   async join(input: JoinInput): Promise<Membership> {
-    return this.membershipModel.create(input);
+    const membership = await this.membershipModel.create(input);
+
+    await this.forestModel.findByIdAndUpdate(input.forest, {
+      $inc: { membersCount: 1 },
+    });
+
+    return membership;
   }
 
   async leave(input: LeaveInput): Promise<Membership | null> {
-    return this.membershipModel.findOneAndDelete(input).lean();
+    const membership = await this.membershipModel
+      .findOneAndDelete(input)
+      .lean();
+
+    if (!membership) return null;
+
+    await this.forestModel.updateOne(
+      { _id: input.forest, membersCount: { $gt: 0 } },
+      { $inc: { membersCount: -1 } },
+    );
+
+    return membership;
   }
 
   async count(filter?: FilterMembershipInput): Promise<number> {

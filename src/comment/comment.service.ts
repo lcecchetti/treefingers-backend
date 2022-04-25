@@ -8,11 +8,16 @@ import { FilterCommentInput } from './inputs/filter-comment.input';
 import { PaginationService } from 'src/pagination/pagination.service';
 import { FilterService } from 'src/filter/filter.service';
 import { CommentDataInput } from './inputs/comment.input';
+import { CommentableEntityType } from './enums/commentable-entity-type.enum';
+import { StoryDocument } from 'src/story/story.entity';
+import { ForestDocument } from 'src/forest/forest.entity';
 
 @Injectable()
 export class CommentService {
   constructor(
     @InjectModel('Comment') private commentModel: Model<CommentDocument>,
+    @InjectModel('Forest') private forestModel: Model<ForestDocument>,
+    @InjectModel('Story') private storyModel: Model<StoryDocument>,
     private paginationService: PaginationService<Comment, CommentDocument>,
     private filterService: FilterService<CommentDocument>,
   ) {}
@@ -28,7 +33,25 @@ export class CommentService {
   }
 
   async create(data: CommentDataInput): Promise<Comment> {
-    return this.commentModel.create(data);
+    const comment = await this.commentModel.create(data);
+
+    // pick entity model
+    let model;
+    switch (data.entityType) {
+      case CommentableEntityType.Forest:
+        model = this.forestModel;
+        break;
+      case CommentableEntityType.Story:
+        model = this.storyModel;
+        break;
+    }
+
+    // update entity model comments count
+    await model.findByIdAndUpdate(data.entity, {
+      $inc: { commentsCount: 1 },
+    });
+
+    return comment;
   }
 
   async paginate(

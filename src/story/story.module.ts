@@ -9,10 +9,16 @@ import { CommentModule } from 'src/comment/comment.module';
 import { ForestModule } from 'src/forest/forest.module';
 import { PaginationModule } from 'src/pagination/pagination.module';
 import { FilterModule } from 'src/filter/filter.module';
+import { UserSchema } from 'src/user/user.entity';
+import { ForestSchema } from 'src/forest/forest.entity';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: 'Story', schema: StorySchema }]),
+    MongooseModule.forFeature([
+      { name: 'Story', schema: StorySchema },
+      { name: 'User', schema: UserSchema },
+      { name: 'Forest', schema: ForestSchema },
+    ]),
     PaginationModule,
     FilterModule,
     forwardRef(() => UserModule),

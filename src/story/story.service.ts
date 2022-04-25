@@ -8,11 +8,15 @@ import { StoryConnection } from './dto/story-connection.dto';
 import { FilterStoryInput } from './inputs/filter-story.input';
 import { PaginationService } from 'src/pagination/pagination.service';
 import { FilterService } from 'src/filter/filter.service';
+import { UserDocument } from 'src/user/user.entity';
+import { ForestDocument } from 'src/forest/forest.entity';
 
 @Injectable()
 export class StoryService {
   constructor(
     @InjectModel('Story') private storyModel: Model<StoryDocument>,
+    @InjectModel('User') private userModel: Model<UserDocument>,
+    @InjectModel('Forest') private forestModel: Model<ForestDocument>,
     private paginationService: PaginationService<Story, StoryDocument>,
     private filterService: FilterService<StoryDocument>,
   ) {}
@@ -34,10 +38,36 @@ export class StoryService {
       data.forest = undefined;
     }
 
-    return this.storyModel.create({
+    const story = await this.storyModel.create({
       ...data,
       root,
     });
+
+    // update user stories count
+    await this.userModel.findByIdAndUpdate(data.author, {
+      $inc: { storiesCount: 1 },
+    });
+
+    // update forest stories count
+    await this.forestModel.findByIdAndUpdate(data.forest, {
+      $inc: { storiesCount: 1 },
+    });
+
+    // update parent children count
+    if (story.parent) {
+      await this.storyModel.findByIdAndUpdate(story.parent, {
+        $inc: { childrenCount: 1 },
+      });
+    }
+
+    // update root descendents count
+    if (story.root) {
+      await this.storyModel.findByIdAndUpdate(story.root, {
+        $inc: { descendentsCount: 1 },
+      });
+    }
+
+    return story;
   }
 
   async paginate(

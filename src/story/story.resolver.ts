@@ -5,7 +5,6 @@ import {
   ResolveField,
   Parent,
   Mutation,
-  Int,
 } from '@nestjs/graphql';
 import { StoryService } from './story.service';
 import { Story, StoryDocument } from './story.entity';
@@ -119,26 +118,5 @@ export class StoryResolver {
   @ResolveField(() => Forest, { nullable: true })
   async forest(@Parent() story: Story): Promise<Forest> {
     return this.forestService.findById(story.forest?._id);
-  }
-
-  @ResolveField(() => Int)
-  async likesCount(@Parent() story: Story): Promise<number> {
-    return this.likeService.count({
-      entity: { eq: story._id },
-      entityType: LikeableEntityType.Story,
-    });
-  }
-
-  @ResolveField(() => Int)
-  async commentsCount(@Parent() story: Story): Promise<number> {
-    return this.commentService.count({
-      entity: { eq: story._id },
-      entityType: CommentableEntityType.Story,
-    });
-  }
-
-  @ResolveField(() => Int)
-  async childrenCount(@Parent() story: Story): Promise<number> {
-    return this.storyService.count({ parent: { eq: story._id } });
   }
 }

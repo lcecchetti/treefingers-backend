@@ -52,8 +52,32 @@ export class Forest implements Commentable {
   @Field(() => User)
   founder: User;
 
-  @Field(() => Int)
+  @Prop({
+    required: true,
+    index: true,
+    min: 0,
+    default: 0,
+  })
+  @Field(() => Int, { defaultValue: 0 })
   commentsCount: number;
+
+  @Prop({
+    required: true,
+    index: true,
+    min: 0,
+    default: 0,
+  })
+  @Field(() => Int, { defaultValue: 0 })
+  membersCount: number;
+
+  @Prop({
+    required: true,
+    index: true,
+    min: 0,
+    default: 0,
+  })
+  @Field(() => Int, { defaultValue: 0 })
+  storiesCount: number;
 
   @Prop({ default: Date.now })
   @Field(() => GraphQLISODateTime)

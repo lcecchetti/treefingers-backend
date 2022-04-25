@@ -4,7 +4,6 @@ import {
   Args,
   ResolveField,
   Parent,
-  Int,
   Mutation,
 } from '@nestjs/graphql';
 import { UserService } from './user.service';
@@ -86,11 +85,6 @@ export class UserResolver {
     return this.storyService.paginate(args);
   }
 
-  @ResolveField(() => Int)
-  async storiesCount(@Parent() user: User): Promise<number> {
-    return this.storyService.count({ author: { eq: user._id } });
-  }
-
   @ResolveField(() => Followership, { nullable: true })
   async currentUserFollowership(
     @GetCurrentUser() currentUser: CurrentUser,
@@ -103,13 +97,6 @@ export class UserResolver {
     return this.followershipService.findOne({
       followed: { eq: user._id },
       follower: { eq: currentUser._id },
-    });
-  }
-
-  @ResolveField(() => Int)
-  async followersCount(@Parent() user: User): Promise<number> {
-    return this.followershipService.count({
-      followed: { eq: user._id },
     });
   }
 }
