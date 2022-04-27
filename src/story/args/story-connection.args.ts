@@ -1,13 +1,13 @@
 import { ArgsType, Field } from '@nestjs/graphql';
 import { ConnectionArgs } from 'src/pagination/args/connection.args';
-import { SortInput } from 'src/pagination/inputs/sort.input';
 import { FilterStoryInput } from '../inputs/filter-story.input';
+import { SortStoryInput } from '../inputs/sort-story.input';
 
 @ArgsType()
 export class StoryConnectionArgs extends ConnectionArgs {
   @Field(() => FilterStoryInput, { nullable: true })
   readonly filter?: FilterStoryInput = new FilterStoryInput();
 
-  @Field(() => SortInput, { nullable: true })
-  readonly sort?: SortInput = new SortInput();
+  @Field(() => SortStoryInput, { nullable: true })
+  readonly sort?: SortStoryInput = new SortStoryInput();
 }
