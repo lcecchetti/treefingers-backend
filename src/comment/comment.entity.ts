@@ -80,4 +80,8 @@ export class Comment implements Likeable {
 }
 
 export type CommentDocument = Comment & Document;
-export const CommentSchema = SchemaFactory.createForClass(Comment);
+const CommentSchema = SchemaFactory.createForClass(Comment);
+
+CommentSchema.index({ likesCount: 1, _id: 1 });
+
+export { CommentSchema };

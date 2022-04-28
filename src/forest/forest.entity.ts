@@ -92,5 +92,8 @@ export type ForestDocument = Forest & Document;
 const ForestSchema = SchemaFactory.createForClass(Forest);
 
 ForestSchema.index({ name: 'text', about: 'text' });
+ForestSchema.index({ membersCount: 1, _id: 1 });
+ForestSchema.index({ commentsCount: 1, _id: 1 });
+ForestSchema.index({ storiesCount: 1, _id: 1 });
 
 export { ForestSchema };

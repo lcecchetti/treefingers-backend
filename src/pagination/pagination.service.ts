@@ -4,20 +4,74 @@ import { ConnectionArgs } from './args/connection.args';
 import { IConnection } from './dto/pagination.dto';
 import { SortInput, SORT_DIRECTION } from './inputs/sort.input';
 
-const encodeCursor = (cursor: string): string => {
-  if (!cursor) {
+const encodeCursor = (node: any, sort: SortInput): string => {
+  if (!node) {
     return '';
   }
 
-  return Buffer.from(String(cursor)).toString('base64');
+  const cursor = {};
+
+  Object.keys(sort).forEach((key) => {
+    if (node[key]) {
+      cursor[key] = node[key];
+    }
+  });
+
+  return Buffer.from(JSON.stringify(cursor)).toString('base64');
 };
 
-const decodeCursor = (cursor: string): string => {
+const decodeCursor = (cursor: string): any | null => {
   if (!cursor) {
-    return '';
+    return null;
   }
 
-  return Buffer.from(String(cursor), 'base64').toString('ascii');
+  return JSON.parse(Buffer.from(String(cursor), 'base64').toString('ascii'));
+};
+
+const prepareCursorFilter = (
+  sort: SortInput,
+  { after, before }: ConnectionArgs,
+): any => {
+  if (!(after || before)) {
+    return {};
+  }
+
+  // decode cursor
+  const cursor = decodeCursor(after) || decodeCursor(before);
+
+  // cursor conditions
+  const conditions = [];
+
+  // operator direction
+  const ascOperator = after ? '$gt' : '$lt';
+  const descOperator = after ? '$lt' : '$gt';
+
+  // for each sort provided
+  Object.keys(sort).forEach((key) => {
+    // don't add _id condition if combined sort
+    if (Object.keys(sort).length > 1 && key === '_id') {
+      return;
+    }
+
+    // secondary column condition
+    conditions.push({
+      [key]: {
+        [sort[key] === SORT_DIRECTION.ASC ? ascOperator : descOperator]:
+          cursor[key],
+      },
+    });
+
+    // primary column condition
+    conditions.push({
+      [key]: cursor[key],
+      _id: {
+        [sort._id === SORT_DIRECTION.ASC ? ascOperator : descOperator]:
+          cursor._id,
+      },
+    });
+  });
+
+  return { $or: conditions };
 };
 
 export class PaginationService<E, D> {
@@ -32,22 +86,22 @@ export class PaginationService<E, D> {
       throw new BadRequestException('Provide only first/after or last/before');
     }
 
-    const result: IConnection<E> = {};
+    // allow sort by maximum 2 fields, _id included
+    if (
+      Object.keys(sort).length > 2 ||
+      (Object.keys(sort).length === 1 && !sort._id)
+    ) {
+      throw new BadRequestException('Sort by maximum 2 fields');
+    }
 
     // prepare cursor filter
-    if (after) {
-      const cursor = decodeCursor(after);
-      filter._id =
-        sort._id === SORT_DIRECTION.ASC ? { $gt: cursor } : { $lt: cursor };
-    }
-    if (before) {
-      const cursor = decodeCursor(before);
-      filter._id =
-        sort._id === SORT_DIRECTION.ASC ? { $lt: cursor } : { $gt: cursor };
-    }
+    const cursorFilter = prepareCursorFilter(sort, { after, before });
+
+    // add cursor filter to filter
+    const composedFilter = { $and: [filter, cursorFilter] };
 
     // get total query count
-    const totalCount = await model.count(filter);
+    const totalCount = await model.count(composedFilter);
 
     // prepare query options
     const limit = first || last || 10;
@@ -55,12 +109,16 @@ export class PaginationService<E, D> {
 
     // get nodes
     //@todo improve performances by removing skip and querying first item in reversed order
-    const nodes = await model.find(filter, null, { sort, limit, skip }).lean();
+    const nodes = await model
+      .find(composedFilter, null, { sort, limit, skip })
+      .lean();
+
+    const result: IConnection<E> = {};
 
     // build edges
     result.edges = nodes.map((node) => {
       return {
-        cursor: encodeCursor(node._id),
+        cursor: encodeCursor(node, sort),
         node,
       };
     });
@@ -71,6 +129,8 @@ export class PaginationService<E, D> {
       endCursor: result.edges.slice(-1).pop()?.cursor,
       hasPreviousPage: last ? totalCount > limit : false,
       hasNextPage: first ? totalCount > limit : false,
+      pagesCount: Math.ceil(totalCount / limit),
+      totalCount,
     };
 
     return result;

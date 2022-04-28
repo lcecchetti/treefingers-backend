@@ -132,5 +132,9 @@ export type StoryDocument = Story & Document;
 const StorySchema = SchemaFactory.createForClass(Story);
 
 StorySchema.index({ title: 'text', content: 'text' });
+StorySchema.index({ commentsCount: 1, _id: 1 });
+StorySchema.index({ likesCount: 1, _id: 1 });
+StorySchema.index({ descendentsCount: 1, _id: 1 });
+StorySchema.index({ childrenCount: 1, _id: 1 });
 
 export { StorySchema };

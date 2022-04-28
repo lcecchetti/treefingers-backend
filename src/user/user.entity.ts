@@ -92,5 +92,8 @@ export type UserDocument = User & Document;
 const UserSchema = SchemaFactory.createForClass(User);
 
 UserSchema.index({ username: 'text', bio: 'text' });
+UserSchema.index({ followersCount: 1, _id: 1 });
+UserSchema.index({ likesCount: 1, _id: 1 });
+UserSchema.index({ storiesCount: 1, _id: 1 });
 
 export { UserSchema };

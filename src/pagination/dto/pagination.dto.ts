@@ -19,6 +19,12 @@ class PageInfo {
 
   @Field({ nullable: true })
   endCursor?: string;
+
+  @Field(() => Int, { defaultValue: 0 })
+  totalCount?: number = 0;
+
+  @Field(() => Int, { defaultValue: 0 })
+  pagesCount?: number = 0;
 }
 
 export interface IConnection<T> {
