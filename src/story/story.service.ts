@@ -63,7 +63,7 @@ export class StoryService {
     // update root descendents count
     if (story.root) {
       await this.storyModel.findByIdAndUpdate(story.root, {
-        $inc: { descendentsCount: 1 },
+        $inc: { descendantsCount: 1 },
       });
     }
 

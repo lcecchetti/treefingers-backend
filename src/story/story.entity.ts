@@ -105,7 +105,7 @@ export class Story implements Likeable, Commentable {
     default: 0,
   })
   @Field(() => Int, { defaultValue: 0 })
-  descendentsCount: number;
+  descendantsCount: number;
 
   @Prop({
     required: true,
@@ -134,7 +134,7 @@ const StorySchema = SchemaFactory.createForClass(Story);
 StorySchema.index({ title: 'text', content: 'text' });
 StorySchema.index({ commentsCount: 1, _id: 1 });
 StorySchema.index({ likesCount: 1, _id: 1 });
-StorySchema.index({ descendentsCount: 1, _id: 1 });
+StorySchema.index({ descendantsCount: 1, _id: 1 });
 StorySchema.index({ childrenCount: 1, _id: 1 });
 
 export { StorySchema };
