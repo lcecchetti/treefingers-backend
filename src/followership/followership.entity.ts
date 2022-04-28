@@ -40,7 +40,7 @@ export type FollowershipDocument = Followership & Document;
 const FollowershipSchema = SchemaFactory.createForClass(Followership);
 
 FollowershipSchema.index(
-  { user: 1, follower: 1 },
+  { followed: 1, follower: 1 },
   {
     unique: true,
   },
