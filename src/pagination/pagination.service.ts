@@ -101,7 +101,8 @@ export class PaginationService<E, D> {
     const composedFilter = { $and: [filter, cursorFilter] };
 
     // get total query count
-    const totalCount = await model.count(composedFilter);
+    const totalCount = await model.count(filter);
+    const remainingCount = await model.count(composedFilter);
 
     // prepare query options
     const limit = first || last || 10;
@@ -127,8 +128,8 @@ export class PaginationService<E, D> {
     result.pageInfo = {
       startCursor: result.edges.slice(0, 1).pop()?.cursor,
       endCursor: result.edges.slice(-1).pop()?.cursor,
-      hasPreviousPage: last ? totalCount > limit : false,
-      hasNextPage: first ? totalCount > limit : false,
+      hasPreviousPage: last ? remainingCount > limit : false,
+      hasNextPage: first ? remainingCount > limit : false,
       pagesCount: Math.ceil(totalCount / limit),
       totalCount,
     };
