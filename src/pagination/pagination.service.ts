@@ -106,7 +106,7 @@ export class PaginationService<E, D> {
 
     // prepare query options
     const limit = first || last || 10;
-    const skip = last ? Math.max(totalCount - last, 0) : 0;
+    const skip = last ? Math.max(remainingCount - last, 0) : 0;
 
     // get nodes
     //@todo improve performances by removing skip and querying first item in reversed order
