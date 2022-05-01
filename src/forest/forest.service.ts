@@ -25,6 +25,10 @@ export class ForestService {
     return this.forestModel.findOne(this.prepareFilter(filter)).lean();
   }
 
+  async findMany(filter?: FilterForestInput): Promise<Forest[]> {
+    return this.forestModel.find(this.prepareFilter(filter)).lean();
+  }
+
   async create(data: CreateForestDataInput): Promise<Forest> {
     // check if forest already exists
     const existingName = await this.forestModel.findOne({ name: data.name });

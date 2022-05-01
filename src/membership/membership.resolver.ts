@@ -6,13 +6,13 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { Loader } from '@tracworx/nestjs-dataloader';
 import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
 import { IsAuthenticatedGuard } from 'src/auth/guards/is-authenticated.guard';
 import { Forest } from 'src/forest/forest.entity';
-import { ForestService } from 'src/forest/forest.service';
+import { UserDataloader } from 'src/user/dataloaders/user.dataloader';
 import { User } from 'src/user/user.entity';
-import { UserService } from 'src/user/user.service';
 import { JoinInput } from './inputs/join.input';
 import { LeaveInput } from './inputs/leave.input';
 import { Membership } from './membership.entity';
@@ -22,11 +22,7 @@ import { LeavePayload } from './payloads/leave.payload';
 
 @Resolver(() => Membership)
 export class MembershipResolver {
-  constructor(
-    private membershipService: MembershipService,
-    private forestService: ForestService,
-    private userService: UserService,
-  ) {}
+  constructor(private membershipService: MembershipService) {}
 
   @Mutation(() => JoinPayload)
   @UseGuards(IsAuthenticatedGuard)
@@ -57,12 +53,18 @@ export class MembershipResolver {
   }
 
   @ResolveField()
-  async member(@Parent() membership: Membership): Promise<User> {
-    return this.userService.findById(membership.member._id);
+  async member(
+    @Parent() membership: Membership,
+    @Loader(UserDataloader) userDataloader,
+  ): Promise<User> {
+    return userDataloader.load(membership.member._id);
   }
 
   @ResolveField()
-  async forest(@Parent() membership: Membership): Promise<Forest> {
-    return this.forestService.findById(membership.forest._id);
+  async forest(
+    @Parent() membership: Membership,
+    @Loader(UserDataloader) userDataloader,
+  ): Promise<Forest> {
+    return userDataloader.load(membership.forest._id);
   }
 }

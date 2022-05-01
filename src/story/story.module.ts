@@ -11,6 +11,7 @@ import { PaginationModule } from 'src/pagination/pagination.module';
 import { FilterModule } from 'src/filter/filter.module';
 import { UserSchema } from 'src/user/user.entity';
 import { ForestSchema } from 'src/forest/forest.entity';
+import { StoryDataloader } from './dataloaders/story.dataloader';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { ForestSchema } from 'src/forest/forest.entity';
     forwardRef(() => CommentModule),
     forwardRef(() => ForestModule),
   ],
-  providers: [StoryService, StoryResolver],
-  exports: [StoryService],
+  providers: [StoryService, StoryResolver, StoryDataloader],
+  exports: [StoryService, StoryDataloader],
 })
 export class StoryModule {}

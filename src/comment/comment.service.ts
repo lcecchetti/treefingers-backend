@@ -32,6 +32,10 @@ export class CommentService {
     return this.commentModel.findOne(this.prepareFilter(filter)).lean();
   }
 
+  async findMany(filter?: FilterCommentInput): Promise<Comment[]> {
+    return this.commentModel.find(this.prepareFilter(filter)).lean();
+  }
+
   async create(data: CommentDataInput): Promise<Comment> {
     const comment = await this.commentModel.create(data);
 

@@ -8,12 +8,10 @@ import {
 } from '@nestjs/graphql';
 import { StoryService } from './story.service';
 import { Story, StoryDocument } from './story.entity';
-import { UserService } from 'src/user/user.service';
 import { User } from 'src/user/user.entity';
 import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
 import { StoryConnectionArgs } from './args/story-connection.args';
 import { Forest } from 'src/forest/forest.entity';
-import { ForestService } from 'src/forest/forest.service';
 import { StringService } from 'src/utils/services/string.service';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
 import { LikeService } from 'src/like/like.service';
@@ -21,22 +19,21 @@ import { StoryConnection } from './dto/story-connection.dto';
 import { CreateStoryPayload } from './payloads/create-story.payload';
 import { CreateStoryInput } from './inputs/create-story.input';
 import { FilterStoryInput } from './inputs/filter-story.input';
-import { CommentService } from 'src/comment/comment.service';
 import { Like } from 'src/like/like.entity';
-import { CommentableEntityType } from 'src/comment/enums/commentable-entity-type.enum';
 import { LikeableEntityType } from 'src/like/enums/likeable-entity-type.enum';
 import { UseGuards } from '@nestjs/common';
 import { IsAuthenticatedGuard } from 'src/auth/guards/is-authenticated.guard';
+import { UserDataloader } from 'src/user/dataloaders/user.dataloader';
+import { Loader } from '@tracworx/nestjs-dataloader';
+import { StoryDataloader } from './dataloaders/story.dataloader';
+import { ForestDataloader } from 'src/forest/dataloaders/forest.dataloader';
 
 @Resolver(() => Story)
 export class StoryResolver {
   constructor(
     private stringService: StringService,
     private storyService: StoryService,
-    private userService: UserService,
-    private forestService: ForestService,
     private likeService: LikeService,
-    private commentService: CommentService,
   ) {}
 
   @Query(() => StoryConnection)
@@ -91,18 +88,34 @@ export class StoryResolver {
   }
 
   @ResolveField()
-  async author(@Parent() story: Story): Promise<User> {
-    return this.userService.findById(story.author._id);
+  async author(
+    @Parent() story: Story,
+    @Loader(UserDataloader) userDataloader,
+  ): Promise<User> {
+    return userDataloader.load(String(story.author._id));
   }
 
   @ResolveField()
-  async root(@Parent() story: Story): Promise<Story> {
-    return this.storyService.findById(story.root?._id);
+  async root(
+    @Parent() story: Story,
+    @Loader(StoryDataloader) storyDataloader,
+  ): Promise<Story | null> {
+    if (!story.root) {
+      return null;
+    }
+    return storyDataloader.load(String(story.root._id));
   }
 
   @ResolveField()
-  async parent(@Parent() story: StoryDocument): Promise<Story> {
-    return this.storyService.findById(story.parent?._id);
+  async parent(
+    @Parent() story: StoryDocument,
+    @Loader(StoryDataloader) storyDataloader,
+  ): Promise<Story | null> {
+    if (!story.parent) {
+      return null;
+    }
+
+    return storyDataloader.load(String(story.parent._id));
   }
 
   @ResolveField(() => StoryConnection, { nullable: true })
@@ -116,7 +129,14 @@ export class StoryResolver {
   }
 
   @ResolveField(() => Forest, { nullable: true })
-  async forest(@Parent() story: Story): Promise<Forest> {
-    return this.forestService.findById(story.forest?._id);
+  async forest(
+    @Parent() story: Story,
+    @Loader(ForestDataloader) forestDataloader,
+  ): Promise<Forest | null> {
+    if (!story.forest) {
+      return null;
+    }
+
+    return forestDataloader.load(String(story.forest._id));
   }
 }

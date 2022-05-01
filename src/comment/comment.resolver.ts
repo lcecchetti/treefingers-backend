@@ -8,15 +8,12 @@ import {
 } from '@nestjs/graphql';
 import { CommentService } from './comment.service';
 import { Comment } from './comment.entity';
-import { UserService } from 'src/user/user.service';
-import { StoryService } from 'src/story/story.service';
 import { User } from 'src/user/user.entity';
 import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
 import { CommentConnectionArgs } from './args/comment-connection.args';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
 import { LikeService } from 'src/like/like.service';
 import { CommentConnection } from './dto/comment-connection.dto';
-import { ForestService } from 'src/forest/forest.service';
 import { Like } from 'src/like/like.entity';
 import { CommentInput } from './inputs/comment.input';
 import { CommentPayload } from './payloads/comment.payload';
@@ -25,15 +22,16 @@ import { CommentableEntityType } from './enums/commentable-entity-type.enum';
 import { LikeableEntityType } from 'src/like/enums/likeable-entity-type.enum';
 import { UseGuards } from '@nestjs/common';
 import { IsAuthenticatedGuard } from 'src/auth/guards/is-authenticated.guard';
+import { UserDataloader } from 'src/user/dataloaders/user.dataloader';
+import { Loader } from '@tracworx/nestjs-dataloader';
+import { StoryDataloader } from 'src/story/dataloaders/story.dataloader';
+import { ForestDataloader } from 'src/forest/dataloaders/forest.dataloader';
 
 @Resolver(() => Comment)
 export class CommentResolver {
   constructor(
     private commentService: CommentService,
-    private userService: UserService,
-    private storyService: StoryService,
     private likeService: LikeService,
-    private forestService: ForestService,
   ) {}
 
   @Query(() => CommentConnection)
@@ -75,19 +73,26 @@ export class CommentResolver {
   }
 
   @ResolveField()
-  async user(@Parent() comment: Comment): Promise<User> {
-    return this.userService.findById(comment.user._id);
+  async user(
+    @Parent() comment: Comment,
+    @Loader(UserDataloader) userDataloader,
+  ): Promise<User> {
+    return userDataloader.load(String(comment.user._id));
   }
 
   @ResolveField()
-  async entity(@Parent() comment: Comment): Promise<Commentable> {
+  async entity(
+    @Parent() comment: Comment,
+    @Loader(StoryDataloader) storyDataloader,
+    @Loader(ForestDataloader) forestDataloader,
+  ): Promise<Commentable> {
     let entity;
     switch (comment.entityType) {
       case CommentableEntityType.Story:
-        entity = await this.storyService.findById(comment.entity._id);
+        entity = await storyDataloader.load(String(comment.entity._id));
         break;
       case CommentableEntityType.Forest:
-        entity = await this.forestService.findById(comment.entity._id);
+        entity = await forestDataloader.load(String(comment.entity._id));
         break;
     }
 

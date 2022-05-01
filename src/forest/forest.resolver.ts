@@ -16,9 +16,7 @@ import { CreateForestInput } from './inputs/create-forest.input';
 import { StoryConnection } from 'src/story/dto/story-connection.dto';
 import { FilterForestInput } from './inputs/filter-forest.input';
 import { User } from 'src/user/user.entity';
-import { UserService } from 'src/user/user.service';
 import { StringService } from 'src/utils/services/string.service';
-import { CommentService } from 'src/comment/comment.service';
 import { ForestConnection } from './dto/forest-connection.dto';
 import { Membership } from 'src/membership/membership.entity';
 import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
@@ -26,6 +24,8 @@ import { CurrentUser } from 'src/auth/dto/current-user.dto';
 import { MembershipService } from 'src/membership/membership.service';
 import { UseGuards } from '@nestjs/common';
 import { IsAuthenticatedGuard } from 'src/auth/guards/is-authenticated.guard';
+import { Loader } from '@tracworx/nestjs-dataloader';
+import { ForestDataloader } from './dataloaders/forest.dataloader';
 
 @Resolver(() => Forest)
 export class ForestResolver {
@@ -33,8 +33,6 @@ export class ForestResolver {
     private stringService: StringService,
     private forestService: ForestService,
     private storyService: StoryService,
-    private userService: UserService,
-    private commentService: CommentService,
     private membershipService: MembershipService,
   ) {}
 
@@ -74,8 +72,11 @@ export class ForestResolver {
   }
 
   @ResolveField(() => User)
-  async founder(@Parent() forest: Forest): Promise<User> {
-    return this.userService.findById(forest.founder._id);
+  async founder(
+    @Parent() forest: Forest,
+    @Loader(ForestDataloader) forestDataloader,
+  ): Promise<User> {
+    return forestDataloader.load(String(forest.founder._id));
   }
 
   @ResolveField(() => StoryConnection)

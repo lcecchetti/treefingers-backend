@@ -18,6 +18,7 @@ import { FollowershipModule } from './followership/followership.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { ComplexityPlugin } from './graphql/complexity.plugin';
+import { DataloaderModule } from '@tracworx/nestjs-dataloader';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { ComplexityPlugin } from './graphql/complexity.plugin';
       }),
       inject: [ConfigService],
     }),
+    DataloaderModule,
     StoryModule,
     UserModule,
     AuthModule,

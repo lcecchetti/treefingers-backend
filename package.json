@@ -29,6 +29,7 @@
     "@nestjs/mongoose": "^8.0.1",
     "@nestjs/passport": "^8.0.1",
     "@nestjs/platform-express": "^8.0.0",
+    "@tracworx/nestjs-dataloader": "^1.1.1",
     "@types/bcrypt": "^5.0.0",
     "apollo-server-express": "^3.3.0",
     "bcrypt": "^5.0.1",

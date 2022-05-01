@@ -6,11 +6,12 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { Loader } from '@tracworx/nestjs-dataloader';
 import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
 import { IsAuthenticatedGuard } from 'src/auth/guards/is-authenticated.guard';
+import { UserDataloader } from 'src/user/dataloaders/user.dataloader';
 import { User } from 'src/user/user.entity';
-import { UserService } from 'src/user/user.service';
 import { Followership } from './followership.entity';
 import { FollowershipService } from './followership.service';
 import { FollowInput } from './inputs/follow.input';
@@ -20,10 +21,7 @@ import { UnfollowPayload } from './payloads/unfollow.payload';
 
 @Resolver(() => Followership)
 export class FollowershipResolver {
-  constructor(
-    private followershipService: FollowershipService,
-    private userService: UserService,
-  ) {}
+  constructor(private followershipService: FollowershipService) {}
 
   @Mutation(() => FollowPayload)
   @UseGuards(IsAuthenticatedGuard)
@@ -54,12 +52,18 @@ export class FollowershipResolver {
   }
 
   @ResolveField()
-  async followed(@Parent() followership: Followership): Promise<User> {
-    return this.userService.findById(followership.followed._id);
+  async followed(
+    @Parent() followership: Followership,
+    @Loader(UserDataloader) userDataloader,
+  ): Promise<User> {
+    return userDataloader.load(String(followership.followed._id));
   }
 
   @ResolveField()
-  async follower(@Parent() followership: Followership): Promise<User> {
-    return this.userService.findById(followership.follower._id);
+  async follower(
+    @Parent() followership: Followership,
+    @Loader(UserDataloader) userDataloader,
+  ): Promise<User> {
+    return userDataloader.load(String(followership.follower._id));
   }
 }

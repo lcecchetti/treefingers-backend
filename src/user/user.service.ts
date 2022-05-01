@@ -33,6 +33,10 @@ export class UserService {
     return this.userModel.findOne(this.prepareFilter(filter)).lean();
   }
 
+  async findMany(filter?: FilterUserInput): Promise<User[]> {
+    return this.userModel.find(this.prepareFilter(filter)).lean();
+  }
+
   async register(data: RegisterDataInput): Promise<User> {
     // check if user already exists
     const existingEmail = await this.userModel.findOne({ email: data.email });

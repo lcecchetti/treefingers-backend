@@ -9,6 +9,7 @@ import { CommentModule } from 'src/comment/comment.module';
 import { PaginationModule } from 'src/pagination/pagination.module';
 import { FilterModule } from 'src/filter/filter.module';
 import { MembershipModule } from 'src/membership/membership.module';
+import { ForestDataloader } from './dataloaders/forest.dataloader';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { MembershipModule } from 'src/membership/membership.module';
     forwardRef(() => CommentModule),
     forwardRef(() => MembershipModule),
   ],
-  providers: [ForestService, ForestResolver],
-  exports: [ForestService],
+  providers: [ForestService, ForestResolver, ForestDataloader],
+  exports: [ForestService, ForestDataloader],
 })
 export class ForestModule {}

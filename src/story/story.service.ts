@@ -29,6 +29,10 @@ export class StoryService {
     return this.storyModel.findOne(this.prepareFilter(filter)).lean();
   }
 
+  async findMany(filter?: FilterStoryInput): Promise<Story[]> {
+    return this.storyModel.find(this.prepareFilter(filter)).lean();
+  }
+
   async create(data: CreateStoryDataInput): Promise<Story | null> {
     // populate parent based fields
     let root;

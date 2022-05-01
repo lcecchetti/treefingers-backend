@@ -9,6 +9,7 @@ import { PaginationModule } from 'src/pagination/pagination.module';
 import { FilterModule } from 'src/filter/filter.module';
 import { FollowershipModule } from 'src/followership/followership.module';
 import { AuthModule } from 'src/auth/auth.module';
+import { UserDataloader } from './dataloaders/user.dataloader';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { AuthModule } from 'src/auth/auth.module';
     forwardRef(() => LikeModule),
     forwardRef(() => FollowershipModule),
   ],
-  providers: [UserService, UserResolver],
-  exports: [UserService],
+  providers: [UserService, UserResolver, UserDataloader],
+  exports: [UserService, UserDataloader],
 })
 export class UserModule {}
