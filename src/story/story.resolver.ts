@@ -118,16 +118,6 @@ export class StoryResolver {
     return storyDataloader.load(String(story.parent._id));
   }
 
-  @ResolveField(() => StoryConnection, { nullable: true })
-  async chapters(
-    @Parent() story: Story,
-    @Args({ nullable: true })
-    args: StoryConnectionArgs = new StoryConnectionArgs(),
-  ): Promise<StoryConnection> {
-    args.filter.parent = { eq: story._id };
-    return this.storyService.paginate(args);
-  }
-
   @ResolveField(() => Forest, { nullable: true })
   async forest(
     @Parent() story: Story,

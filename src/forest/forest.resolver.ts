@@ -10,10 +10,8 @@ import { ForestService } from './forest.service';
 import { Forest } from './forest.entity';
 import { StoryService } from 'src/story/story.service';
 import { ForestConnectionArgs } from './args/forest-connection.args';
-import { StoryConnectionArgs } from 'src/story/args/story-connection.args';
 import { CreateForestPayload } from './payloads/create-forest.payload';
 import { CreateForestInput } from './inputs/create-forest.input';
-import { StoryConnection } from 'src/story/dto/story-connection.dto';
 import { FilterForestInput } from './inputs/filter-forest.input';
 import { User } from 'src/user/user.entity';
 import { StringService } from 'src/utils/services/string.service';
@@ -76,16 +74,6 @@ export class ForestResolver {
     @Loader(ForestDataloader) forestDataloader,
   ): Promise<User> {
     return forestDataloader.load(String(forest.founder._id));
-  }
-
-  @ResolveField(() => StoryConnection)
-  async stories(
-    @Args({ nullable: true })
-    args: StoryConnectionArgs = new StoryConnectionArgs(),
-    @Parent() forest: Forest,
-  ): Promise<StoryConnection> {
-    args.filter.forest = { eq: forest._id };
-    return this.storyService.paginate(args);
   }
 
   @ResolveField(() => Membership, { nullable: true })
