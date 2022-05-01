@@ -6,6 +6,7 @@ import { FollowershipService } from './followership.service';
 import { FollowershipResolver } from './followership.resolver';
 import { FollowershipSchema } from './followership.entity';
 import { UserSchema } from 'src/user/user.entity';
+import { FollowershipDataloader } from './dataloaders/followership.dataloader';
 
 @Module({
   imports: [
@@ -16,7 +17,11 @@ import { UserSchema } from 'src/user/user.entity';
     FilterModule,
     forwardRef(() => UserModule),
   ],
-  providers: [FollowershipResolver, FollowershipService],
-  exports: [FollowershipService],
+  providers: [
+    FollowershipResolver,
+    FollowershipService,
+    FollowershipDataloader,
+  ],
+  exports: [FollowershipService, FollowershipDataloader],
 })
 export class FollowershipModule {}

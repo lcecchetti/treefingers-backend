@@ -7,6 +7,7 @@ import { UserModule } from 'src/user/user.module';
 import { FilterModule } from 'src/filter/filter.module';
 import { MembershipSchema } from './membership.entity';
 import { ForestSchema } from 'src/forest/forest.entity';
+import { MembershipDataloader } from './dataloaders/membership.dataloader';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { ForestSchema } from 'src/forest/forest.entity';
     forwardRef(() => UserModule),
     forwardRef(() => ForestModule),
   ],
-  providers: [MembershipResolver, MembershipService],
-  exports: [MembershipService],
+  providers: [MembershipResolver, MembershipService, MembershipDataloader],
+  exports: [MembershipService, MembershipDataloader],
 })
 export class MembershipModule {}

@@ -18,11 +18,12 @@ import { UserConnection } from './dto/user-connection.dto';
 import { StoryConnection } from 'src/story/dto/story-connection.dto';
 import { FilterUserInput } from './inputs/filter-user.input';
 import { Followership } from 'src/followership/followership.entity';
-import { FollowershipService } from 'src/followership/followership.service';
 import { IsAuthenticatedGuard } from 'src/auth/guards/is-authenticated.guard';
 import { UseGuards } from '@nestjs/common';
 import { EditUserPayload } from './payloads/edit-user.payload';
 import { EditUserInput } from './inputs/edit-user.input';
+import { Loader } from '@tracworx/nestjs-dataloader';
+import { FollowershipDataloader } from 'src/followership/dataloaders/followership.dataloader';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -30,7 +31,6 @@ export class UserResolver {
     private stringService: StringService,
     private userService: UserService,
     private storyService: StoryService,
-    private followershipService: FollowershipService,
   ) {}
 
   @Query(() => UserConnection)
@@ -89,14 +89,15 @@ export class UserResolver {
   async currentUserFollowership(
     @GetCurrentUser() currentUser: CurrentUser,
     @Parent() user: User,
+    @Loader(FollowershipDataloader) followershipDataloader,
   ): Promise<Followership | null> {
     if (!currentUser) {
       return null;
     }
 
-    return this.followershipService.findOne({
-      followed: { eq: user._id },
-      follower: { eq: currentUser._id },
+    return followershipDataloader.load({
+      followed: String(user._id),
+      follower: currentUser._id,
     });
   }
 }

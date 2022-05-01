@@ -10,6 +10,7 @@ import { Loader } from '@tracworx/nestjs-dataloader';
 import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
 import { IsAuthenticatedGuard } from 'src/auth/guards/is-authenticated.guard';
+import { ForestDataloader } from 'src/forest/dataloaders/forest.dataloader';
 import { Forest } from 'src/forest/forest.entity';
 import { UserDataloader } from 'src/user/dataloaders/user.dataloader';
 import { User } from 'src/user/user.entity';
@@ -63,8 +64,8 @@ export class MembershipResolver {
   @ResolveField()
   async forest(
     @Parent() membership: Membership,
-    @Loader(UserDataloader) userDataloader,
+    @Loader(ForestDataloader) forestDataloader,
   ): Promise<Forest> {
-    return userDataloader.load(membership.forest._id);
+    return forestDataloader.load(membership.forest._id);
   }
 }

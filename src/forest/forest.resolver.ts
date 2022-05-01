@@ -21,11 +21,11 @@ import { ForestConnection } from './dto/forest-connection.dto';
 import { Membership } from 'src/membership/membership.entity';
 import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
-import { MembershipService } from 'src/membership/membership.service';
 import { UseGuards } from '@nestjs/common';
 import { IsAuthenticatedGuard } from 'src/auth/guards/is-authenticated.guard';
 import { Loader } from '@tracworx/nestjs-dataloader';
 import { ForestDataloader } from './dataloaders/forest.dataloader';
+import { MembershipDataloader } from 'src/membership/dataloaders/membership.dataloader';
 
 @Resolver(() => Forest)
 export class ForestResolver {
@@ -33,7 +33,6 @@ export class ForestResolver {
     private stringService: StringService,
     private forestService: ForestService,
     private storyService: StoryService,
-    private membershipService: MembershipService,
   ) {}
 
   @Query(() => ForestConnection)
@@ -93,14 +92,15 @@ export class ForestResolver {
   async currentUserMembership(
     @GetCurrentUser() currentUser: CurrentUser,
     @Parent() forest: Forest,
+    @Loader(MembershipDataloader) membershipDataloader,
   ): Promise<Membership | null> {
     if (!currentUser) {
       return null;
     }
 
-    return this.membershipService.findOne({
-      forest: { eq: forest._id },
-      member: { eq: currentUser._id },
+    return membershipDataloader.load({
+      forest: String(forest._id),
+      member: currentUser._id,
     });
   }
 }

@@ -26,6 +26,7 @@ import { UserDataloader } from 'src/user/dataloaders/user.dataloader';
 import { Loader } from '@tracworx/nestjs-dataloader';
 import { StoryDataloader } from 'src/story/dataloaders/story.dataloader';
 import { ForestDataloader } from 'src/forest/dataloaders/forest.dataloader';
+import { LikeDataloader } from 'src/like/dataloaders/like.dataloader';
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -60,15 +61,16 @@ export class CommentResolver {
   async currentUserLike(
     @GetCurrentUser() currentUser: CurrentUser,
     @Parent() comment: Comment,
+    @Loader(LikeDataloader) likeDataloader,
   ): Promise<Like | null> {
     if (!currentUser) {
       return null;
     }
 
-    return this.likeService.findOne({
-      entity: { eq: comment._id },
+    return likeDataloader.load({
       entityType: LikeableEntityType.Comment,
-      user: { eq: currentUser._id },
+      entity: String(comment._id),
+      user: currentUser._id,
     });
   }
 

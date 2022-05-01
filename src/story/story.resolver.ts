@@ -14,7 +14,6 @@ import { StoryConnectionArgs } from './args/story-connection.args';
 import { Forest } from 'src/forest/forest.entity';
 import { StringService } from 'src/utils/services/string.service';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
-import { LikeService } from 'src/like/like.service';
 import { StoryConnection } from './dto/story-connection.dto';
 import { CreateStoryPayload } from './payloads/create-story.payload';
 import { CreateStoryInput } from './inputs/create-story.input';
@@ -27,13 +26,13 @@ import { UserDataloader } from 'src/user/dataloaders/user.dataloader';
 import { Loader } from '@tracworx/nestjs-dataloader';
 import { StoryDataloader } from './dataloaders/story.dataloader';
 import { ForestDataloader } from 'src/forest/dataloaders/forest.dataloader';
+import { LikeDataloader } from 'src/like/dataloaders/like.dataloader';
 
 @Resolver(() => Story)
 export class StoryResolver {
   constructor(
     private stringService: StringService,
     private storyService: StoryService,
-    private likeService: LikeService,
   ) {}
 
   @Query(() => StoryConnection)
@@ -70,15 +69,16 @@ export class StoryResolver {
   async currentUserLike(
     @GetCurrentUser() currentUser: CurrentUser,
     @Parent() story: Story,
+    @Loader(LikeDataloader) likeDataloader,
   ): Promise<Like | null> {
     if (!currentUser) {
       return null;
     }
 
-    return this.likeService.findOne({
-      entity: { eq: story._id },
+    return likeDataloader.load({
       entityType: LikeableEntityType.Story,
-      user: { eq: currentUser._id },
+      entity: String(story._id),
+      user: currentUser._id,
     });
   }
 

@@ -9,6 +9,7 @@ import { CommentModule } from 'src/comment/comment.module';
 import { FilterModule } from 'src/filter/filter.module';
 import { StorySchema } from 'src/story/story.entity';
 import { CommentSchema } from 'src/comment/comment.entity';
+import { LikeDataloader } from './dataloaders/like.dataloader';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { CommentSchema } from 'src/comment/comment.entity';
     forwardRef(() => StoryModule),
     forwardRef(() => CommentModule),
   ],
-  providers: [LikeService, LikeResolver],
-  exports: [LikeService],
+  providers: [LikeService, LikeResolver, LikeDataloader],
+  exports: [LikeService, LikeDataloader],
 })
 export class LikeModule {}
