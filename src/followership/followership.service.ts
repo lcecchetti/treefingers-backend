@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import { FilterService } from 'src/filter/filter.service';
-import { UserDocument } from 'src/user/user.entity';
+import { UserService } from 'src/user/user.service';
 import { Followership, FollowershipDocument } from './followership.entity';
 import { FilterFollowershipInput } from './inputs/filter-followership.input';
 import { FollowInput } from './inputs/follow.input';
@@ -13,8 +13,7 @@ export class FollowershipService {
   constructor(
     @InjectModel('Followership')
     private followershipModel: Model<FollowershipDocument>,
-    @InjectModel('User')
-    private userModel: Model<UserDocument>,
+    private userService: UserService,
     private filterService: FilterService<FollowershipDocument>,
   ) {}
 
@@ -35,10 +34,7 @@ export class FollowershipService {
   async follow(input: FollowInput): Promise<Followership> {
     const followership = await this.followershipModel.create(input);
 
-    // update user followers count
-    await this.userModel.findByIdAndUpdate(input.followed, {
-      $inc: { followersCount: 1 },
-    });
+    await this.userService.updateFollowersCount(input.followed, 1);
 
     return followership;
   }
@@ -50,11 +46,7 @@ export class FollowershipService {
 
     if (!followership) return null;
 
-    // update users followers count
-    await this.userModel.updateOne(
-      { _id: input.followed, followersCount: { $gt: 0 } },
-      { $inc: { followersCount: -1 } },
-    );
+    await this.userService.updateFollowersCount(input.followed, -1);
 
     return followership;
   }

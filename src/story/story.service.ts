@@ -8,15 +8,15 @@ import { StoryConnection } from './dto/story-connection.dto';
 import { FilterStoryInput } from './inputs/filter-story.input';
 import { PaginationService } from 'src/pagination/pagination.service';
 import { FilterService } from 'src/filter/filter.service';
-import { UserDocument } from 'src/user/user.entity';
-import { ForestDocument } from 'src/forest/forest.entity';
+import { ForestService } from 'src/forest/forest.service';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class StoryService {
   constructor(
     @InjectModel('Story') private storyModel: Model<StoryDocument>,
-    @InjectModel('User') private userModel: Model<UserDocument>,
-    @InjectModel('Forest') private forestModel: Model<ForestDocument>,
+    private forestService: ForestService,
+    private userService: UserService,
     private paginationService: PaginationService<Story, StoryDocument>,
     private filterService: FilterService<StoryDocument>,
   ) {}
@@ -48,30 +48,74 @@ export class StoryService {
     });
 
     // update user stories count
-    await this.userModel.findByIdAndUpdate(data.author, {
-      $inc: { storiesCount: 1 },
-    });
+    await this.userService.updateStoriesCount(data.author, 1);
 
     // update forest stories count
-    await this.forestModel.findByIdAndUpdate(data.forest, {
-      $inc: { storiesCount: 1 },
-    });
+    await this.forestService.updateStoriesCount(data.forest, 1);
 
     // update parent children count
     if (story.parent) {
-      await this.storyModel.findByIdAndUpdate(story.parent, {
-        $inc: { childrenCount: 1 },
-      });
+      await this.updateChildrenCount(story.parent._id, 1);
     }
 
     // update root descendents count
     if (story.root) {
-      await this.storyModel.findByIdAndUpdate(story.root, {
-        $inc: { descendantsCount: 1 },
-      });
+      await this.updateDescendantsCount(story.root._id, 1);
     }
 
     return story;
+  }
+
+  async updateLikesCount(_id: string, modifier: number): Promise<Story> {
+    const filter = { _id };
+
+    // safe check to avoid negative numbers
+    if (modifier < 0) {
+      filter['likesCount'] = { $gt: 0 };
+    }
+
+    return this.storyModel.findOneAndUpdate(filter, {
+      $inc: { likesCount: modifier },
+    });
+  }
+
+  async updateCommentsCount(_id: string, modifier: number): Promise<Story> {
+    const filter = { _id };
+
+    // safe check to avoid negative numbers
+    if (modifier < 0) {
+      filter['commentsCount'] = { $gt: 0 };
+    }
+
+    return this.storyModel.findOneAndUpdate(filter, {
+      $inc: { commentsCount: modifier },
+    });
+  }
+
+  async updateChildrenCount(_id: string, modifier: number): Promise<Story> {
+    const filter = { _id };
+
+    // safe check to avoid negative numbers
+    if (modifier < 0) {
+      filter['childrenCount'] = { $gt: 0 };
+    }
+
+    return this.storyModel.findOneAndUpdate(filter, {
+      $inc: { childrenCount: modifier },
+    });
+  }
+
+  async updateDescendantsCount(_id: string, modifier: number): Promise<Story> {
+    const filter = { _id };
+
+    // safe check to avoid negative numbers
+    if (modifier < 0) {
+      filter['descendantsCount'] = { $gt: 0 };
+    }
+
+    return this.storyModel.findOneAndUpdate(filter, {
+      $inc: { descendantsCount: modifier },
+    });
   }
 
   async paginate(

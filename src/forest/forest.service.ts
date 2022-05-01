@@ -30,13 +30,25 @@ export class ForestService {
   }
 
   async create(data: CreateForestDataInput): Promise<Forest> {
-    // check if forest already exists
     const existingName = await this.forestModel.findOne({ name: data.name });
     if (existingName) {
       throw new ConflictException('Forest with same name already exists');
     }
 
     return this.forestModel.create(data);
+  }
+
+  async updateCommentsCount(_id: string, modifier: number): Promise<Forest> {
+    const filter = { _id };
+
+    // safe check to avoid negative numbers
+    if (modifier < 0) {
+      filter['commentsCount'] = { $gt: 0 };
+    }
+
+    return this.forestModel.findOneAndUpdate(filter, {
+      $inc: { commentsCount: modifier },
+    });
   }
 
   async paginate(
@@ -56,6 +68,32 @@ export class ForestService {
 
   async count(filter?: FilterForestInput): Promise<number> {
     return this.forestModel.count(this.prepareFilter(filter));
+  }
+
+  async updateMembersCount(_id: string, modifier: number): Promise<Forest> {
+    const filter = { _id };
+
+    // safe check to avoid negative numbers
+    if (modifier < 0) {
+      filter['membersCount'] = { $gt: 0 };
+    }
+
+    return this.forestModel.findByIdAndUpdate(filter, {
+      $inc: { membersCount: modifier },
+    });
+  }
+
+  async updateStoriesCount(_id: string, modifier: number): Promise<Forest> {
+    const filter = { _id };
+
+    // safe check to avoid negative numbers
+    if (modifier < 0) {
+      filter['storiesCount'] = { $gt: 0 };
+    }
+
+    return this.forestModel.findByIdAndUpdate(filter, {
+      $inc: { storiesCount: modifier },
+    });
   }
 
   prepareFilter({ query, ...filter }: FilterForestInput): FilterQuery<Comment> {

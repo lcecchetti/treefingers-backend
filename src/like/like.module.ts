@@ -7,17 +7,11 @@ import { UserModule } from 'src/user/user.module';
 import { StoryModule } from 'src/story/story.module';
 import { CommentModule } from 'src/comment/comment.module';
 import { FilterModule } from 'src/filter/filter.module';
-import { StorySchema } from 'src/story/story.entity';
-import { CommentSchema } from 'src/comment/comment.entity';
 import { LikeDataloader } from './dataloaders/like.dataloader';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: 'Like', schema: LikeSchema },
-      { name: 'Story', schema: StorySchema },
-      { name: 'Comment', schema: CommentSchema },
-    ]),
+    MongooseModule.forFeature([{ name: 'Like', schema: LikeSchema }]),
     FilterModule,
     forwardRef(() => UserModule),
     forwardRef(() => StoryModule),

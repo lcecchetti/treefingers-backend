@@ -81,6 +81,32 @@ export class UserService {
     return this.userModel.count(this.prepareFilter(filter));
   }
 
+  async updateFollowersCount(_id: string, modifier: number): Promise<User> {
+    const filter = { _id };
+
+    // safe check to avoid negative numbers
+    if (modifier < 0) {
+      filter['followersCount'] = { $gt: 0 };
+    }
+
+    return this.userModel.findOneAndUpdate(filter, {
+      $inc: { followersCount: modifier },
+    });
+  }
+
+  async updateStoriesCount(_id: string, modifier: number): Promise<User> {
+    const filter = { _id };
+
+    // safe check to avoid negative numbers
+    if (modifier < 0) {
+      filter['storiesCount'] = { $gt: 0 };
+    }
+
+    return this.userModel.findOneAndUpdate(filter, {
+      $inc: { storiesCount: modifier },
+    });
+  }
+
   prepareFilter({ query, ...filter }: FilterUserInput): FilterQuery<Comment> {
     const preparedFilter = this.filterService.prepareFilter(filter);
 

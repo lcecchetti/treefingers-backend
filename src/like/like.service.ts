@@ -6,16 +6,16 @@ import { FilterLikeInput } from './inputs/filter-like.input';
 import { FilterService } from 'src/filter/filter.service';
 import { LikeInput } from './inputs/like.input';
 import { DislikeInput } from './inputs/dislike.input';
-import { CommentDocument } from 'src/comment/comment.entity';
-import { StoryDocument } from 'src/story/story.entity';
 import { LikeableEntityType } from './enums/likeable-entity-type.enum';
+import { CommentService } from 'src/comment/comment.service';
+import { StoryService } from 'src/story/story.service';
 
 @Injectable()
 export class LikeService {
   constructor(
     @InjectModel('Like') private likeModel: Model<LikeDocument>,
-    @InjectModel('Story') private storyModel: Model<StoryDocument>,
-    @InjectModel('Comment') private commentModel: Model<CommentDocument>,
+    private commentService: CommentService,
+    private storyService: StoryService,
     private filterService: FilterService<LikeDocument>,
   ) {}
 
@@ -34,19 +34,17 @@ export class LikeService {
   async like(input: LikeInput): Promise<Like> {
     const like = await this.likeModel.create(input);
 
-    // pick likeable entity model
-    let model;
+    let service;
     switch (input.entityType) {
       case LikeableEntityType.Comment:
-        model = this.commentModel;
+        service = this.commentService;
         break;
       case LikeableEntityType.Story:
-        model = this.storyModel;
+        service = this.storyService;
         break;
     }
 
-    // update likes count
-    await model.findByIdAndUpdate(input.entity, { $inc: { likesCount: 1 } });
+    await service.updateLikesCount(input.entity, 1);
 
     return like;
   }
@@ -56,22 +54,17 @@ export class LikeService {
 
     if (!like) return null;
 
-    // pick likeable entity model
-    let model;
+    let service;
     switch (input.entityType) {
       case LikeableEntityType.Comment:
-        model = this.commentModel;
+        service = this.commentService;
         break;
       case LikeableEntityType.Story:
-        model = this.storyModel;
+        service = this.storyService;
         break;
     }
 
-    // update likes count
-    await model.updateOne(
-      { _id: input.entity, likesCount: { $gt: 0 } },
-      { $inc: { likesCount: -1 } },
-    );
+    await service.updateLikesCount(input.entity, -1);
 
     return like;
   }

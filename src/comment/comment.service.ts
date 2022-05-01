@@ -9,15 +9,15 @@ import { PaginationService } from 'src/pagination/pagination.service';
 import { FilterService } from 'src/filter/filter.service';
 import { CommentDataInput } from './inputs/comment.input';
 import { CommentableEntityType } from './enums/commentable-entity-type.enum';
-import { StoryDocument } from 'src/story/story.entity';
-import { ForestDocument } from 'src/forest/forest.entity';
+import { StoryService } from 'src/story/story.service';
+import { ForestService } from 'src/forest/forest.service';
 
 @Injectable()
 export class CommentService {
   constructor(
     @InjectModel('Comment') private commentModel: Model<CommentDocument>,
-    @InjectModel('Forest') private forestModel: Model<ForestDocument>,
-    @InjectModel('Story') private storyModel: Model<StoryDocument>,
+    private storyService: StoryService,
+    private forestService: ForestService,
     private paginationService: PaginationService<Comment, CommentDocument>,
     private filterService: FilterService<CommentDocument>,
   ) {}
@@ -39,23 +39,34 @@ export class CommentService {
   async create(data: CommentDataInput): Promise<Comment> {
     const comment = await this.commentModel.create(data);
 
-    // pick entity model
-    let model;
+    // pick service
+    let service;
     switch (data.entityType) {
       case CommentableEntityType.Forest:
-        model = this.forestModel;
+        service = this.forestService;
         break;
       case CommentableEntityType.Story:
-        model = this.storyModel;
+        service = this.storyService;
         break;
     }
 
     // update entity model comments count
-    await model.findByIdAndUpdate(data.entity, {
-      $inc: { commentsCount: 1 },
-    });
+    await service.updateCommentsCount(data.entity, 1);
 
     return comment;
+  }
+
+  async updateLikesCount(_id: string, modifier: number): Promise<Comment> {
+    const filter = { _id };
+
+    // safe check to avoid negative numbers
+    if (modifier < 0) {
+      filter['likesCount'] = { $gt: 0 };
+    }
+
+    return this.commentModel.findOneAndUpdate(filter, {
+      $inc: { likesCount: modifier },
+    });
   }
 
   async paginate(
