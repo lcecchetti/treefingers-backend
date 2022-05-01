@@ -1,20 +1,19 @@
 import * as DataLoader from 'dataloader';
 import { DataloaderProvider } from '@tracworx/nestjs-dataloader';
-import { Like, LikeDocument } from '../like.entity';
+import { Like } from '../like.entity';
 import { FilterLikeInput } from '../inputs/filter-like.input';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { LikeService } from '../like.service';
 
 @DataloaderProvider()
 export class LikeDataloader {
-  constructor(@InjectModel('Like') private likeModel: Model<LikeDocument>) {}
+  constructor(private likeService: LikeService) {}
 
   createDataloader() {
     return new DataLoader<FilterLikeInput, Like, string>(
       async (keys) => {
         // get likes
-        const result = await this.likeModel.find({
-          $or: keys.map(({ entityType, entity, user }) => ({
+        const result = await this.likeService.findMany({
+          or: keys.map(({ entityType, entity, user }) => ({
             entityType,
             entity,
             user,

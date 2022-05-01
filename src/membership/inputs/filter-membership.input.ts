@@ -8,4 +8,6 @@ export class FilterMembershipInput extends FilterInput {
 
   @Field(() => FilterIdInput, { nullable: true })
   readonly member?: FilterIdInput;
+
+  readonly or?: FilterMembershipInput[];
 }

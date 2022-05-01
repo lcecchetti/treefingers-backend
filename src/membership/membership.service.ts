@@ -26,6 +26,10 @@ export class MembershipService {
     return this.membershipModel.findOne(this.prepareFilter(filter)).lean();
   }
 
+  async findMany(filter?: FilterMembershipInput): Promise<Membership[]> {
+    return this.membershipModel.find(this.prepareFilter(filter)).lean();
+  }
+
   async join(input: JoinInput): Promise<Membership> {
     const membership = await this.membershipModel.create(input);
 

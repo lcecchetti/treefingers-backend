@@ -27,6 +27,10 @@ export class LikeService {
     return this.likeModel.findOne(this.prepareFilter(filter)).lean();
   }
 
+  async findMany(filter?: FilterLikeInput): Promise<Like[]> {
+    return this.likeModel.find(this.prepareFilter(filter)).lean();
+  }
+
   async like(input: LikeInput): Promise<Like> {
     const like = await this.likeModel.create(input);
 

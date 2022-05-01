@@ -8,4 +8,6 @@ export class FilterFollowershipInput extends FilterInput {
 
   @Field(() => FilterIdInput, { nullable: true })
   readonly follower?: FilterIdInput;
+
+  readonly or?: FilterFollowershipInput[];
 }

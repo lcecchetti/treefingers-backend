@@ -12,4 +12,6 @@ export class FilterLikeInput extends FilterInput {
 
   @Field(() => FilterIdInput, { nullable: true })
   readonly user?: FilterIdInput;
+
+  readonly or?: FilterLikeInput[];
 }

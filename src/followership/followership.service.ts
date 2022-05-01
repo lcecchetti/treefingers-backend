@@ -28,6 +28,10 @@ export class FollowershipService {
     return this.followershipModel.findOne(this.prepareFilter(filter)).lean();
   }
 
+  async findMany(filter?: FilterFollowershipInput): Promise<Followership[]> {
+    return this.followershipModel.find(this.prepareFilter(filter)).lean();
+  }
+
   async follow(input: FollowInput): Promise<Followership> {
     const followership = await this.followershipModel.create(input);
 
