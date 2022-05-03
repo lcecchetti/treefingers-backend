@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
-export class ForgotPasswordPayload {
+export class ChangePasswordPayload {
   @Field()
-  emailSent: boolean;
+  passwordChanged: boolean;
 }

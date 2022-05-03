@@ -79,6 +79,10 @@ export class User {
   @Field(() => Int, { defaultValue: 0 })
   followersCount: number;
 
+  @Prop()
+  @Field({ nullable: true })
+  changePasswordToken: string;
+
   @Prop({ default: Date.now })
   @Field(() => GraphQLISODateTime, { middleware: [isPrivateMiddleware] })
   createdAt: Date;
