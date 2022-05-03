@@ -7,8 +7,8 @@ import { LoginPayload } from './payloads/login.payload';
 import { JwtPayload } from './payloads/jwt.payload';
 import { RegisterDataInput } from './inputs/register.input';
 import { RegisterPayload } from './payloads/register.payload';
-import { RecoverPassowrdPayload } from './payloads/recover-password.payload';
-import { RecoverPasswordInput } from './inputs/recover-password.input';
+import { ResetPassowrdPayload } from './payloads/reset-password.payload';
+import { ResetPasswordInput } from './inputs/reset-password.input';
 import { MailerService } from '@nestjs-modules/mailer';
 import { Exception } from 'handlebars';
 import { ConfigService } from '@nestjs/config';
@@ -54,17 +54,17 @@ export class AuthService {
     return this.login(user);
   }
 
-  async recoverPassowrd({
+  async resetPassowrd({
     email,
-  }: RecoverPasswordInput): Promise<RecoverPassowrdPayload> {
+  }: ResetPasswordInput): Promise<ResetPassowrdPayload> {
     let result: any = {};
     try {
       result = await this.mailerService.sendMail({
         to: email,
-        subject: 'Recover your password',
-        template: 'recover-password',
+        subject: 'Reset your password',
+        template: 'reset-password',
         context: {
-          recoverLink: this.configService.get<string>('frontend.webUrl'),
+          resetLink: this.configService.get<string>('frontend.webUrl'),
         },
       });
     } catch (e) {

@@ -8,8 +8,8 @@ import { LoginPayload } from './payloads/login.payload';
 import { LoginInput } from './inputs/login.input';
 import { RegisterPayload } from './payloads/register.payload';
 import { RegisterInput } from './inputs/register.input';
-import { RecoverPassowrdPayload } from './payloads/recover-password.payload';
-import { RecoverPasswordInput } from './inputs/recover-password.input';
+import { ResetPassowrdPayload } from './payloads/reset-password.payload';
+import { ResetPasswordInput } from './inputs/reset-password.input';
 
 @Resolver()
 export class AuthResolver {
@@ -24,11 +24,11 @@ export class AuthResolver {
     return this.authService.login(currentUser);
   }
 
-  @Mutation(() => RecoverPassowrdPayload)
-  async recoverPassword(
-    @Args('input') input: RecoverPasswordInput,
-  ): Promise<RecoverPassowrdPayload> {
-    return this.authService.recoverPassowrd(input);
+  @Mutation(() => ResetPassowrdPayload)
+  async resetPassword(
+    @Args('input') input: ResetPasswordInput,
+  ): Promise<ResetPassowrdPayload> {
+    return this.authService.resetPassowrd(input);
   }
 
   @Mutation(() => RegisterPayload)
