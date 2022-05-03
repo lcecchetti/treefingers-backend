@@ -50,10 +50,10 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
           },
         },
         defaults: {
-          from: `"Treefingers.co" <${configService.get<string>('email.user')}>`,
+          from: `"Treefingers" <${configService.get<string>('email.user')}>`,
         },
         template: {
-          dir: process.cwd() + '/email-templates/',
+          dir: process.cwd() + '/src/email-templates/',
           adapter: new HandlebarsAdapter(),
           options: {
             strict: true,
