@@ -8,13 +8,20 @@ import { LoginPayload } from './payloads/login.payload';
 import { JwtPayload } from './payloads/jwt.payload';
 import { RegisterDataInput } from './inputs/register.input';
 import { RegisterPayload } from './payloads/register.payload';
+import { RecoverPassowrdPayload } from './payloads/recover-password.payload';
+import { RecoverPasswordInput } from './inputs/recover-password.input';
+import { MailerService } from '@nestjs-modules/mailer';
+import { Exception } from 'handlebars';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     @Inject(forwardRef(() => UserService))
     private userService: UserService,
+    private configService: ConfigService,
     private jwtService: JwtService,
+    private readonly mailerService: MailerService,
   ) {}
 
   async validateUser(email: string, password: string): Promise<User | null> {
@@ -50,6 +57,28 @@ export class AuthService {
 
     // login user
     return this.login(user);
+  }
+
+  async recoverPassowrd({
+    email,
+  }: RecoverPasswordInput): Promise<RecoverPassowrdPayload> {
+    let result: any = {};
+    try {
+      result = await this.mailerService.sendMail({
+        to: email,
+        subject: 'Recover your password',
+        template: 'recover-password',
+        context: {
+          recoverLink: this.configService.get<string>('frontend.webUrl'),
+        },
+      });
+    } catch (e) {
+      throw new Exception('An error occurred while sending email');
+    }
+
+    return {
+      emailSent: !!result.accepted?.length,
+    };
   }
 
   async encryptPassword(password: string): Promise<string> {

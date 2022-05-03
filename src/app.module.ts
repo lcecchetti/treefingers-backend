@@ -19,6 +19,8 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { ComplexityPlugin } from './graphql/complexity.plugin';
 import { DataloaderModule } from '@tracworx/nestjs-dataloader';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 @Module({
   imports: [
@@ -26,7 +28,6 @@ import { DataloaderModule } from '@tracworx/nestjs-dataloader';
       isGlobal: true,
       load: [config],
     }),
-    UtilsModule,
     GraphQLModule.forRootAsync({
       useFactory: async (configService: ConfigService) => ({
         autoSchemaFile: configService.get<string>('graphql.schema'),
@@ -39,6 +40,29 @@ import { DataloaderModule } from '@tracworx/nestjs-dataloader';
       }),
       inject: [ConfigService],
     }),
+    MailerModule.forRootAsync({
+      useFactory: async (configService: ConfigService) => ({
+        transport: {
+          service: configService.get<string>('email.service'),
+          auth: {
+            user: configService.get<string>('email.user'),
+            pass: configService.get<string>('email.password'),
+          },
+        },
+        defaults: {
+          from: `"Treefingers.co" <${configService.get<string>('email.user')}>`,
+        },
+        template: {
+          dir: process.cwd() + '/email-templates/',
+          adapter: new HandlebarsAdapter(),
+          options: {
+            strict: true,
+          },
+        },
+      }),
+      inject: [ConfigService],
+    }),
+    UtilsModule,
     DataloaderModule,
     StoryModule,
     UserModule,

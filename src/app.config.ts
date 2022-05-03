@@ -12,4 +12,12 @@ export default () => ({
     secret: process.env.JWT_SECRET,
     expiration: '1 day',
   },
+  frontend: {
+    webUrl: 'http://localhost:3000',
+  },
+  email: {
+    service: process.env.EMAIL_SERVICE,
+    user: process.env.EMAIL_USER,
+    password: process.env.EMAIL_PASSWORD,
+  },
 });
