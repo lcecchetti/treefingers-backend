@@ -8,8 +8,8 @@ import { LoginPayload } from './payloads/login.payload';
 import { LoginInput } from './inputs/login.input';
 import { RegisterPayload } from './payloads/register.payload';
 import { RegisterInput } from './inputs/register.input';
-import { ResetPassowrdPayload } from './payloads/reset-password.payload';
-import { ResetPasswordInput } from './inputs/reset-password.input';
+import { ResetPassowrdPayload } from './payloads/forgot-password.payload';
+import { ForgotPasswordInput } from './inputs/forgot-password.input';
 
 @Resolver()
 export class AuthResolver {
@@ -25,8 +25,8 @@ export class AuthResolver {
   }
 
   @Mutation(() => ResetPassowrdPayload)
-  async resetPassword(
-    @Args('input') input: ResetPasswordInput,
+  async forgotPassword(
+    @Args('input') input: ForgotPasswordInput,
   ): Promise<ResetPassowrdPayload> {
     return this.authService.resetPassowrd(input);
   }
