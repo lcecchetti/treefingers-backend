@@ -1,7 +1,6 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
 import { User } from 'src/user/user.entity';
 import { CurrentUser } from './dto/current-user.dto';
 import { LoginPayload } from './payloads/login.payload';
@@ -13,15 +12,15 @@ import { RecoverPasswordInput } from './inputs/recover-password.input';
 import { MailerService } from '@nestjs-modules/mailer';
 import { Exception } from 'handlebars';
 import { ConfigService } from '@nestjs/config';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject(forwardRef(() => UserService))
     private userService: UserService,
     private configService: ConfigService,
     private jwtService: JwtService,
-    private readonly mailerService: MailerService,
+    private mailerService: MailerService,
   ) {}
 
   async validateUser(email: string, password: string): Promise<User | null> {
@@ -49,11 +48,7 @@ export class AuthService {
 
   async register(data: RegisterDataInput): Promise<RegisterPayload> {
     // create user
-    const encryptedPassword = await this.encryptPassword(data.password);
-    const user = await this.userService.register({
-      ...data,
-      password: encryptedPassword,
-    });
+    const user = await this.userService.register(data);
 
     // login user
     return this.login(user);
@@ -79,9 +74,5 @@ export class AuthService {
     return {
       emailSent: !!result.accepted?.length,
     };
-  }
-
-  async encryptPassword(password: string): Promise<string> {
-    return bcrypt.hash(password, 10);
   }
 }

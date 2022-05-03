@@ -8,7 +8,6 @@ import { LikeModule } from 'src/like/like.module';
 import { PaginationModule } from 'src/pagination/pagination.module';
 import { FilterModule } from 'src/filter/filter.module';
 import { FollowershipModule } from 'src/followership/followership.module';
-import { AuthModule } from 'src/auth/auth.module';
 import { UserDataloader } from './dataloaders/user.dataloader';
 
 @Module({
@@ -16,7 +15,6 @@ import { UserDataloader } from './dataloaders/user.dataloader';
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
     PaginationModule,
     FilterModule,
-    forwardRef(() => AuthModule),
     forwardRef(() => StoryModule),
     forwardRef(() => LikeModule),
     forwardRef(() => FollowershipModule),

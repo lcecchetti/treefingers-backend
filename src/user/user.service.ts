@@ -1,9 +1,4 @@
-import {
-  ConflictException,
-  forwardRef,
-  Inject,
-  Injectable,
-} from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './user.entity';
 import { FilterQuery, Model } from 'mongoose';
@@ -14,13 +9,12 @@ import { RegisterDataInput } from 'src/auth/inputs/register.input';
 import { PaginationService } from 'src/pagination/pagination.service';
 import { FilterService } from 'src/filter/filter.service';
 import { EditUserDataInput } from './inputs/edit-user.input';
-import { AuthService } from 'src/auth/auth.service';
+import * as bcrypt from 'bcrypt';
+
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel('User') private userModel: Model<UserDocument>,
-    @Inject(forwardRef(() => AuthService))
-    private authService: AuthService,
     private paginationService: PaginationService<User, UserDocument>,
     private filterService: FilterService<UserDocument>,
   ) {}
@@ -51,12 +45,15 @@ export class UserService {
       throw new ConflictException('Username already exists');
     }
 
-    return this.userModel.create(data);
+    return this.userModel.create({
+      ...data,
+      password: await this.encryptPassword(data.password),
+    });
   }
 
   async edit(user: string, data: EditUserDataInput): Promise<User> {
     if (data.password) {
-      data.password = await this.authService.encryptPassword(data.password);
+      data.password = await this.encryptPassword(data.password);
     }
 
     return await this.userModel.findByIdAndUpdate(user, data);
@@ -119,5 +116,9 @@ export class UserService {
     }
 
     return preparedFilter;
+  }
+
+  async encryptPassword(password: string): Promise<string> {
+    return bcrypt.hash(password, 10);
   }
 }
