@@ -4,9 +4,6 @@ import { MinLength } from 'class-validator';
 @InputType()
 export class ChangePasswordInput {
   @Field()
-  readonly user: string;
-
-  @Field()
   readonly token: string;
 
   @Field()

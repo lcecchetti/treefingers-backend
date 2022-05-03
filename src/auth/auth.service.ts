@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/user/user.entity';
@@ -13,10 +9,8 @@ import { RegisterDataInput } from './inputs/register.input';
 import { RegisterPayload } from './payloads/register.payload';
 import { ForgotPasswordInput } from './inputs/forgot-password.input';
 import { MailerService } from '@nestjs-modules/mailer';
-import { Exception } from 'handlebars';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
-import * as crypto from 'crypto';
 import { ChangePasswordPayload } from './payloads/change-password.payload';
 import { ChangePasswordInput } from './inputs/change-password.input';
 import { ForgotPasswordPayload } from './payloads/forgot-password.payload';
@@ -64,60 +58,49 @@ export class AuthService {
   async forgotPassword({
     email,
   }: ForgotPasswordInput): Promise<ForgotPasswordPayload> {
-    // get user
     const user = await this.userService.findOne({ email: { eq: email } });
-    if (!user) {
-      throw new NotFoundException('User does not exist');
-    }
 
-    // update user
-    const changePasswordToken = this.generateRandomToken();
-    await this.userService.edit(user._id, { changePasswordToken });
+    if (user) {
+      const token = this.jwtService.sign(
+        { sub: user._id },
+        { expiresIn: 60 * 15 },
+      );
 
-    let result: any = {};
-    try {
-      result = await this.mailerService.sendMail({
+      await this.mailerService.sendMail({
         to: email,
         subject: 'Forgot your password?',
         template: 'forgot-password',
         context: {
           resetLink:
             this.configService.get<string>('frontend.webUrl') +
-            `/auth/change-password/${user._id}/${changePasswordToken}/`,
+            `/auth/change-password/${token}/`,
         },
       });
-    } catch (e) {
-      throw new Exception('An error occurred while sending email');
     }
 
+    // always return true to avoid user enumeration
     return {
-      emailSent: !!result.accepted?.length,
+      emailSent: true,
     };
   }
 
   async changePassword({
-    user,
     token,
     password,
   }: ChangePasswordInput): Promise<ChangePasswordPayload> {
-    const userData = await this.userService.findById(user);
-    if (userData.changePasswordToken !== token) {
-      throw new UnauthorizedException(
-        'You are not authorized to change this user password',
-      );
+    let decodedToken;
+    try {
+      decodedToken = this.jwtService.verify(token);
+    } catch (e) {
+      throw new UnauthorizedException('This link has expired');
     }
 
-    const result = await this.userService.edit(user, {
+    const result = await this.userService.edit(decodedToken.sub, {
       password: password,
-      changePasswordToken: null,
     });
 
     return {
       passwordChanged: !!result?._id,
     };
-  }
-
-  generateRandomToken(length = 32): string {
-    return crypto.randomBytes(length).toString('hex');
   }
 }
