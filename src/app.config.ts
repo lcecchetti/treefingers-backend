@@ -13,7 +13,7 @@ export default () => ({
     expiration: '1 day',
   },
   frontend: {
-    webUrl: 'http://localhost:3000',
+    webUrl: process.env.FRONTEND_WEBURL,
   },
   email: {
     service: process.env.EMAIL_SERVICE,
