@@ -16,7 +16,7 @@ import { IsAuthenticatedGuard } from './guards/is-authenticated.guard';
     JwtModule.registerAsync({
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('jwt.secret'),
-        expiresIn: configService.get<string>('jwt.expiration'),
+        signOptions: { expiresIn: configService.get<string>('jwt.expiration') },
       }),
       inject: [ConfigService],
     }),

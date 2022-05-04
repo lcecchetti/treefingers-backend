@@ -1,8 +1,12 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/user/user.entity';
-import { CurrentUser } from './dto/current-user.dto';
 import { LoginPayload } from './payloads/login.payload';
 import { JwtPayload } from './payloads/jwt.payload';
 import { RegisterDataInput } from './inputs/register.input';
@@ -29,24 +33,27 @@ export class AuthService {
   async validateUser(email: string, password: string): Promise<User | null> {
     const user = await this.userService.findOne({ email: { eq: email } });
 
+    // user not found
     if (!user) {
       throw new NotFoundException('User or password are not valid.');
     }
 
-    // check if user is active
+    // user not active
     if (user && !user.isActive) {
       throw new UnauthorizedException(
         'Your account is not active yet, check your emails.',
       );
     }
 
+    // wrong password
     const isPasswordMatching = await bcrypt.compare(password, user.password);
     if (!isPasswordMatching) {
-      throw new UnauthorizedException('Mmh, you sure?');
+      throw new UnauthorizedException('User or password are not valid.');
     }
 
     // strip out password
     user.password = undefined;
+
     return user;
   }
 
@@ -56,29 +63,39 @@ export class AuthService {
       sub: user._id,
       username: user.username,
     };
+
     return {
       token: this.jwtService.sign(payload),
     };
   }
 
   async register(data: RegisterDataInput): Promise<RegisterPayload> {
-    const user = await this.userService.register(data);
+    // create user
+    const user = await this.userService.create(data);
 
+    // activate account token
     const token = this.jwtService.sign(
       { sub: user._id },
       { expiresIn: '1 day' },
     );
 
-    await this.mailerService.sendMail({
-      to: data.email,
-      subject: 'Activate your account',
-      template: 'activate-account',
-      context: {
-        activateLink:
-          this.configService.get<string>('frontend.webUrl') +
-          `/auth/activate-account/${token}/`,
-      },
-    });
+    // send activate account email
+    try {
+      await this.mailerService.sendMail({
+        to: data.email,
+        subject: 'Activate your account',
+        template: 'activate-account',
+        context: {
+          activateLink:
+            this.configService.get<string>('frontend.webUrl') +
+            `/auth/activate-account/${token}/`,
+        },
+      });
+    } catch (e) {
+      throw new InternalServerErrorException(
+        'An error occurred while sending email',
+      );
+    }
 
     return {
       registrationResult: true,
@@ -88,24 +105,33 @@ export class AuthService {
   async forgotPassword({
     email,
   }: ForgotPasswordInput): Promise<ForgotPasswordPayload> {
+    // get user
     const user = await this.userService.findOne({ email: { eq: email } });
 
     if (user) {
+      // change password token
       const token = this.jwtService.sign(
-        { sub: user._id },
+        { sub: user._id, password: user.password },
         { expiresIn: 60 * 15 },
       );
 
-      await this.mailerService.sendMail({
-        to: email,
-        subject: 'Forgot your password?',
-        template: 'forgot-password',
-        context: {
-          resetLink:
-            this.configService.get<string>('frontend.webUrl') +
-            `/auth/change-password/${token}/`,
-        },
-      });
+      // send forgot password email
+      try {
+        await this.mailerService.sendMail({
+          to: email,
+          subject: 'Forgot your password?',
+          template: 'forgot-password',
+          context: {
+            resetLink:
+              this.configService.get<string>('frontend.webUrl') +
+              `/auth/change-password/${token}/`,
+          },
+        });
+      } catch (e) {
+        throw new InternalServerErrorException(
+          'An error occurred while sending email',
+        );
+      }
     }
 
     // always return true to avoid user enumeration
@@ -125,12 +151,20 @@ export class AuthService {
       throw new UnauthorizedException('This link has expired');
     }
 
-    const result = await this.userService.edit(decodedToken.sub, {
+    const user = await this.userService.findById(decodedToken.sub);
+
+    // if password has changed already, link is expired
+    if (user.password !== decodedToken.password) {
+      throw new UnauthorizedException('This link has expired');
+    }
+
+    // change password
+    await this.userService.edit(decodedToken.sub, {
       password: password,
     });
 
     return {
-      passwordChanged: !!result?._id,
+      passwordChanged: true,
     };
   }
 
@@ -144,6 +178,7 @@ export class AuthService {
       throw new UnauthorizedException('This link has expired');
     }
 
+    // get user
     const user = await this.userService.findById(decodedToken.sub);
     if (!user || user.isActive) {
       throw new NotFoundException(
@@ -151,12 +186,13 @@ export class AuthService {
       );
     }
 
-    const result = await this.userService.edit(decodedToken.sub, {
+    // activate user
+    await this.userService.edit(decodedToken.sub, {
       isActive: true,
     });
 
     return {
-      accountActivated: !!result?._id,
+      accountActivated: true,
     };
   }
 }

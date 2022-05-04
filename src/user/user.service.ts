@@ -10,6 +10,7 @@ import { PaginationService } from 'src/pagination/pagination.service';
 import { FilterService } from 'src/filter/filter.service';
 import { EditUserDataInput } from './inputs/edit-user.input';
 import * as bcrypt from 'bcrypt';
+import { CreateUserInputData } from './inputs/create-user.input';
 
 @Injectable()
 export class UserService {
@@ -31,7 +32,7 @@ export class UserService {
     return this.userModel.find(this.prepareFilter(filter)).lean();
   }
 
-  async register(data: RegisterDataInput): Promise<User> {
+  async create(data: CreateUserInputData): Promise<User> {
     // check if user already exists
     const existingEmail = await this.userModel.findOne({ email: data.email });
     if (existingEmail) {
