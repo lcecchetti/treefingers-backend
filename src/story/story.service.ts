@@ -51,7 +51,9 @@ export class StoryService {
     await this.userService.updateStoriesCount(data.author, 1);
 
     // update forest stories count
-    await this.forestService.updateStoriesCount(data.forest, 1);
+    if (story.forest) {
+      await this.forestService.updateStoriesCount(story.forest._id, 1);
+    }
 
     // update parent children count
     if (story.parent) {

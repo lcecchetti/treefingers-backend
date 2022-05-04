@@ -19,7 +19,7 @@ export class CreateStoryDataInput {
   @Field(() => [String], { nullable: true })
   readonly tags?: string[];
 
-  @Field(() => String, { nullable: true })
+  @Field(() => ID, { nullable: true })
   forest?: string;
 
   author: string;
