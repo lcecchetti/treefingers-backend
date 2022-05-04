@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
-export class RegisterPayload {
+export class ActivateAccountPayload {
   @Field()
-  registrationResult: boolean;
+  accountActivated: boolean;
 }

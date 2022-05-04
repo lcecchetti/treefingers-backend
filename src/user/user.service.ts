@@ -105,6 +105,11 @@ export class UserService {
   }
 
   prepareFilter({ query, ...filter }: FilterUserInput): FilterQuery<Comment> {
+    // filter by isActive if no value provided
+    if (filter.isActive !== false) {
+      filter.isActive = true;
+    }
+
     const preparedFilter = this.filterService.prepareFilter(filter);
 
     // add search query condition if provided

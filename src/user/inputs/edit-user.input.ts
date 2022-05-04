@@ -11,7 +11,7 @@ export class EditUserDataInput {
   @MaxLength(255)
   bio?: string;
 
-  changePasswordToken?: string;
+  isActive?: boolean;
 }
 
 @InputType()

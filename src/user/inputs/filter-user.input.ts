@@ -24,4 +24,6 @@ export class FilterUserInput extends FilterInput {
 
   @Field(() => String, { nullable: true })
   query?: string;
+
+  isActive?: boolean;
 }
