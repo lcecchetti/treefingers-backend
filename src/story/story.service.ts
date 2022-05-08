@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Story, StoryDocument } from './story.entity';
 import { FilterQuery, Model } from 'mongoose';
@@ -40,6 +40,10 @@ export class StoryService {
       const parent = await this.findById(data.parent);
       root = parent.root || parent._id;
       data.forest = undefined;
+    }
+
+    if (!data.forest && !data.parent) {
+      throw new BadRequestException('Forest is required on root stories');
     }
 
     const story = await this.storyModel.create({
