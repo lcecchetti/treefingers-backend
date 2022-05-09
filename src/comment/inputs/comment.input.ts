@@ -5,7 +5,7 @@ import { CommentableEntityType } from '../enums/commentable-entity-type.enum';
 @InputType()
 export class CommentDataInput {
   @Field()
-  @MaxLength(255)
+  @MaxLength(512)
   content: string;
 
   @Field(() => ID)

@@ -27,7 +27,7 @@ export class Comment implements Likeable {
   @Prop({
     required: true,
     minlength: 1,
-    maxlength: 511,
+    maxlength: 512,
   })
   @Field()
   content: string;

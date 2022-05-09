@@ -14,6 +14,7 @@ import { LikeableEntityType } from 'src/like/enums/likeable-entity-type.enum';
 import { Like } from 'src/like/like.entity';
 import { Commentable } from 'src/comment/interfaces/commentable.interface';
 import { CommentableEntityType } from 'src/comment/enums/commentable-entity-type.enum';
+import { map } from 'rxjs';
 
 @Schema({ timestamps: true })
 @ObjectType({
@@ -28,7 +29,7 @@ export class Story implements Likeable, Commentable {
 
   @Prop({
     required: true,
-    maxlength: 300,
+    maxlength: 64,
   })
   @Field()
   title: string;
@@ -69,6 +70,10 @@ export class Story implements Likeable, Commentable {
   @Prop({
     index: true,
     trim: true,
+    validate: [
+      (value) => value.length < 5 && value.find((el) => el.length < 16),
+      'Invalid tags',
+    ],
   })
   @Field(() => [String], { nullable: true, defaultValue: [] })
   tags: string[];
