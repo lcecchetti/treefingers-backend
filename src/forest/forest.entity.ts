@@ -24,8 +24,7 @@ export class Forest implements Commentable {
   @Prop({
     required: true,
     unique: true,
-    minlength: 2,
-    maxlength: 32,
+    maxlength: 21,
     trim: true,
     match: [
       /^[a-zA-Z0-9-_]+$/,
@@ -37,8 +36,7 @@ export class Forest implements Commentable {
 
   @Prop({
     required: true,
-    minlength: 1,
-    maxlength: 1024,
+    maxlength: 4096,
     trim: true,
   })
   @Field()

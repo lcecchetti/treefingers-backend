@@ -18,12 +18,12 @@ export class CreateUserInputData {
   password: string;
 
   @Field()
-  @Length(2, 32)
+  @Length(3, 20)
   @Matches(/^[a-zA-Z0-9-_]+$/)
   readonly username: string;
 
   @Field({ nullable: true })
-  @MaxLength(255)
+  @MaxLength(4096)
   readonly bio?: string;
 }
 

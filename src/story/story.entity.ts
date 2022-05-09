@@ -28,14 +28,14 @@ export class Story implements Likeable, Commentable {
 
   @Prop({
     required: true,
-    minlength: 1,
-    maxlength: 255,
+    maxlength: 300,
   })
   @Field()
   title: string;
 
   @Prop({
     required: true,
+    maxlength: 4096,
   })
   @Field()
   content: string;

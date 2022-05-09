@@ -33,7 +33,8 @@ export class User {
   password?: string;
 
   @Prop({
-    maxlength: 31,
+    maxlength: 20,
+    minlength: 3,
     index: true,
     unique: true,
     trim: true,
@@ -46,7 +47,7 @@ export class User {
   username: string;
 
   @Prop({
-    maxlength: 255,
+    maxlength: 4096,
     trim: true,
   })
   @Field({ nullable: true })
