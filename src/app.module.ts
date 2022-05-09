@@ -31,6 +31,10 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
     GraphQLModule.forRootAsync({
       useFactory: async (configService: ConfigService) => ({
         autoSchemaFile: configService.get<string>('graphql.schema'),
+        cors: {
+          origin: configService.get<string>('frontend.webUrl'),
+          credentials: true,
+        },
       }),
       inject: [ConfigService],
     }),
