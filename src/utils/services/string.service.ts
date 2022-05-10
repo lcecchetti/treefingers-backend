@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class StringService {
-  createExcerpt(text = '', limit = 256, suffix = '...') {
+  createExcerpt(text = '', limit = 200, suffix = '...') {
     if (text.length < limit) {
       return text;
     }
