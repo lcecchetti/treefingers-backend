@@ -5,7 +5,6 @@ import { FilterQuery, Model } from 'mongoose';
 import { UserConnectionArgs } from './args/user-connection.args';
 import { UserConnection } from './dto/user-connection.dto';
 import { FilterUserInput } from './inputs/filter-user.input';
-import { RegisterDataInput } from 'src/auth/inputs/register.input';
 import { PaginationService } from 'src/pagination/pagination.service';
 import { FilterService } from 'src/filter/filter.service';
 import { EditUserDataInput } from './inputs/edit-user.input';

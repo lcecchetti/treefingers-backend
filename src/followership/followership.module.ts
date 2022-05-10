@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from 'src/user/user.module';
 import { FilterModule } from 'src/filter/filter.module';
@@ -13,7 +13,7 @@ import { FollowershipDataloader } from './dataloaders/followership.dataloader';
       { name: 'Followership', schema: FollowershipSchema },
     ]),
     FilterModule,
-    forwardRef(() => UserModule),
+    UserModule,
   ],
   providers: [
     FollowershipResolver,

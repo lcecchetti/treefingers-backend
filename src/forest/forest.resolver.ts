@@ -30,7 +30,6 @@ export class ForestResolver {
   constructor(
     private stringService: StringService,
     private forestService: ForestService,
-    private storyService: StoryService,
   ) {}
 
   @Query(() => ForestConnection)

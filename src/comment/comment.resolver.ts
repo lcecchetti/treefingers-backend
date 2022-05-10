@@ -12,7 +12,6 @@ import { User } from 'src/user/user.entity';
 import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
 import { CommentConnectionArgs } from './args/comment-connection.args';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
-import { LikeService } from 'src/like/like.service';
 import { CommentConnection } from './dto/comment-connection.dto';
 import { Like } from 'src/like/like.entity';
 import { CommentInput } from './inputs/comment.input';
@@ -30,10 +29,7 @@ import { LikeDataloader } from 'src/like/dataloaders/like.dataloader';
 
 @Resolver(() => Comment)
 export class CommentResolver {
-  constructor(
-    private commentService: CommentService,
-    private likeService: LikeService,
-  ) {}
+  constructor(private commentService: CommentService) {}
 
   @Query(() => CommentConnection)
   async comments(

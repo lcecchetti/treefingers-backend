@@ -1,9 +1,8 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { MembershipService } from './membership.service';
 import { MembershipResolver } from './membership.resolver';
 import { ForestModule } from 'src/forest/forest.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserModule } from 'src/user/user.module';
 import { FilterModule } from 'src/filter/filter.module';
 import { MembershipSchema } from './membership.entity';
 import { MembershipDataloader } from './dataloaders/membership.dataloader';
@@ -14,8 +13,7 @@ import { MembershipDataloader } from './dataloaders/membership.dataloader';
       { name: 'Membership', schema: MembershipSchema },
     ]),
     FilterModule,
-    forwardRef(() => UserModule),
-    forwardRef(() => ForestModule),
+    ForestModule,
   ],
   providers: [MembershipResolver, MembershipService, MembershipDataloader],
   exports: [MembershipService, MembershipDataloader],

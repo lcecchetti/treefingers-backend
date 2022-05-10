@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
@@ -11,7 +11,7 @@ import { IsAuthenticatedGuard } from './guards/is-authenticated.guard';
 
 @Module({
   imports: [
-    forwardRef(() => UserModule),
+    UserModule,
     PassportModule,
     JwtModule.registerAsync({
       useFactory: async (configService: ConfigService) => ({
