@@ -21,6 +21,7 @@ import { ComplexityPlugin } from './graphql/complexity.plugin';
 import { DataloaderModule } from '@tracworx/nestjs-dataloader';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 @Module({
   imports: [
@@ -28,7 +29,8 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
       isGlobal: true,
       load: [config],
     }),
-    GraphQLModule.forRootAsync({
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
+      driver: ApolloDriver,
       useFactory: async (configService: ConfigService) => ({
         autoSchemaFile: configService.get<string>('graphql.schema'),
         cors: {
