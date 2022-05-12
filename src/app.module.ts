@@ -6,7 +6,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { StoryModule } from './story/story.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
-import config from './app.config';
 import { CommentModule } from './comment/comment.module';
 import { LikeModule } from './like/like.module';
 import { ForestModule } from './forest/forest.module';
@@ -22,12 +21,15 @@ import { DataloaderModule } from '@tracworx/nestjs-dataloader';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import config from './app.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       load: [config],
+      cache: true,
     }),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -43,6 +45,21 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
     MongooseModule.forRootAsync({
       useFactory: async (configService: ConfigService) => ({
         uri: configService.get<string>('database.uri'),
+      }),
+      inject: [ConfigService],
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        autoLoadEntities: true,
+        type: 'postgres',
+        host: configService.get<string>('database.host', 'localhost'),
+        port: configService.get<number>('database.port', 5432),
+        username: configService.get<string>('database.user'),
+        password: configService.get<string>('database.password'),
+        database: configService.get<string>('database.name'),
+        synchronize: configService.get<boolean>('env.isDev'),
+        logging: configService.get<boolean>('env.isDev'),
       }),
       inject: [ConfigService],
     }),
