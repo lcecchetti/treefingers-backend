@@ -4,6 +4,9 @@ import { FilterInput, FilterStringInput } from 'src/query/inputs/filter.input';
 @InputType()
 export class FilterUserInput extends FilterInput {
   @Field(() => [FilterUserInput], { nullable: true })
+  and?: FilterUserInput[];
+
+  @Field(() => [FilterUserInput], { nullable: true })
   or?: FilterUserInput[];
 
   @Field(() => FilterStringInput, { nullable: true })

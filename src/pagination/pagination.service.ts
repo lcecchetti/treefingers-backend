@@ -1,23 +1,22 @@
 import { BadRequestException } from '@nestjs/common';
-import { FindManyOptions, ObjectLiteral, Repository } from 'typeorm';
+import { SortInput } from 'src/query/inputs/sort.input';
+import { ObjectLiteral, SelectQueryBuilder } from 'typeorm';
 import { ConnectionArgs } from './args/connection.args';
 import { IConnection } from './dto/pagination.dto';
 
 export class PaginationService<Entity extends ObjectLiteral> {
-  encodeCursor(node: any, queryOptions: FindManyOptions<Entity>): string {
+  encodeCursor(node: any, sort: SortInput): string {
     if (!node) {
       return '';
     }
 
     const cursor = {};
 
-    if (queryOptions.order) {
-      Object.keys(queryOptions.order).forEach((key) => {
-        if (node[key]) {
-          cursor[key] = node[key];
-        }
-      });
-    }
+    Object.keys(sort).forEach((key) => {
+      if (node[key]) {
+        cursor[key] = node[key];
+      }
+    });
 
     return Buffer.from(JSON.stringify(cursor)).toString('base64');
   }
@@ -31,16 +30,17 @@ export class PaginationService<Entity extends ObjectLiteral> {
   }
 
   addCursorFilter(
-    queryOptions: FindManyOptions<Entity> = {},
+    queryBuilder: SelectQueryBuilder<Entity>,
+    sort: SortInput,
     { after, before }: ConnectionArgs,
-  ): FindManyOptions<Entity> {
-    return queryOptions;
+  ): void {
+    return;
   }
 
   async paginate(
-    repository: Repository<Entity>,
-    queryOptions: FindManyOptions<Entity> = {},
-    { first, last, before, after }: ConnectionArgs = new ConnectionArgs(),
+    queryBuilder: SelectQueryBuilder<Entity>,
+    sort: SortInput,
+    { first, last, before, after }: ConnectionArgs,
   ): Promise<IConnection<Entity>> {
     // only one couple of param should be provided per time
     if ((first && last) || (before && after)) {
@@ -48,12 +48,12 @@ export class PaginationService<Entity extends ObjectLiteral> {
     }
 
     // get total query count
-    const totalCount = await repository.count(queryOptions);
+    const totalCount = await queryBuilder.getCount();
 
     // prepare cursor filter
-    this.addCursorFilter(queryOptions, { after, before });
+    this.addCursorFilter(queryBuilder, sort, { after, before });
 
-    const remainingCount = await repository.count(queryOptions);
+    const remainingCount = await queryBuilder.getCount();
 
     // prepare query options
     const limit = first || last || 10;
@@ -61,18 +61,14 @@ export class PaginationService<Entity extends ObjectLiteral> {
 
     // get nodes
     //@todo improve performances by removing skip and querying first item in reversed order
-    const nodes = await repository.find({
-      ...queryOptions,
-      take: limit,
-      skip,
-    });
+    const nodes = await queryBuilder.limit(limit).skip(skip).getMany();
 
     const result: IConnection<Entity> = {};
 
     // build edges
     result.edges = nodes.map((node) => {
       return {
-        cursor: this.encodeCursor(node, queryOptions),
+        cursor: this.encodeCursor(node, sort),
         node,
       };
     });

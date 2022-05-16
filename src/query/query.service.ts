@@ -1,37 +1,36 @@
 import { Injectable } from '@nestjs/common';
-import {
-  Equal,
-  FindManyOptions,
-  FindOptionsOrder,
-  FindOptionsWhere,
-} from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { FilterInput } from './inputs/filter.input';
 import { SortInput } from './inputs/sort.input';
 
-const operationsMap = {
-  eq: Equal,
-};
-
 @Injectable()
 export class QueryService<Entity> {
-  prepareWhere(
-    filter: FilterInput,
-  ): FindOptionsWhere<Entity>[] | FindOptionsWhere<Entity> {
-    //@todo build where from api
-    return {};
+  private queryBuilder: SelectQueryBuilder<Entity>;
+
+  addFilter(filter: FilterInput): void {
+    return;
   }
 
-  prepareSort(sort: any): FindOptionsOrder<Entity> {
-    return sort;
+  addSort(sort: SortInput): void {
+    const orderBy = {};
+
+    Object.keys(sort).forEach((key) => {
+      orderBy[key] = sort[key];
+    });
+
+    this.queryBuilder.orderBy(orderBy);
   }
 
-  prepareOptions(
+  prepareQueryBuilder(
+    repository: Repository<Entity>,
     filter: FilterInput,
-    sort?: SortInput,
-  ): FindManyOptions<Entity> {
-    return {
-      where: this.prepareWhere(filter),
-      order: this.prepareSort(sort),
-    };
+    sort: SortInput = new SortInput(),
+  ): SelectQueryBuilder<Entity> {
+    this.queryBuilder = repository.createQueryBuilder();
+
+    this.addFilter(filter);
+    this.addSort(sort);
+
+    return this.queryBuilder;
   }
 }

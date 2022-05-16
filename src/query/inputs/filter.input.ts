@@ -18,16 +18,16 @@ export class FilterStringInput {
 @InputType()
 export class FilterIdInput {
   @Field(() => ID, { nullable: true })
-  eq?: string;
+  eq?: number;
 
   @Field(() => ID, { nullable: true })
-  ne?: string;
+  ne?: number;
 
   @Field(() => [ID], { nullable: true })
-  in?: string[];
+  in?: number[];
 
   @Field(() => [ID], { nullable: true })
-  nin?: string[];
+  nin?: number[];
 }
 
 @InputType()
@@ -61,7 +61,4 @@ export class FilterIntInput {
 export class FilterInput {
   @Field(() => FilterIdInput, { nullable: true })
   id?: FilterIdInput;
-
-  @Field(() => [FilterInput], { nullable: true })
-  or?: FilterInput[];
 }
