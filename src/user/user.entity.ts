@@ -1,104 +1,49 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
-import {
-  Field,
-  GraphQLISODateTime,
-  ID,
-  Int,
-  ObjectType,
-} from '@nestjs/graphql';
-import { isEmail } from 'class-validator';
+import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
 import { isPrivateMiddleware } from './middleware/is-private.middleware';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
-@Schema({ timestamps: true })
+@Entity()
 @ObjectType()
 export class User {
+  @PrimaryGeneratedColumn()
   @Field(() => ID)
-  _id: string;
+  id: number;
 
-  @Prop({
-    required: true,
-    validate: [isEmail, 'Please fill a valid email address'],
-    index: true,
-    unique: true,
-    trim: true,
-  })
+  @Column()
+  @Index({ unique: true })
   @Field({ middleware: [isPrivateMiddleware] })
   email: string;
 
-  @Prop({
-    required: true,
-    minlength: 10,
-  })
+  @Column()
   password?: string;
 
-  @Prop({
-    maxlength: 20,
-    minlength: 3,
-    index: true,
-    unique: true,
-    trim: true,
-    match: [
-      /^[a-zA-Z0-9-_]+$/,
-      'Only letters, numbers, dots, hyphens and dashes',
-    ],
-  })
+  @Column()
+  @Index({ unique: true })
   @Field()
   username: string;
 
-  @Prop({
-    maxlength: 4096,
-    trim: true,
-  })
+  @Column({ type: 'text', nullable: true })
+  @Index()
   @Field({ nullable: true })
   bio?: string;
 
-  @Prop({
-    required: true,
-    index: true,
-    min: 0,
-    default: 0,
-  })
-  @Field(() => Int, { defaultValue: 0 })
-  likesCount: number;
-
-  @Prop({
-    required: true,
-    index: true,
-    min: 0,
-    default: 0,
-  })
-  @Field(() => Int, { defaultValue: 0 })
-  storiesCount: number;
-
-  @Prop({
-    required: true,
-    index: true,
-    min: 0,
-    default: 0,
-  })
-  @Field(() => Int, { defaultValue: 0 })
-  followersCount: number;
-
-  @Prop()
+  @Column({ default: false })
+  @Index()
   @Field({ defaultValue: false })
   isActive: boolean;
 
-  @Prop({ default: Date.now })
+  @CreateDateColumn()
   @Field(() => GraphQLISODateTime, { middleware: [isPrivateMiddleware] })
   createdAt: Date;
 
-  @Prop({ default: Date.now })
+  @UpdateDateColumn()
   @Field(() => GraphQLISODateTime, { middleware: [isPrivateMiddleware] })
   updatedAt: Date;
 }
-
-export type UserDocument = User & Document;
-const UserSchema = SchemaFactory.createForClass(User);
-
-UserSchema.index({ username: 'text', bio: 'text' });
-UserSchema.index({ followersCount: 1, _id: 1 });
-UserSchema.index({ likesCount: 1, _id: 1 });
-UserSchema.index({ storiesCount: 1, _id: 1 });
-
-export { UserSchema };

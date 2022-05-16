@@ -60,5 +60,8 @@ export class FilterIntInput {
 @InputType()
 export class FilterInput {
   @Field(() => FilterIdInput, { nullable: true })
-  _id?: FilterIdInput;
+  id?: FilterIdInput;
+
+  @Field(() => [FilterInput], { nullable: true })
+  or?: FilterInput[];
 }

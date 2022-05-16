@@ -8,8 +8,8 @@ export class UserDataloader {
   constructor(private readonly userService: UserService) {}
 
   createDataloader() {
-    return new DataLoader<string, User>(async (_ids) =>
-      this.userService.findMany({ _id: { in: [..._ids] } }),
+    return new DataLoader<string, User>(async (ids) =>
+      this.userService.findMany({ id: { in: [...ids] } }),
     );
   }
 }

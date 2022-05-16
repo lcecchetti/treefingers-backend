@@ -11,7 +11,7 @@ import {
 export class CreateUserInputData {
   @Field()
   @IsEmail()
-  readonly email: string;
+  email: string;
 
   @Field()
   @MinLength(10)
@@ -20,11 +20,11 @@ export class CreateUserInputData {
   @Field()
   @Length(3, 20)
   @Matches(/^[a-zA-Z0-9-_]+$/)
-  readonly username: string;
+  username: string;
 
   @Field({ nullable: true })
   @MaxLength(4096)
-  readonly bio?: string;
+  bio?: string;
 }
 
 @InputType()

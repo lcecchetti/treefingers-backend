@@ -2,18 +2,10 @@ import { Module, ValidationPipe } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
-import { MongooseModule } from '@nestjs/mongoose';
-import { StoryModule } from './story/story.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
-import { CommentModule } from './comment/comment.module';
-import { LikeModule } from './like/like.module';
-import { ForestModule } from './forest/forest.module';
 import { UtilsModule } from './utils/utils.module';
-import { FilterModule } from './filter/filter.module';
 import { PaginationModule } from './pagination/pagination.module';
-import { MembershipModule } from './membership/membership.module';
-import { FollowershipModule } from './followership/followership.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { ComplexityPlugin } from './graphql/complexity.plugin';
@@ -23,6 +15,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import config from './app.config';
+import { QueryModule } from './query/query.module';
 
 @Module({
   imports: [
@@ -39,12 +32,6 @@ import config from './app.config';
           origin: configService.get<string>('frontend.webUrl'),
           credentials: true,
         },
-      }),
-      inject: [ConfigService],
-    }),
-    MongooseModule.forRootAsync({
-      useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('database.uri'),
       }),
       inject: [ConfigService],
     }),
@@ -87,16 +74,10 @@ import config from './app.config';
     }),
     UtilsModule,
     DataloaderModule,
-    StoryModule,
     UserModule,
     AuthModule,
-    CommentModule,
-    LikeModule,
-    ForestModule,
-    FilterModule,
+    QueryModule,
     PaginationModule,
-    MembershipModule,
-    FollowershipModule,
   ],
   providers: [
     {

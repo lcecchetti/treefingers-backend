@@ -60,7 +60,7 @@ export class AuthService {
   async login(user: User): Promise<LoginPayload> {
     const payload: JwtPayload = {
       email: user.email,
-      sub: user._id,
+      sub: user.id,
       username: user.username,
     };
 
@@ -76,7 +76,7 @@ export class AuthService {
 
     // activate account token
     const token = this.jwtService.sign(
-      { sub: user._id },
+      { sub: user.id },
       { expiresIn: '1 day' },
     );
 
@@ -112,7 +112,7 @@ export class AuthService {
     if (user) {
       // change password token
       const token = this.jwtService.sign(
-        { sub: user._id, password: user.password },
+        { sub: user.id, password: user.password },
         { expiresIn: 60 * 15 },
       );
 

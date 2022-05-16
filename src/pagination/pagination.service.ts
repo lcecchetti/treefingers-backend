@@ -1,108 +1,59 @@
 import { BadRequestException } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { FindManyOptions, ObjectLiteral, Repository } from 'typeorm';
 import { ConnectionArgs } from './args/connection.args';
 import { IConnection } from './dto/pagination.dto';
-import { SortInput, SORT_DIRECTION } from './inputs/sort.input';
 
-const encodeCursor = (node: any, sort: SortInput): string => {
-  if (!node) {
-    return '';
-  }
-
-  const cursor = {};
-
-  Object.keys(sort).forEach((key) => {
-    if (node[key]) {
-      cursor[key] = node[key];
-    }
-  });
-
-  return Buffer.from(JSON.stringify(cursor)).toString('base64');
-};
-
-const decodeCursor = (cursor: string): any | null => {
-  if (!cursor) {
-    return null;
-  }
-
-  return JSON.parse(Buffer.from(String(cursor), 'base64').toString('ascii'));
-};
-
-const prepareCursorFilter = (
-  sort: SortInput,
-  { after, before }: ConnectionArgs,
-): any => {
-  if (!(after || before)) {
-    return {};
-  }
-
-  // decode cursor
-  const cursor = decodeCursor(after) || decodeCursor(before);
-
-  // cursor conditions
-  const conditions = [];
-
-  // operator direction
-  const ascOperator = after ? '$gt' : '$lt';
-  const descOperator = after ? '$lt' : '$gt';
-
-  // for each sort provided
-  Object.keys(sort).forEach((key) => {
-    // don't add _id condition if combined sort
-    if (Object.keys(sort).length > 1 && key === '_id') {
-      return;
+export class PaginationService<Entity extends ObjectLiteral> {
+  encodeCursor(node: any, queryOptions: FindManyOptions<Entity>): string {
+    if (!node) {
+      return '';
     }
 
-    // secondary column condition
-    conditions.push({
-      [key]: {
-        [sort[key] === SORT_DIRECTION.ASC ? ascOperator : descOperator]:
-          cursor[key],
-      },
-    });
+    const cursor = {};
 
-    // primary column condition
-    conditions.push({
-      [key]: cursor[key],
-      _id: {
-        [sort._id === SORT_DIRECTION.ASC ? ascOperator : descOperator]:
-          cursor._id,
-      },
-    });
-  });
+    if (queryOptions.order) {
+      Object.keys(queryOptions.order).forEach((key) => {
+        if (node[key]) {
+          cursor[key] = node[key];
+        }
+      });
+    }
 
-  return { $or: conditions };
-};
+    return Buffer.from(JSON.stringify(cursor)).toString('base64');
+  }
 
-export class PaginationService<E, D> {
+  decodeCursor(cursor: string): any | null {
+    if (!cursor) {
+      return null;
+    }
+
+    return JSON.parse(Buffer.from(String(cursor), 'base64').toString('ascii'));
+  }
+
+  addCursorFilter(
+    queryOptions: FindManyOptions<Entity> = {},
+    { after, before }: ConnectionArgs,
+  ): FindManyOptions<Entity> {
+    return queryOptions;
+  }
+
   async paginate(
-    model: Model<D>,
-    filter: any = {},
-    sort: SortInput = new SortInput(),
+    repository: Repository<Entity>,
+    queryOptions: FindManyOptions<Entity> = {},
     { first, last, before, after }: ConnectionArgs = new ConnectionArgs(),
-  ): Promise<IConnection<E>> {
+  ): Promise<IConnection<Entity>> {
     // only one couple of param should be provided per time
     if ((first && last) || (before && after)) {
       throw new BadRequestException('Provide only first/after or last/before');
     }
 
-    // allow sort by maximum 2 fields, _id included
-    if (
-      Object.keys(sort).length > 2 ||
-      (Object.keys(sort).length === 1 && !sort._id)
-    ) {
-      throw new BadRequestException('Sort by maximum 2 fields');
-    }
+    // get total query count
+    const totalCount = await repository.count(queryOptions);
 
     // prepare cursor filter
-    const cursorFilter = prepareCursorFilter(sort, { after, before });
+    this.addCursorFilter(queryOptions, { after, before });
 
-    // add cursor filter to filter
-    const composedFilter = { $and: [filter, cursorFilter] };
-
-    // get total query count
-    const totalCount = await model.count(filter);
-    const remainingCount = await model.count(composedFilter);
+    const remainingCount = await repository.count(queryOptions);
 
     // prepare query options
     const limit = first || last || 10;
@@ -110,16 +61,18 @@ export class PaginationService<E, D> {
 
     // get nodes
     //@todo improve performances by removing skip and querying first item in reversed order
-    const nodes = await model
-      .find(composedFilter, null, { sort, limit, skip })
-      .lean();
+    const nodes = await repository.find({
+      ...queryOptions,
+      take: limit,
+      skip,
+    });
 
-    const result: IConnection<E> = {};
+    const result: IConnection<Entity> = {};
 
     // build edges
     result.edges = nodes.map((node) => {
       return {
-        cursor: encodeCursor(node, sort),
+        cursor: this.encodeCursor(node, queryOptions),
         node,
       };
     });
