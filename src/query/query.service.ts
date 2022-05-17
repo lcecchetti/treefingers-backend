@@ -43,8 +43,8 @@ export class QueryService<Entity> {
           break;
         case 'like':
         case 'ilike':
-          where.andWhere(`${field} ${operatorsMap[operator]} %:${paramId}%`, {
-            [paramId]: value,
+          where.andWhere(`${field} ${operatorsMap[operator]} :${paramId}`, {
+            [paramId]: `%${value}%`,
           });
           break;
         case 'in':
@@ -102,12 +102,14 @@ export class QueryService<Entity> {
     queryBuilder: SelectQueryBuilder<Entity>,
     sort: SortInput,
   ): SelectQueryBuilder<Entity> {
-    const orderBy = {};
+    if (!sort) {
+      return queryBuilder;
+    }
 
+    const orderBy = {};
     Object.entries(sort).map(([key, value]) => {
       orderBy[key] = value;
     });
-
     return queryBuilder.orderBy(orderBy);
   }
 

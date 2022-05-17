@@ -13,6 +13,21 @@ export class FilterStringInput {
 
   @Field(() => [String], { nullable: true })
   nin?: string[];
+
+  @Field(() => String, { nullable: true })
+  like?: string;
+
+  @Field(() => String, { nullable: true })
+  ilike?: string;
+}
+
+@InputType()
+export class FilterBooleanInput {
+  @Field(() => Boolean, { nullable: true })
+  eq?: boolean;
+
+  @Field(() => Boolean, { nullable: true })
+  neq?: boolean;
 }
 
 @InputType()

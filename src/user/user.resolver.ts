@@ -37,7 +37,7 @@ export class UserResolver {
   @Query(() => User, { nullable: true })
   async user(
     @Args('filter', { nullable: true })
-    filter: FilterUserInput,
+    filter: FilterUserInput = new FilterUserInput(),
   ): Promise<User> {
     return this.userService.findOne(filter);
   }

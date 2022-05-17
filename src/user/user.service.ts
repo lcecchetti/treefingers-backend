@@ -10,6 +10,7 @@ import { CreateUserInputData } from './inputs/create-user.input';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { QueryService } from 'src/query/query.service';
+import { SortUserInput } from './inputs/sort-user.input';
 
 @Injectable()
 export class UserService {
@@ -24,15 +25,11 @@ export class UserService {
   }
 
   async findOne(filter?: FilterUserInput): Promise<User | null> {
-    return this.queryService
-      .prepareQueryBuilder(this.userRepository, filter)
-      .getOne();
+    return this.prepareQueryBuilder(filter).getOne();
   }
 
   async findMany(filter?: FilterUserInput): Promise<User[]> {
-    return this.queryService
-      .prepareQueryBuilder(this.userRepository, filter)
-      .getMany();
+    return this.prepareQueryBuilder(filter).getMany();
   }
 
   async create(data: CreateUserInputData): Promise<User> {
@@ -65,17 +62,31 @@ export class UserService {
     });
   }
 
-  async paginate(
-    {
-      filter,
-      sort,
-      ...connectionArgs
-    }: UserConnectionArgs = new UserConnectionArgs(),
-  ): Promise<UserConnection> {
+  async paginate({
+    filter,
+    sort,
+    ...connectionArgs
+  }: UserConnectionArgs): Promise<UserConnection> {
     return this.paginationService.paginate(
-      this.queryService.prepareQueryBuilder(this.userRepository, filter, sort),
+      this.prepareQueryBuilder(filter, sort),
       sort,
       connectionArgs,
+    );
+  }
+
+  prepareQueryBuilder(
+    filter: FilterUserInput = new FilterUserInput(),
+    sort: SortUserInput = new SortUserInput(),
+  ) {
+    /*filter.isActive = false;
+    if (!filter.isActive === false) {
+      filter.isActive = true;
+    }*/
+
+    return this.queryService.prepareQueryBuilder(
+      this.userRepository,
+      filter,
+      sort,
     );
   }
 
