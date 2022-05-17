@@ -1,6 +1,11 @@
 import { BadRequestException } from '@nestjs/common';
-import { SortInput } from 'src/query/inputs/sort.input';
-import { ObjectLiteral, SelectQueryBuilder } from 'typeorm';
+import { SortInput, SORT_DIRECTION } from 'src/query/inputs/sort.input';
+import {
+  Brackets,
+  ObjectLiteral,
+  SelectQueryBuilder,
+  WhereExpressionBuilder,
+} from 'typeorm';
 import { ConnectionArgs } from './args/connection.args';
 import { IConnection } from './dto/pagination.dto';
 
@@ -29,12 +34,94 @@ export class PaginationService<Entity extends ObjectLiteral> {
     return JSON.parse(Buffer.from(String(cursor), 'base64').toString('ascii'));
   }
 
+  prepareCursorFilter(
+    where: WhereExpressionBuilder,
+    cursor,
+    sortArray: [string, SORT_DIRECTION][],
+    { ascComparison, descComparison },
+    paramId = 0,
+  ) {
+    // current sort field
+    const [field, direction] = sortArray.shift();
+
+    // comparison operator
+    const comparison =
+      direction === SORT_DIRECTION.ASC ? ascComparison : descComparison;
+
+    // add non unique constraint
+    paramId++;
+    where.where(`"${field}" ${comparison} :${paramId}`, {
+      [paramId]: cursor[field],
+    });
+
+    if (!sortArray.length) {
+      return;
+    }
+
+    // add subi
+    where.orWhere(
+      new Brackets((orQb) => {
+        paramId++;
+        orQb.where(`"${field}" = :${paramId}`, {
+          [paramId]: cursor[field],
+        });
+
+        orQb.andWhere(
+          new Brackets((andQb) => {
+            this.prepareCursorFilter(
+              andQb,
+              cursor,
+              sortArray,
+              { ascComparison, descComparison },
+              paramId,
+            );
+          }),
+        );
+      }),
+    );
+  }
+
   addCursorFilter(
     queryBuilder: SelectQueryBuilder<Entity>,
-    sort: SortInput,
+    sort: SortInput = new SortInput(),
     { after, before }: ConnectionArgs,
-  ): void {
-    return;
+  ) {
+    if (!(after || before)) {
+      return;
+    }
+
+    // add default sorting
+    if (!sort.id) {
+      sort = {
+        ...sort,
+        ...new SortInput(),
+      };
+    }
+
+    // decode cursor
+    const cursor = this.decodeCursor(after) || this.decodeCursor(before);
+
+    // sort fields as ordered array (order defined by class keys)
+    const sortFields = Object.entries(sort);
+
+    // continue from previous added param
+    const paramId = Object.keys(queryBuilder.getParameters()).length;
+
+    // add cursor filter
+    queryBuilder.andWhere(
+      new Brackets((where) => {
+        this.prepareCursorFilter(
+          where,
+          cursor,
+          sortFields,
+          {
+            ascComparison: after ? '>' : '<',
+            descComparison: after ? '<' : '>',
+          },
+          paramId,
+        );
+      }),
+    );
   }
 
   async paginate(

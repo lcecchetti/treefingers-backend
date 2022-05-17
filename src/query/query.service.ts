@@ -119,12 +119,8 @@ export class QueryService<Entity> {
     sort: SortInput = new SortInput(),
   ): SelectQueryBuilder<Entity> {
     const queryBuilder = repository.createQueryBuilder();
-    queryBuilder.where(
-      new Brackets((qb) => (filter) => this.addFilter(qb, filter)),
-    );
     this.addFilter(queryBuilder, filter);
     this.addSort(queryBuilder, sort);
-
     return queryBuilder;
   }
 }
