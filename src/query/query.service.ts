@@ -37,20 +37,20 @@ export class QueryService<Entity> {
         case 'lte':
         case 'gt':
         case 'gte':
-          where.andWhere(`${field} ${operatorsMap[operator]} :${paramId}`, {
+          where.andWhere(`"${field}" ${operatorsMap[operator]} :${paramId}`, {
             [paramId]: value,
           });
           break;
         case 'like':
         case 'ilike':
-          where.andWhere(`${field} ${operatorsMap[operator]} :${paramId}`, {
+          where.andWhere(`"${field}" ${operatorsMap[operator]} :${paramId}`, {
             [paramId]: `%${value}%`,
           });
           break;
         case 'in':
         case 'nin':
           where.andWhere(
-            `${field} ${operatorsMap[operator]} (:...${paramId})`,
+            `"${field}" ${operatorsMap[operator]} (:...${paramId})`,
             {
               [paramId]: value,
             },
@@ -80,8 +80,8 @@ export class QueryService<Entity> {
             new Brackets((qb) =>
               value.forEach((subFilter) => {
                 qb[`${key}Where`](
-                  new Brackets((orQb) =>
-                    this.addFilter(orQb, subFilter, key, paramId++),
+                  new Brackets((andOrQb) =>
+                    this.addFilter(andOrQb, subFilter, key, paramId++),
                   ),
                 );
               }),
