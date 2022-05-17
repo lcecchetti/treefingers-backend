@@ -9,6 +9,7 @@ import {
 import { ConnectionArgs } from './args/connection.args';
 import { IConnection } from './dto/pagination.dto';
 
+const paramPre = 'cursor_';
 export class PaginationService<Entity extends ObjectLiteral> {
   encodeCursor(node: any, sort: SortInput): string {
     if (!node) {
@@ -50,8 +51,8 @@ export class PaginationService<Entity extends ObjectLiteral> {
 
     // add non unique constraint
     paramId++;
-    where.where(`"${field}" ${comparison} :${paramId}`, {
-      [paramId]: cursor[field],
+    where.where(`"${field}" ${comparison} :${paramPre}${paramId}`, {
+      [`${paramPre}${paramId}`]: cursor[field],
     });
 
     if (!sortArray.length) {
@@ -62,8 +63,8 @@ export class PaginationService<Entity extends ObjectLiteral> {
     where.orWhere(
       new Brackets((orQb) => {
         paramId++;
-        orQb.where(`"${field}" = :${paramId}`, {
-          [paramId]: cursor[field],
+        orQb.where(`"${field}" = :${paramPre}${paramId}`, {
+          [`${paramPre}${paramId}`]: cursor[field],
         });
 
         orQb.andWhere(
@@ -104,22 +105,13 @@ export class PaginationService<Entity extends ObjectLiteral> {
     // sort fields as ordered array (order defined by class keys)
     const sortFields = Object.entries(sort);
 
-    // continue from previous added param
-    const paramId = Object.keys(queryBuilder.getParameters()).length;
-
     // add cursor filter
     queryBuilder.andWhere(
       new Brackets((where) => {
-        this.prepareCursorFilter(
-          where,
-          cursor,
-          sortFields,
-          {
-            ascComparison: after ? '>' : '<',
-            descComparison: after ? '<' : '>',
-          },
-          paramId,
-        );
+        this.prepareCursorFilter(where, cursor, sortFields, {
+          ascComparison: after ? '>' : '<',
+          descComparison: after ? '<' : '>',
+        });
       }),
     );
   }

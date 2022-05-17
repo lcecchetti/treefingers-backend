@@ -21,6 +21,8 @@ const operatorsMap = {
   ilike: 'ILIKE',
 };
 
+const paramPre = 'filter_';
+
 @Injectable()
 export class QueryService<Entity> {
   addCondition(
@@ -37,22 +39,28 @@ export class QueryService<Entity> {
         case 'lte':
         case 'gt':
         case 'gte':
-          where.andWhere(`"${field}" ${operatorsMap[operator]} :${paramId}`, {
-            [paramId]: value,
-          });
+          where.andWhere(
+            `"${field}" ${operatorsMap[operator]} :${paramPre}${paramId}`,
+            {
+              [`${paramPre}${paramId}`]: value,
+            },
+          );
           break;
         case 'like':
         case 'ilike':
-          where.andWhere(`"${field}" ${operatorsMap[operator]} :${paramId}`, {
-            [paramId]: `%${value}%`,
-          });
+          where.andWhere(
+            `"${field}" ${operatorsMap[operator]} :${paramPre}${paramId}`,
+            {
+              [`${paramPre}${paramId}`]: `%${value}%`,
+            },
+          );
           break;
         case 'in':
         case 'nin':
           where.andWhere(
-            `"${field}" ${operatorsMap[operator]} (:...${paramId})`,
+            `"${field}" ${operatorsMap[operator]} (:...${paramPre}${paramId})`,
             {
-              [paramId]: value,
+              [`${paramPre}${paramId}`]: value,
             },
           );
           break;
