@@ -5,11 +5,14 @@ import {
   CreateDateColumn,
   Entity,
   Index,
-  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Followership } from 'src/followership/followership.entity';
+import { Forest } from 'src/forest/forest.entity';
+import { Comment } from 'src/comment/comment.entity';
+import { Like } from 'src/like/like.entity';
 
 @Entity()
 @ObjectType()
@@ -41,11 +44,20 @@ export class User {
   @Field({ defaultValue: false })
   isActive: boolean;
 
-  @ManyToOne(() => Followership, (followership) => followership.followed)
+  @OneToMany(() => Followership, (followership) => followership.followed)
   followershipsAsFollowed: Followership;
 
-  @ManyToOne(() => Followership, (followership) => followership.follower)
+  @OneToMany(() => Followership, (followership) => followership.follower)
   followershipsAsFollower: Followership;
+
+  @OneToMany(() => Forest, (forest) => forest.founder)
+  forests: Forest[];
+
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comments: Comment[];
+
+  @OneToMany(() => Like, (like) => like.user)
+  likes: Comment[];
 
   @CreateDateColumn()
   @Field(() => GraphQLISODateTime, { middleware: [isPrivateMiddleware] })

@@ -1,5 +1,6 @@
 import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
+import { LikeableEntityType } from './enums/likeable-entity-type.enum';
 import {
   Column,
   CreateDateColumn,
@@ -8,34 +9,42 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  TableInheritance,
   UpdateDateColumn,
 } from 'typeorm';
+import { Likeable } from './interfaces/likeable.interface';
 
 @Entity()
-@Index(['followedId', 'followerId'], { unique: true })
+@TableInheritance({ column: { type: 'varchar', name: 'entityType' } })
+@Index(['user', 'entityId', 'entityType'], { unique: true })
 @ObjectType()
-export class Followership {
+export class Like {
   @PrimaryGeneratedColumn()
   @Field(() => ID)
   id: number;
 
-  @ManyToOne(() => User, (user) => user.followershipsAsFollowed)
-  @JoinColumn()
-  @Field(() => User)
-  followed: User;
+  @Column({
+    type: 'enum',
+    enum: LikeableEntityType,
+  })
+  @Field(() => LikeableEntityType)
+  entityType: LikeableEntityType;
+
+  @Field(() => Likeable)
+  entity: Likeable;
 
   @Column()
   @Index()
-  followedId: number;
+  entityId: number;
 
-  @ManyToOne(() => User, (user) => user.followershipsAsFollower)
+  @ManyToOne(() => User, (user) => user.likes)
   @JoinColumn()
   @Field(() => User)
-  follower: User;
+  user: User;
 
   @Column()
   @Index()
-  followerId: number;
+  userId: number;
 
   @CreateDateColumn()
   @Field(() => GraphQLISODateTime)

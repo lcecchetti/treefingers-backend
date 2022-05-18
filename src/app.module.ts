@@ -17,6 +17,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import config from './app.config';
 import { QueryModule } from './query/query.module';
 import { FollowershipModule } from './followership/followership.module';
+import { ForestModule } from './forest/forest.module';
+import { CommentModule } from './comment/comment.module';
+import { LikeModule } from './like/like.module';
 
 @Module({
   imports: [
@@ -80,6 +83,9 @@ import { FollowershipModule } from './followership/followership.module';
     AuthModule,
     UserModule,
     FollowershipModule,
+    ForestModule,
+    CommentModule,
+    LikeModule,
   ],
   providers: [
     {

@@ -1,6 +1,5 @@
 import * as DataLoader from 'dataloader';
 import { DataloaderProvider } from '@tracworx/nestjs-dataloader';
-import { FilterFollowershipInput } from '../inputs/filter-followership.input';
 import { Followership } from '../followership.entity';
 import { FollowershipService } from '../followership.service';
 
@@ -9,13 +8,17 @@ export class FollowershipDataloader {
   constructor(private followershipService: FollowershipService) {}
 
   createDataloader() {
-    return new DataLoader<FilterFollowershipInput, Followership, string>(
+    return new DataLoader<
+      { followedId: number; followerId: number },
+      Followership,
+      string
+    >(
       async (keys) => {
         // get followerships
         const result = await this.followershipService.findMany({
           or: keys.map(({ followedId, followerId }) => ({
-            followedId,
-            followerId,
+            followedId: { eq: followedId },
+            followerId: { eq: followerId },
           })),
         });
 

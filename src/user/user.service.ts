@@ -8,7 +8,7 @@ import { EditUserDataInput } from './inputs/edit-user.input';
 import * as bcrypt from 'bcrypt';
 import { CreateUserInputData } from './inputs/create-user.input';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Brackets, Repository } from 'typeorm';
 import { QueryService } from 'src/query/query.service';
 import { SortUserInput } from './inputs/sort-user.input';
 
@@ -75,18 +75,28 @@ export class UserService {
   }
 
   prepareQueryBuilder(
-    filter: FilterUserInput = new FilterUserInput(),
+    { query, ...filter }: FilterUserInput = new FilterUserInput(),
     sort: SortUserInput = new SortUserInput(),
   ) {
+    const queryBuilder = this.userRepository.createQueryBuilder();
+
+    // add isActive filter
     if (!filter.isActive === false) {
       filter.isActive = true;
     }
 
-    return this.queryService.prepareQueryBuilder(
-      this.userRepository.createQueryBuilder(),
-      filter,
-      sort,
-    );
+    // add query conditon
+    if (query) {
+      queryBuilder.andWhere(
+        new Brackets((qb) => {
+          qb.where(`"username" ilike :query_username`, {
+            ['query_username']: `%${query}%`,
+          });
+        }),
+      );
+    }
+
+    return this.queryService.prepareQueryBuilder(queryBuilder, filter, sort);
   }
 
   async encryptPassword(password: string): Promise<string> {
