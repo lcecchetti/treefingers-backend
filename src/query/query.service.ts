@@ -101,19 +101,14 @@ export class QueryService<Entity> {
     });
   }
 
-  addSort(
-    queryBuilder: SelectQueryBuilder<Entity>,
-    sort: SortInput,
-  ): SelectQueryBuilder<Entity> {
+  addSort(queryBuilder: SelectQueryBuilder<Entity>, sort: SortInput) {
     if (!sort) {
       return queryBuilder;
     }
 
-    const orderBy = {};
     Object.entries(sort).map(([key, value]) => {
-      orderBy[key] = value;
+      queryBuilder.addOrderBy(key, value);
     });
-    return queryBuilder.orderBy(orderBy);
   }
 
   prepareQueryBuilder(

@@ -5,9 +5,11 @@ import {
   CreateDateColumn,
   Entity,
   Index,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Followership } from 'src/followership/followership.entity';
 
 @Entity()
 @ObjectType()
@@ -38,6 +40,12 @@ export class User {
   @Index()
   @Field({ defaultValue: false })
   isActive: boolean;
+
+  @ManyToOne(() => Followership, (followership) => followership.followed)
+  followershipsAsFollowed: Followership;
+
+  @ManyToOne(() => Followership, (followership) => followership.follower)
+  followershipsAsFollower: Followership;
 
   @CreateDateColumn()
   @Field(() => GraphQLISODateTime, { middleware: [isPrivateMiddleware] })

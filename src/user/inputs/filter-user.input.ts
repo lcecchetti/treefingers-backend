@@ -14,4 +14,6 @@ export class FilterUserInput extends FilterInput {
 
   @Field(() => FilterStringInput, { nullable: true })
   username?: FilterStringInput;
+
+  isActive?: boolean;
 }

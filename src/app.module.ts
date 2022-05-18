@@ -16,6 +16,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import config from './app.config';
 import { QueryModule } from './query/query.module';
+import { FollowershipModule } from './followership/followership.module';
 
 @Module({
   imports: [
@@ -74,10 +75,11 @@ import { QueryModule } from './query/query.module';
     }),
     UtilsModule,
     DataloaderModule,
-    UserModule,
-    AuthModule,
     QueryModule,
     PaginationModule,
+    AuthModule,
+    UserModule,
+    FollowershipModule,
   ],
   providers: [
     {

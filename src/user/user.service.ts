@@ -20,16 +20,16 @@ export class UserService {
     private queryService: QueryService<User>,
   ) {}
 
-  async findById(id: number): Promise<User | null> {
-    return this.findOne({ id: { eq: id } });
-  }
-
   async findOne(filter?: FilterUserInput): Promise<User | null> {
     return this.prepareQueryBuilder(filter).getOne();
   }
 
   async findMany(filter?: FilterUserInput): Promise<User[]> {
     return this.prepareQueryBuilder(filter).getMany();
+  }
+
+  async findById(id: number): Promise<User | null> {
+    return this.findOne({ id: { eq: id } });
   }
 
   async create(data: CreateUserInputData): Promise<User> {
@@ -78,10 +78,9 @@ export class UserService {
     filter: FilterUserInput = new FilterUserInput(),
     sort: SortUserInput = new SortUserInput(),
   ) {
-    /*filter.isActive = false;
     if (!filter.isActive === false) {
       filter.isActive = true;
-    }*/
+    }
 
     return this.queryService.prepareQueryBuilder(
       this.userRepository.createQueryBuilder(),
