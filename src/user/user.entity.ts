@@ -14,6 +14,7 @@ import { Forest } from 'src/forest/forest.entity';
 import { Comment } from 'src/comment/comment.entity';
 import { Like } from 'src/like/like.entity';
 import { Membership } from 'src/membership/membership.entity';
+import { Story } from 'src/story/story.entity';
 
 @Entity()
 @ObjectType()
@@ -62,6 +63,9 @@ export class User {
 
   @OneToMany(() => Membership, (membership) => membership.member)
   memberships: Membership[];
+
+  @OneToMany(() => Story, (story) => story.author)
+  stories: Story[];
 
   @CreateDateColumn()
   @Field(() => GraphQLISODateTime, { middleware: [isPrivateMiddleware] })

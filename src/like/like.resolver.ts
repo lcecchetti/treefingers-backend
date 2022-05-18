@@ -21,6 +21,7 @@ import { IsAuthenticatedGuard } from 'src/auth/guards/is-authenticated.guard';
 import { UserDataloader } from 'src/user/dataloaders/user.dataloader';
 import { Loader } from '@tracworx/nestjs-dataloader';
 import { CommentDataloader } from 'src/comment/dataloaders/comment.dataloader';
+import { StoryDataloader } from 'src/story/dataloaders/story.dataloader';
 
 @Resolver(() => Like)
 export class LikeResolver {
@@ -66,11 +67,15 @@ export class LikeResolver {
   async entity(
     @Parent() like: Like,
     @Loader(CommentDataloader) commentDataloader,
+    @Loader(StoryDataloader) storyDataloader,
   ): Promise<Likeable> {
     let entity;
     switch (like.entityType) {
       case LikeableEntityType.Comment:
-        entity = await commentDataloader.load(String(like.entityId));
+        entity = await commentDataloader.load(like.entityId);
+        break;
+      case LikeableEntityType.Story:
+        entity = await storyDataloader.load(like.entityId);
         break;
     }
 

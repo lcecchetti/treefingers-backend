@@ -21,6 +21,7 @@ import {
 } from 'typeorm';
 import { ForestComment } from 'src/comment/forest-comment.entity';
 import { Membership } from 'src/membership/membership.entity';
+import { Story } from 'src/story/story.entity';
 
 @Entity()
 @ObjectType({
@@ -44,7 +45,6 @@ export class Forest implements Commentable {
   about: string;
 
   @ManyToOne(() => User, (founder) => founder.forests)
-  @JoinColumn()
   @Field(() => User)
   founder: User;
 
@@ -66,6 +66,9 @@ export class Forest implements Commentable {
 
   @OneToMany(() => Membership, (membership) => membership.member)
   memberships: Membership[];
+
+  @OneToMany(() => Story, (story) => story.forest)
+  stories: Story[];
 
   @CreateDateColumn()
   @Field(() => GraphQLISODateTime)

@@ -6,6 +6,5 @@ import { Commentable } from './interfaces/commentable.interface';
 @ChildEntity()
 export class ForestComment extends Comment {
   @ManyToOne(() => Forest, (forest) => forest.comments)
-  @JoinColumn()
   entity: Commentable;
 }

@@ -21,6 +21,7 @@ import { ForestModule } from './forest/forest.module';
 import { CommentModule } from './comment/comment.module';
 import { LikeModule } from './like/like.module';
 import { MembershipModule } from './membership/membership.module';
+import { StoryModule } from './story/story.module';
 
 @Module({
   imports: [
@@ -88,6 +89,7 @@ import { MembershipModule } from './membership/membership.module';
     CommentModule,
     LikeModule,
     MembershipModule,
+    StoryModule,
   ],
   providers: [
     {

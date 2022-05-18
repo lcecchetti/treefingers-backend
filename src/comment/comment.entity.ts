@@ -43,7 +43,6 @@ export class Comment implements Likeable {
   content: string;
 
   @ManyToOne(() => User, (user) => user.comments)
-  @JoinColumn()
   @Field(() => User)
   user: User;
 

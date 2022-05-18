@@ -20,7 +20,6 @@ export class Followership {
   id: number;
 
   @ManyToOne(() => User, (user) => user.followershipsAsFollowed)
-  @JoinColumn()
   @Field(() => User)
   followed: User;
 
@@ -29,7 +28,6 @@ export class Followership {
   followedId: number;
 
   @ManyToOne(() => User, (user) => user.followershipsAsFollower)
-  @JoinColumn()
   @Field(() => User)
   follower: User;
 

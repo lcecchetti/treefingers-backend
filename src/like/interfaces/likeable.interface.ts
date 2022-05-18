@@ -1,5 +1,6 @@
 import { Field, ID, Int, InterfaceType } from '@nestjs/graphql';
 import { Comment } from 'src/comment/comment.entity';
+import { Story } from 'src/story/story.entity';
 import { LikeableEntityType } from '../enums/likeable-entity-type.enum';
 import { Like } from '../like.entity';
 
@@ -8,6 +9,8 @@ import { Like } from '../like.entity';
     switch (likeable.likeableEntityType) {
       case LikeableEntityType.Comment:
         return Comment;
+      case LikeableEntityType.Story:
+        return Story;
     }
   },
 })

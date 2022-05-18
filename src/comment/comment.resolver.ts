@@ -25,6 +25,7 @@ import { UserDataloader } from 'src/user/dataloaders/user.dataloader';
 import { Loader } from '@tracworx/nestjs-dataloader';
 import { ForestDataloader } from 'src/forest/dataloaders/forest.dataloader';
 import { LikeDataloader } from 'src/like/dataloaders/like.dataloader';
+import { StoryDataloader } from 'src/story/dataloaders/story.dataloader';
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -81,11 +82,15 @@ export class CommentResolver {
   async entity(
     @Parent() comment: Comment,
     @Loader(ForestDataloader) forestDataloader,
+    @Loader(StoryDataloader) storyDataloader,
   ): Promise<Commentable> {
     let entity;
     switch (comment.entityType) {
       case CommentableEntityType.Forest:
         entity = await forestDataloader.load(comment.entityId);
+        break;
+      case CommentableEntityType.Story:
+        entity = await storyDataloader.load(comment.entityId);
         break;
     }
 

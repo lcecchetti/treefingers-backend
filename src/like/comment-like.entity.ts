@@ -6,6 +6,5 @@ import { Likeable } from './interfaces/likeable.interface';
 @ChildEntity()
 export class CommentLike extends Like {
   @ManyToOne(() => Comment, (comment) => comment.likes)
-  @JoinColumn()
   entity: Likeable;
 }

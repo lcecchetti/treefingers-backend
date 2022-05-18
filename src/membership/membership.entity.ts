@@ -21,7 +21,6 @@ export class Membership {
   id: number;
 
   @ManyToOne(() => Forest, (forest) => forest.memberships)
-  @JoinColumn()
   @Field(() => Forest)
   forest: Forest;
 

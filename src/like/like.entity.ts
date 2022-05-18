@@ -38,7 +38,6 @@ export class Like {
   entityId: number;
 
   @ManyToOne(() => User, (user) => user.likes)
-  @JoinColumn()
   @Field(() => User)
   user: User;
 
