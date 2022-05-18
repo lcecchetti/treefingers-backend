@@ -34,19 +34,12 @@ export class QueryService<Entity> {
         case 'lte':
         case 'gt':
         case 'gte':
-          where.andWhere(
-            `"${field}" ${operatorsMap[operator]} :${paramPre}${paramId}`,
-            {
-              [`${paramPre}${paramId}`]: value,
-            },
-          );
-          break;
         case 'like':
         case 'ilike':
           where.andWhere(
             `"${field}" ${operatorsMap[operator]} :${paramPre}${paramId}`,
             {
-              [`${paramPre}${paramId}`]: `%${value}%`,
+              [`${paramPre}${paramId}`]: value,
             },
           );
           break;
