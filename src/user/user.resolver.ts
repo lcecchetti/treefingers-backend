@@ -18,6 +18,9 @@ import { IsAuthenticatedGuard } from 'src/auth/guards/is-authenticated.guard';
 import { UseGuards } from '@nestjs/common';
 import { EditUserPayload } from './payloads/edit-user.payload';
 import { EditUserInput } from './inputs/edit-user.input';
+import { Followership } from 'src/followership/followership.entity';
+import { FollowershipDataloader } from 'src/followership/dataloaders/followership.dataloader';
+import { Loader } from '@tracworx/nestjs-dataloader';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -66,5 +69,21 @@ export class UserResolver {
   @ResolveField(() => String)
   async excerpt(@Parent() user: User): Promise<string> {
     return this.stringService.createExcerpt(user.bio);
+  }
+
+  @ResolveField(() => Followership, { nullable: true })
+  async currentUserFollowershipAsFollower(
+    @GetCurrentUser() currentUser: CurrentUser,
+    @Parent() user: User,
+    @Loader(FollowershipDataloader) followershipDataloader,
+  ): Promise<Followership | null> {
+    if (!currentUser) {
+      return null;
+    }
+
+    return followershipDataloader.load({
+      followedId: user.id,
+      followerId: currentUser.id,
+    });
   }
 }
