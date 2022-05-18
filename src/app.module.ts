@@ -20,6 +20,7 @@ import { FollowershipModule } from './followership/followership.module';
 import { ForestModule } from './forest/forest.module';
 import { CommentModule } from './comment/comment.module';
 import { LikeModule } from './like/like.module';
+import { MembershipModule } from './membership/membership.module';
 
 @Module({
   imports: [
@@ -86,6 +87,7 @@ import { LikeModule } from './like/like.module';
     ForestModule,
     CommentModule,
     LikeModule,
+    MembershipModule,
   ],
   providers: [
     {

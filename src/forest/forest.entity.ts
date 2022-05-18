@@ -20,6 +20,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ForestComment } from 'src/comment/forest-comment.entity';
+import { Membership } from 'src/membership/membership.entity';
 
 @Entity()
 @ObjectType({
@@ -62,6 +63,9 @@ export class Forest implements Commentable {
 
   @OneToMany(() => ForestComment, (comment) => comment.entity)
   comments: Comment[];
+
+  @OneToMany(() => Membership, (membership) => membership.member)
+  memberships: Membership[];
 
   @CreateDateColumn()
   @Field(() => GraphQLISODateTime)
