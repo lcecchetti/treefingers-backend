@@ -84,7 +84,7 @@ export class UserService {
     }*/
 
     return this.queryService.prepareQueryBuilder(
-      this.userRepository,
+      this.userRepository.createQueryBuilder(),
       filter,
       sort,
     );

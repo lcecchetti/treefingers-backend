@@ -1,10 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import {
-  Brackets,
-  Repository,
-  SelectQueryBuilder,
-  WhereExpressionBuilder,
-} from 'typeorm';
+import { Brackets, SelectQueryBuilder, WhereExpressionBuilder } from 'typeorm';
 import { FilterInput } from './inputs/filter.input';
 import { SortInput } from './inputs/sort.input';
 
@@ -122,12 +117,11 @@ export class QueryService<Entity> {
   }
 
   prepareQueryBuilder(
-    repository: Repository<Entity>,
+    queryBuilder: SelectQueryBuilder<Entity>,
     filter: FilterInput,
     sort: SortInput = new SortInput(),
   ): SelectQueryBuilder<Entity> {
-    const queryBuilder = repository.createQueryBuilder();
-    this.addFilter(queryBuilder, filter);
+    queryBuilder.andWhere(new Brackets((qb) => this.addFilter(qb, filter)));
     this.addSort(queryBuilder, sort);
     return queryBuilder;
   }
