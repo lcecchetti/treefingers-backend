@@ -37,12 +37,18 @@ export class FollowershipService {
     followedId,
     followerId,
   }: UnfollowInput): Promise<Followership | null> {
-    const follow = await this.findOne({
+    const followership = await this.findOne({
       followedId: { eq: followedId },
       followerId: { eq: followerId },
     });
 
-    return this.followershipRepository.remove(follow);
+    if (!followership) {
+      return null;
+    }
+
+    await this.followershipRepository.delete(followership.id);
+
+    return followership;
   }
 
   prepareQueryBuilder(

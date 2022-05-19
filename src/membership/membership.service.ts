@@ -37,7 +37,13 @@ export class MembershipService {
       memberId: { eq: memberId },
     });
 
-    return this.membershipRepository.remove(membership);
+    if (!membership) {
+      return null;
+    }
+
+    await this.membershipRepository.delete(membership.id);
+
+    return membership;
   }
 
   prepareQueryBuilder(

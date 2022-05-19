@@ -15,7 +15,9 @@ import {
 import { Likeable } from './interfaces/likeable.interface';
 
 @Entity()
-@TableInheritance({ column: { type: 'varchar', name: 'entityType' } })
+@TableInheritance({
+  column: { type: 'enum', name: 'entityType', enum: LikeableEntityType },
+})
 @Index(['user', 'entityId', 'entityType'], { unique: true })
 @ObjectType()
 export class Like {
@@ -23,10 +25,6 @@ export class Like {
   @Field(() => ID)
   id: number;
 
-  @Column({
-    type: 'enum',
-    enum: LikeableEntityType,
-  })
   @Field(() => LikeableEntityType)
   entityType: LikeableEntityType;
 

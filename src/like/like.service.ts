@@ -3,7 +3,6 @@ import { Like } from './like.entity';
 import { FilterLikeInput } from './inputs/filter-like.input';
 import { LikeInput } from './inputs/like.input';
 import { DislikeInput } from './inputs/dislike.input';
-import { LikeableEntityType } from './enums/likeable-entity-type.enum';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { QueryService } from 'src/query/query.service';
@@ -44,7 +43,13 @@ export class LikeService {
       userId: { eq: userId },
     });
 
-    return this.likeRepository.remove(like);
+    if (!like) {
+      return null;
+    }
+
+    await this.likeRepository.delete(like.id);
+
+    return like;
   }
 
   prepareQueryBuilder(

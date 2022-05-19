@@ -15,7 +15,6 @@ import {
   CreateDateColumn,
   Entity,
   Index,
-  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -26,7 +25,9 @@ import { CommentLike } from 'src/like/comment-like.entity';
 import { Commentable } from './interfaces/commentable.interface';
 
 @Entity()
-@TableInheritance({ column: { type: 'varchar', name: 'entityType' } })
+@TableInheritance({
+  column: { type: 'enum', name: 'entityType', enum: CommentableEntityType },
+})
 @Index(['entityType', 'entityId'], { unique: true })
 @ObjectType({
   implements: () => [Likeable],
@@ -50,10 +51,6 @@ export class Comment implements Likeable {
   @Index()
   userId: number;
 
-  @Column({
-    type: 'enum',
-    enum: CommentableEntityType,
-  })
   @Field(() => CommentableEntityType)
   entityType: CommentableEntityType;
 

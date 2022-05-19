@@ -85,7 +85,7 @@ export class ForestResolver {
     }
 
     return membershipDataloader.load({
-      forestId: forest,
+      forestId: forest.id,
       memberId: currentUser.id,
     });
   }
