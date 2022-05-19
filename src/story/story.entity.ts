@@ -61,6 +61,10 @@ export class Story implements Likeable, Commentable {
   @TreeParent()
   parent?: Story;
 
+  @TreeLevelColumn()
+  @Index()
+  level: number;
+
   @Column({ nullable: true })
   @Index()
   parentId?: number;

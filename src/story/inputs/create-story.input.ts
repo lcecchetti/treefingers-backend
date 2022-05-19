@@ -26,6 +26,7 @@ export class CreateStoryDataInput {
 
   authorId: number;
   rootId: number;
+  level: number;
 }
 @InputType()
 export class CreateStoryInput {

@@ -35,10 +35,12 @@ export class StoryService {
       throw new BadRequestException('Forest is required on root stories');
     }
 
+    data.level = 0;
     if (data.parentId) {
       const parent = await this.findById(data.parentId);
       data.rootId = parent.rootId || parent.id;
       data.forestId = undefined;
+      data.level = parent.level + 1;
     }
 
     return this.storyRepository.save(data);
