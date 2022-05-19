@@ -65,7 +65,7 @@ export class ForestService {
     if (query) {
       queryBuilder.andWhere(
         new Brackets((qb) => {
-          qb.where(`"name" ilike :query_username`, {
+          qb.where(`"name" ilike :query_name`, {
             ['query_name']: `%${query}%`,
           });
           qb.orWhere(`"about" ilike :query_about`, {

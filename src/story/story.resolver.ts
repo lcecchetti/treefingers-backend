@@ -95,7 +95,7 @@ export class StoryResolver {
     return userDataloader.load(String(story.authorId));
   }
 
-  @ResolveField(() => Story)
+  @ResolveField(() => Story, { nullable: true })
   async parent(
     @Parent() story: Story,
     @Loader(StoryDataloader) storyDataloader,
@@ -107,9 +107,16 @@ export class StoryResolver {
     return storyDataloader.load(story.parentId);
   }
 
-  @ResolveField(() => Story)
-  async root(@Parent() story: Story): Promise<Story> {
-    return this.storyService.findRoot(story.id);
+  @ResolveField(() => Story, { nullable: true })
+  async root(
+    @Parent() story: Story,
+    @Loader(StoryDataloader) storyDataloader,
+  ): Promise<Story | null> {
+    if (!story.rootId) {
+      return null;
+    }
+
+    return storyDataloader.load(story.rootId);
   }
 
   @ResolveField(() => Forest, { nullable: true })

@@ -61,16 +61,19 @@ export class Story implements Likeable, Commentable {
   @TreeParent()
   parent?: Story;
 
-  @Column()
+  @Column({ nullable: true })
   @Index()
-  parentId: number;
+  parentId?: number;
+
+  @OneToMany(() => Story, (root) => root.descendents)
+  root?: Story;
+
+  @Column({ nullable: true })
+  @Index()
+  rootId?: number;
 
   @TreeChildren()
   chapters: Story[];
-
-  @TreeLevelColumn()
-  @Index()
-  level: number;
 
   @Column({ type: 'simple-array' })
   @Index()
@@ -79,6 +82,9 @@ export class Story implements Likeable, Commentable {
 
   @ManyToOne(() => Forest, (forest) => forest.stories)
   forest?: Forest;
+
+  @ManyToOne(() => Story, (chapter) => chapter.root)
+  descendents: Story[];
 
   @Column()
   @Index()
@@ -97,7 +103,7 @@ export class Story implements Likeable, Commentable {
   likesCount: number;
 
   @Field(() => Int, { defaultValue: 0 })
-  descendantsCount: number;
+  descendentsCount: number;
 
   @Field(() => Int, { defaultValue: 0 })
   childrenCount: number;

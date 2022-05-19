@@ -21,6 +21,8 @@ import { UseGuards } from '@nestjs/common';
 import { IsAuthenticatedGuard } from 'src/auth/guards/is-authenticated.guard';
 import { Loader } from '@tracworx/nestjs-dataloader';
 import { ForestDataloader } from './dataloaders/forest.dataloader';
+import { Membership } from 'src/membership/membership.entity';
+import { MembershipDataloader } from 'src/membership/dataloaders/membership.dataloader';
 
 @Resolver(() => Forest)
 export class ForestResolver {
@@ -70,5 +72,21 @@ export class ForestResolver {
     @Loader(ForestDataloader) forestDataloader,
   ): Promise<User> {
     return forestDataloader.load(forest.founderId);
+  }
+
+  @ResolveField(() => Membership, { nullable: true })
+  async currentUserMembership(
+    @GetCurrentUser() currentUser: CurrentUser,
+    @Parent() forest: Forest,
+    @Loader(MembershipDataloader) membershipDataloader,
+  ): Promise<Membership | null> {
+    if (!currentUser) {
+      return null;
+    }
+
+    return membershipDataloader.load({
+      forestId: forest,
+      memberId: currentUser.id,
+    });
   }
 }

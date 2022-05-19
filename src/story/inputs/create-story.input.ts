@@ -25,6 +25,7 @@ export class CreateStoryDataInput {
   forestId?: number;
 
   authorId: number;
+  rootId: number;
 }
 @InputType()
 export class CreateStoryInput {

@@ -35,21 +35,13 @@ export class StoryService {
       throw new BadRequestException('Forest is required on root stories');
     }
 
-    // populate parent based fields
     if (data.parentId) {
+      const parent = await this.findById(data.parentId);
+      data.rootId = parent.rootId || parent.id;
       data.forestId = undefined;
     }
 
     return this.storyRepository.save(data);
-  }
-
-  async findRoot(id: number): Promise<Story | null> {
-    const chapter = await this.findById(id);
-
-    return this.storyRepository
-      .createAncestorsQueryBuilder('story', 'story_closure', chapter)
-      .andWhere("story.level = '0'")
-      .getOne();
   }
 
   async paginate(

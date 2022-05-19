@@ -1,4 +1,10 @@
-import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
+import {
+  Field,
+  GraphQLISODateTime,
+  ID,
+  Int,
+  ObjectType,
+} from '@nestjs/graphql';
 import { isPrivateMiddleware } from './middleware/is-private.middleware';
 import {
   Column,
@@ -66,6 +72,15 @@ export class User {
 
   @OneToMany(() => Story, (story) => story.author)
   stories: Story[];
+
+  @Field(() => Int, { defaultValue: 0 })
+  likesCount: number;
+
+  @Field(() => Int, { defaultValue: 0 })
+  storiesCount: number;
+
+  @Field(() => Int, { defaultValue: 0 })
+  followersCount: number;
 
   @CreateDateColumn()
   @Field(() => GraphQLISODateTime, { middleware: [isPrivateMiddleware] })
