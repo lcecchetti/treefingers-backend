@@ -39,7 +39,6 @@ export class Story implements Likeable, Commentable {
   id: number;
 
   likeableEntityType: LikeableEntityType;
-  commentableEntityType: CommentableEntityType;
 
   @Column()
   @Index()

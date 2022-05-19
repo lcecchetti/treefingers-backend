@@ -64,7 +64,7 @@ export class CommentResolver {
     }
 
     return likeDataloader.load({
-      entityType: LikeableEntityType.Comment,
+      entityType: LikeableEntityType.CommentLike,
       entityId: comment.id,
       userId: currentUser.id,
     });
@@ -84,17 +84,11 @@ export class CommentResolver {
     @Loader(ForestDataloader) forestDataloader,
     @Loader(StoryDataloader) storyDataloader,
   ): Promise<Commentable> {
-    let entity;
-    switch (comment.entityType) {
-      case CommentableEntityType.Forest:
-        entity = await forestDataloader.load(comment.entityId);
-        break;
-      case CommentableEntityType.Story:
-        entity = await storyDataloader.load(comment.entityId);
-        break;
+    switch (comment.constructor.name) {
+      case CommentableEntityType.ForestComment:
+        return forestDataloader.load(comment.entityId);
+      case CommentableEntityType.StoryComment:
+        return storyDataloader.load(comment.entityId);
     }
-
-    entity.commentableEntityType = comment.entityType;
-    return entity;
   }
 }

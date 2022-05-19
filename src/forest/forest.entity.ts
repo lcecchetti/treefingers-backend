@@ -31,8 +31,6 @@ export class Forest implements Commentable {
   @Field(() => ID)
   id: number;
 
-  commentableEntityType: CommentableEntityType;
-
   @Column()
   @Index({ unique: true })
   @Field()

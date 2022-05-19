@@ -1,8 +1,8 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum LikeableEntityType {
-  Comment = 'Comment',
-  Story = 'Story',
+  CommentLike = 'CommentLike',
+  StoryLike = 'StoryLike',
 }
 
 registerEnumType(LikeableEntityType, { name: 'LikeableEntityType' });

@@ -9,11 +9,18 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { QueryService } from 'src/query/query.service';
 import { SortCommentInput } from './inputs/sort-comment.input';
+import { ForestComment } from './forest-comment.entity';
+import { CommentableEntityType } from './enums/commentable-entity-type.enum';
+import { StoryComment } from './story-comment.entity';
 
 @Injectable()
 export class CommentService {
   constructor(
     @InjectRepository(Comment) private commentRepository: Repository<Comment>,
+    @InjectRepository(ForestComment)
+    private forestCommentRepository: Repository<ForestComment>,
+    @InjectRepository(StoryComment)
+    private storyCommentRepository: Repository<StoryComment>,
     private paginationService: PaginationService<Comment>,
     private queryService: QueryService<Comment>,
   ) {}
@@ -31,7 +38,12 @@ export class CommentService {
   }
 
   async create(data: CommentDataInput): Promise<Comment> {
-    return this.commentRepository.save(data);
+    switch (data.entityType) {
+      case CommentableEntityType.ForestComment:
+        return this.forestCommentRepository.save(data);
+      case CommentableEntityType.StoryComment:
+        return this.storyCommentRepository.save(data);
+    }
   }
 
   async paginate(

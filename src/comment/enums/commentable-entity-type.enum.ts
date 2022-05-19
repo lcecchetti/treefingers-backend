@@ -1,8 +1,8 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum CommentableEntityType {
-  Forest = 'Forest',
-  Story = 'Story',
+  ForestComment = 'ForestComment',
+  StoryComment = 'StoryComment',
 }
 
 registerEnumType(CommentableEntityType, { name: 'CommentableEntityType' });

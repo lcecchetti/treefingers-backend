@@ -16,17 +16,16 @@ const operatorsMap = {
   ilike: 'ILIKE',
 };
 
-const paramPre = 'filter_';
-
 @Injectable()
 export class QueryService<Entity> {
   addCondition(
     where: WhereExpressionBuilder,
     filter: FilterInput,
     field: string,
-    paramId: number,
+    paramId: string,
   ): WhereExpressionBuilder {
     Object.entries(filter).map(([operator, value]) => {
+      paramId += `_${operator}`;
       switch (operator) {
         case 'eq':
         case 'neq':
@@ -36,19 +35,16 @@ export class QueryService<Entity> {
         case 'gte':
         case 'like':
         case 'ilike':
-          where.andWhere(
-            `"${field}" ${operatorsMap[operator]} :${paramPre}${paramId}`,
-            {
-              [`${paramPre}${paramId}`]: value,
-            },
-          );
+          where.andWhere(`"${field}" ${operatorsMap[operator]} :${paramId}`, {
+            [`${paramId}`]: value,
+          });
           break;
         case 'in':
         case 'nin':
           where.andWhere(
-            `"${field}" ${operatorsMap[operator]} (:...${paramPre}${paramId})`,
+            `"${field}" ${operatorsMap[operator]} (:...${paramId})`,
             {
-              [`${paramPre}${paramId}`]: value,
+              [`${paramId}`]: value,
             },
           );
           break;
@@ -62,22 +58,24 @@ export class QueryService<Entity> {
     where: WhereExpressionBuilder,
     filter: FilterInput,
     field = '',
-    paramId = 0,
+    paramId = 'filter',
   ) {
     if (!filter) {
       return where;
     }
 
     Object.entries(filter).map(([key, value]) => {
+      paramId += `_${key}`;
       switch (key) {
         case 'or':
         case 'and':
           where.andWhere(
             new Brackets((qb) =>
-              value.forEach((subFilter) => {
+              value.forEach((subFilter, index) => {
+                paramId += `_${index}`;
                 qb[`${key}Where`](
                   new Brackets((andOrQb) =>
-                    this.addFilter(andOrQb, subFilter, key, paramId++),
+                    this.addFilter(andOrQb, subFilter, key, paramId),
                   ),
                 );
               }),
@@ -86,9 +84,9 @@ export class QueryService<Entity> {
           break;
         default:
           if (operatorsMap[key]) {
-            this.addCondition(where, filter, field, paramId++);
+            this.addCondition(where, filter, field, paramId);
           } else {
-            this.addFilter(where, value, key, paramId++);
+            this.addFilter(where, value, key, paramId);
           }
       }
     });

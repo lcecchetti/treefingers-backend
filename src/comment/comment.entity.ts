@@ -28,7 +28,7 @@ import { Commentable } from './interfaces/commentable.interface';
 @TableInheritance({
   column: { type: 'enum', name: 'entityType', enum: CommentableEntityType },
 })
-@Index(['entityType', 'entityId'], { unique: true })
+@Index(['entityType', 'entityId'])
 @ObjectType({
   implements: () => [Likeable],
 })
@@ -36,8 +36,6 @@ export class Comment implements Likeable {
   @PrimaryGeneratedColumn()
   @Field(() => ID)
   id: number;
-
-  likeableEntityType: LikeableEntityType;
 
   @Column({ type: 'text' })
   @Field()
