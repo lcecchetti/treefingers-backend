@@ -92,7 +92,7 @@ export class StoryResolver {
     @Parent() story: Story,
     @Loader(UserDataloader) userDataloader,
   ): Promise<User> {
-    return userDataloader.load(String(story.authorId));
+    return userDataloader.load(story.authorId);
   }
 
   @ResolveField(() => Story, { nullable: true })

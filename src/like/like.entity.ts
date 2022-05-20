@@ -24,6 +24,7 @@ export class Like {
   @Field(() => ID)
   id: number;
 
+  @Column({ type: 'enum', name: 'entityType', enum: LikeableEntityType })
   @Field(() => LikeableEntityType)
   entityType: LikeableEntityType;
 

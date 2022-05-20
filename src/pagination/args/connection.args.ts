@@ -7,17 +7,17 @@ export class ConnectionArgs {
   @IsOptional()
   @Min(1)
   @Max(10)
-  readonly first?: number;
+  first?: number;
 
   @Field(() => Int, { nullable: true })
   @IsOptional()
   @Min(1)
   @Max(10)
-  readonly last?: number;
+  last?: number;
 
   @Field({ nullable: true })
-  readonly before?: string;
+  before?: string;
 
   @Field({ nullable: true })
-  readonly after?: string;
+  after?: string;
 }

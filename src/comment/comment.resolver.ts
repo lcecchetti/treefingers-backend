@@ -84,7 +84,7 @@ export class CommentResolver {
     @Loader(ForestDataloader) forestDataloader,
     @Loader(StoryDataloader) storyDataloader,
   ): Promise<Commentable> {
-    switch (comment.constructor.name) {
+    switch (comment.entityType) {
       case CommentableEntityType.ForestComment:
         return forestDataloader.load(comment.entityId);
       case CommentableEntityType.StoryComment:

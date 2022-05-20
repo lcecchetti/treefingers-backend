@@ -49,6 +49,7 @@ export class Comment implements Likeable {
   @Index()
   userId: number;
 
+  @Column({ type: 'enum', name: 'entityType', enum: CommentableEntityType })
   @Field(() => CommentableEntityType)
   entityType: CommentableEntityType;
 
