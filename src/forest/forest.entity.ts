@@ -7,7 +7,6 @@ import {
 } from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
 import { Commentable } from 'src/comment/interfaces/commentable.interface';
-import { CommentableEntityType } from 'src/comment/enums/commentable-entity-type.enum';
 import {
   Column,
   CreateDateColumn,
@@ -21,6 +20,7 @@ import {
 import { ForestComment } from 'src/comment/forest-comment.entity';
 import { Membership } from 'src/membership/membership.entity';
 import { Story } from 'src/story/story.entity';
+import { Comment } from 'src/comment/comment.entity';
 
 @Entity()
 @ObjectType({
