@@ -37,9 +37,9 @@ export class LikeService {
 
   async like(input: LikeInput): Promise<Like> {
     switch (input.entityType) {
-      case LikeableEntityType.CommentLike:
+      case LikeableEntityType.Comment:
         return this.commentLikeRepository.save(input);
-      case LikeableEntityType.StoryLike:
+      case LikeableEntityType.Story:
         return this.storyLikeRepository.save(input);
     }
   }

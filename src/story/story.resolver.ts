@@ -76,7 +76,7 @@ export class StoryResolver {
     }
 
     return likeDataloader.load({
-      entityType: LikeableEntityType.StoryLike,
+      entityType: LikeableEntityType.Story,
       entityId: story.id,
       userId: currentUser.id,
     });

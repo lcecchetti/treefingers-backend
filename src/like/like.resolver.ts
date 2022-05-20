@@ -70,9 +70,9 @@ export class LikeResolver {
     @Loader(StoryDataloader) storyDataloader,
   ): Promise<Likeable> {
     switch (like.entityType) {
-      case LikeableEntityType.CommentLike:
+      case LikeableEntityType.Comment:
         return commentDataloader.load(like.entityId);
-      case LikeableEntityType.StoryLike:
+      case LikeableEntityType.Story:
         return storyDataloader.load(like.entityId);
     }
   }

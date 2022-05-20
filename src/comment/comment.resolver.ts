@@ -64,7 +64,7 @@ export class CommentResolver {
     }
 
     return likeDataloader.load({
-      entityType: LikeableEntityType.CommentLike,
+      entityType: LikeableEntityType.Comment,
       entityId: comment.id,
       userId: currentUser.id,
     });
@@ -85,9 +85,9 @@ export class CommentResolver {
     @Loader(StoryDataloader) storyDataloader,
   ): Promise<Commentable> {
     switch (comment.entityType) {
-      case CommentableEntityType.ForestComment:
+      case CommentableEntityType.Forest:
         return forestDataloader.load(comment.entityId);
-      case CommentableEntityType.StoryComment:
+      case CommentableEntityType.Story:
         return storyDataloader.load(comment.entityId);
     }
   }

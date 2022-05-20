@@ -39,9 +39,9 @@ export class CommentService {
 
   async create(data: CommentDataInput): Promise<Comment> {
     switch (data.entityType) {
-      case CommentableEntityType.ForestComment:
+      case CommentableEntityType.Forest:
         return this.forestCommentRepository.save(data);
-      case CommentableEntityType.StoryComment:
+      case CommentableEntityType.Story:
         return this.storyCommentRepository.save(data);
     }
   }

@@ -7,7 +7,6 @@ import {
 } from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
 import { Likeable } from 'src/like/interfaces/likeable.interface';
-import { LikeableEntityType } from 'src/like/enums/likeable-entity-type.enum';
 import { Like } from 'src/like/like.entity';
 import { CommentableEntityType } from './enums/commentable-entity-type.enum';
 import {
