@@ -53,10 +53,10 @@ export class User {
   isActive: boolean;
 
   @OneToMany(() => Followership, (followership) => followership.followed)
-  followershipsAsFollowed: Followership;
+  followershipsAsFollowed: Followership[];
 
   @OneToMany(() => Followership, (followership) => followership.follower)
-  followershipsAsFollower: Followership;
+  followershipsAsFollower: Followership[];
 
   @OneToMany(() => Forest, (forest) => forest.founder)
   forests: Forest[];

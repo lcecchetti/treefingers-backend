@@ -28,6 +28,16 @@ export class QueryService<Entity> {
       paramId += `_${operator}`;
       switch (operator) {
         case 'eq':
+          if (value === null) {
+            where.andWhere(`"${field}" IS NULL`);
+            break;
+          }
+        case 'neq':
+          if (value === null) {
+            where.andWhere(`"${field}" IS NOT NULL`);
+            break;
+          }
+        case 'eq':
         case 'neq':
         case 'lt':
         case 'lte':
