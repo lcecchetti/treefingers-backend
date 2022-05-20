@@ -11,7 +11,6 @@ import { Likeable } from 'src/like/interfaces/likeable.interface';
 import { LikeableEntityType } from 'src/like/enums/likeable-entity-type.enum';
 import { Like } from 'src/like/like.entity';
 import { Commentable } from 'src/comment/interfaces/commentable.interface';
-import { CommentableEntityType } from 'src/comment/enums/commentable-entity-type.enum';
 import {
   Column,
   CreateDateColumn,
@@ -20,16 +19,11 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  Tree,
-  TreeChildren,
-  TreeLevelColumn,
-  TreeParent,
   UpdateDateColumn,
 } from 'typeorm';
 import { Comment } from 'src/comment/comment.entity';
 
 @Entity()
-@Tree('closure-table')
 @ObjectType({
   implements: () => [Likeable, Commentable],
 })
@@ -57,12 +51,8 @@ export class Story implements Likeable, Commentable {
   @Index()
   authorId: number;
 
-  @TreeParent()
+  @OneToMany(() => Story, (chapter) => chapter.parent)
   parent?: Story;
-
-  @TreeLevelColumn()
-  @Index()
-  level: number;
 
   @Column({ nullable: true })
   @Index()
@@ -75,7 +65,7 @@ export class Story implements Likeable, Commentable {
   @Index()
   rootId?: number;
 
-  @TreeChildren()
+  @ManyToOne(() => Story, (parent) => parent.chapters)
   chapters: Story[];
 
   @Column({ type: 'simple-array' })
@@ -89,7 +79,7 @@ export class Story implements Likeable, Commentable {
   @ManyToOne(() => Story, (chapter) => chapter.root)
   descendents: Story[];
 
-  @Column()
+  @Column({ nullable: true })
   @Index()
   forestId?: number;
 
