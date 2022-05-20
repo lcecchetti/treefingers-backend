@@ -140,7 +140,7 @@ export class PaginationService<Entity extends ObjectLiteral> {
 
     // get nodes
     //@todo improve performances by removing skip and querying first item in reversed order
-    const nodes = await queryBuilder.limit(limit).skip(skip).getMany();
+    const nodes = await queryBuilder.take(limit).skip(skip).getMany();
 
     const result: IConnection<Entity> = {};
 
