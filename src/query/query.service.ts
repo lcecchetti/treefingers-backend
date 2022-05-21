@@ -108,7 +108,7 @@ export class QueryService<Entity> {
     }
 
     Object.entries(sort).map(([key, value]) => {
-      queryBuilder.addOrderBy(key, value);
+      queryBuilder.addOrderBy(`"${key}"`, value);
     });
   }
 
