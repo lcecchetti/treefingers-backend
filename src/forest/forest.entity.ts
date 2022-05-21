@@ -17,10 +17,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ForestComment } from 'src/comment/forest-comment.entity';
 import { Membership } from 'src/membership/membership.entity';
 import { Story } from 'src/story/story.entity';
-import { Comment } from 'src/comment/comment.entity';
 
 @Entity()
 @ObjectType({
@@ -57,9 +55,6 @@ export class Forest implements Commentable {
 
   @Field(() => Int, { defaultValue: 0 })
   storiesCount: number;
-
-  @OneToMany(() => ForestComment, (comment) => comment.entity)
-  comments: Comment[];
 
   @OneToMany(() => Membership, (membership) => membership.member)
   memberships: Membership[];

@@ -6,15 +6,9 @@ import { CommentDataloader } from './dataloaders/comment.dataloader';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { QueryModule } from 'src/query/query.module';
 import { Comment } from './comment.entity';
-import { ForestComment } from './forest-comment.entity';
-import { StoryComment } from './story-comment.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Comment, ForestComment, StoryComment]),
-    PaginationModule,
-    QueryModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Comment]), PaginationModule, QueryModule],
   providers: [CommentService, CommentResolver, CommentDataloader],
   exports: [CommentService, CommentDataloader],
 })

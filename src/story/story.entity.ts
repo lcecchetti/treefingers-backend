@@ -83,12 +83,6 @@ export class Story implements Likeable, Commentable {
   @Index()
   forestId?: number;
 
-  @OneToMany(() => Like, (like) => like.entity)
-  likes: Like[];
-
-  @OneToMany(() => Comment, (comment) => comment.entity)
-  comments: Comment[];
-
   @Field(() => Int, { defaultValue: 0 })
   commentsCount: number;
 

@@ -8,18 +8,11 @@ import { Repository } from 'typeorm';
 import { QueryService } from 'src/query/query.service';
 import { SortUserInput } from 'src/user/inputs/sort-user.input';
 import { FilterUserInput } from 'src/user/inputs/filter-user.input';
-import { CommentLike } from './comment-like.entity';
-import { StoryLike } from './story-like.entity';
-import { LikeableEntityType } from './enums/likeable-entity-type.enum';
 
 @Injectable()
 export class LikeService {
   constructor(
     @InjectRepository(Like) private likeRepository: Repository<Like>,
-    @InjectRepository(CommentLike)
-    private commentLikeRepository: Repository<CommentLike>,
-    @InjectRepository(StoryLike)
-    private storyLikeRepository: Repository<StoryLike>,
     private queryService: QueryService<Like>,
   ) {}
 
@@ -36,12 +29,7 @@ export class LikeService {
   }
 
   async like(input: LikeInput): Promise<Like> {
-    switch (input.entityType) {
-      case LikeableEntityType.Comment:
-        return this.commentLikeRepository.save(input);
-      case LikeableEntityType.Story:
-        return this.storyLikeRepository.save(input);
-    }
+    return this.likeRepository.save(input);
   }
 
   async dislike({

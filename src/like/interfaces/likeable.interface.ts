@@ -11,6 +11,4 @@ export abstract class Likeable {
 
   @Field(() => Like, { nullable: true })
   currentUserLike: Like;
-
-  likes: Like[];
 }

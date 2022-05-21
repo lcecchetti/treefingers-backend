@@ -8,16 +8,13 @@ import {
   Index,
   ManyToOne,
   PrimaryGeneratedColumn,
-  TableInheritance,
   UpdateDateColumn,
 } from 'typeorm';
 import { Likeable } from './interfaces/likeable.interface';
 
 @Entity()
-@TableInheritance({
-  column: { type: 'enum', name: 'entityType', enum: LikeableEntityType },
-})
 @Index(['user', 'entityId', 'entityType'], { unique: true })
+@Index(['entityId', 'entityType'])
 @ObjectType()
 export class Like {
   @PrimaryGeneratedColumn()
@@ -28,6 +25,7 @@ export class Like {
   @Field(() => LikeableEntityType)
   entityType: LikeableEntityType;
 
+  
   @Field(() => Likeable)
   entity: Likeable;
 

@@ -5,14 +5,9 @@ import { LikeDataloader } from './dataloaders/like.dataloader';
 import { QueryModule } from 'src/query/query.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Like } from './like.entity';
-import { CommentLike } from './comment-like.entity';
-import { StoryLike } from './story-like.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Like, CommentLike, StoryLike]),
-    QueryModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Like]), QueryModule],
   providers: [LikeService, LikeResolver, LikeDataloader],
   exports: [LikeService, LikeDataloader],
 })

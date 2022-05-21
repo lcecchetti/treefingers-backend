@@ -15,18 +15,12 @@ import {
   Entity,
   Index,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
-  TableInheritance,
   UpdateDateColumn,
 } from 'typeorm';
-import { CommentLike } from 'src/like/comment-like.entity';
 import { Commentable } from './interfaces/commentable.interface';
 
 @Entity()
-@TableInheritance({
-  column: { type: 'enum', name: 'entityType', enum: CommentableEntityType },
-})
 @Index(['entityType', 'entityId'])
 @ObjectType({
   implements: () => [Likeable],
@@ -56,6 +50,7 @@ export class Comment implements Likeable {
   entity: Commentable;
 
   @Column()
+  @Index()
   entityId: number;
 
   @Field(() => Int, { defaultValue: 0 })
@@ -63,9 +58,6 @@ export class Comment implements Likeable {
 
   @Field(() => Like, { nullable: true })
   currentUserLike: Like;
-
-  @OneToMany(() => CommentLike, (like) => like.entity)
-  likes: Like[];
 
   @CreateDateColumn()
   @Field(() => GraphQLISODateTime)
