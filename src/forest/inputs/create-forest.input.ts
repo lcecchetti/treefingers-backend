@@ -12,7 +12,7 @@ export class CreateForestDataInput {
   @MaxLength(4096)
   about: string;
 
-  founderId: number;
+  founder: number;
 }
 @InputType()
 export class CreateForestInput {

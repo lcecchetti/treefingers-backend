@@ -1,4 +1,4 @@
-import * as DataLoader from 'dataloader';
+import DataLoader from 'dataloader';
 import { DataloaderProvider } from '@tracworx/nestjs-dataloader';
 import { CommentService } from '../comment.service';
 import { Comment } from '../comment.entity';

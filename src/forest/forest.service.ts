@@ -5,15 +5,16 @@ import { CreateForestDataInput } from './inputs/create-forest.input';
 import { ForestConnection } from './dto/forest-connection.dto';
 import { FilterForestInput } from './inputs/filter-forest.input';
 import { PaginationService } from 'src/pagination/pagination.service';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Brackets, Repository } from 'typeorm';
 import { QueryService } from 'src/query/query.service';
 import { SortForestInput } from './inputs/sort-forest.input';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityRepository } from '@mikro-orm/postgresql';
 
 @Injectable()
 export class ForestService {
   constructor(
-    @InjectRepository(Forest) private forestRepository: Repository<Forest>,
+    @InjectRepository(Forest)
+    private forestRepository: EntityRepository<Forest>,
     private paginationService: PaginationService<Forest>,
     private queryService: QueryService<Forest>,
   ) {}
@@ -38,7 +39,9 @@ export class ForestService {
       throw new ConflictException('Forest with same name already exists');
     }
 
-    return this.forestRepository.save(data);
+    const forest = await this.forestRepository.create(data);
+    await this.forestRepository.persistAndFlush(forest);
+    return forest;
   }
 
   async paginate(
@@ -60,21 +63,6 @@ export class ForestService {
     sort: SortForestInput = new SortForestInput(),
   ) {
     const queryBuilder = this.forestRepository.createQueryBuilder();
-
-    // add query conditon
-    if (query) {
-      queryBuilder.andWhere(
-        new Brackets((qb) => {
-          qb.where(`"name" ilike :query_name`, {
-            ['query_name']: `%${query}%`,
-          });
-          qb.orWhere(`"about" ilike :query_about`, {
-            ['query_about']: `%${query}%`,
-          });
-        }),
-      );
-    }
-
     return this.queryService.prepareQueryBuilder(queryBuilder, filter, sort);
   }
 }

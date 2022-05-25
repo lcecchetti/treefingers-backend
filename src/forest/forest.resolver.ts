@@ -56,7 +56,7 @@ export class ForestResolver {
     return {
       forest: await this.forestService.create({
         ...data,
-        founderId: currentUser.id,
+        founder: currentUser.id,
       }),
     };
   }
@@ -71,7 +71,7 @@ export class ForestResolver {
     @Parent() forest: Forest,
     @Loader(ForestDataloader) forestDataloader,
   ): Promise<User> {
-    return forestDataloader.load(forest.founderId);
+    return forestDataloader.load(forest.founder.id);
   }
 
   @ResolveField(() => Membership, { nullable: true })
@@ -85,8 +85,8 @@ export class ForestResolver {
     }
 
     return membershipDataloader.load({
-      forestId: forest.id,
-      memberId: currentUser.id,
+      forest: forest.id,
+      member: currentUser.id,
     });
   }
 }

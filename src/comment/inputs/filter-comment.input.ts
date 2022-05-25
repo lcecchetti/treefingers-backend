@@ -17,7 +17,7 @@ export class FilterCommentInput extends FilterInput {
   or?: FilterCommentInput[];
 
   @Field(() => FilterIdInput, { nullable: true })
-  entityId?: FilterIdInput;
+  entity?: FilterIdInput;
 
   @Field(() => FilterCommentableEntityTypeInput, { nullable: true })
   entityType?: FilterCommentableEntityTypeInput;

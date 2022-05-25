@@ -12,7 +12,7 @@ export class CreateStoryDataInput {
   content: string;
 
   @Field(() => ID, { nullable: true })
-  parentId?: number;
+  parent?: number;
 
   @Field(() => [String], { nullable: true })
   @MaxLength(16, {
@@ -22,10 +22,10 @@ export class CreateStoryDataInput {
   tags?: string[];
 
   @Field(() => ID, { nullable: true })
-  forestId?: number;
+  forest?: number;
 
-  authorId: number;
-  rootId: number;
+  author: number;
+  root: number;
   level: number;
 }
 @InputType()

@@ -1,44 +1,37 @@
-import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
-import { User } from 'src/user/user.entity';
 import {
-  Column,
-  CreateDateColumn,
   Entity,
   Index,
   ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+  PrimaryKey,
+  Property,
+  Unique,
+} from '@mikro-orm/core';
+import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
+import { User } from 'src/user/user.entity';
 
 @Entity()
-@Index(['followedId', 'followerId'], { unique: true })
+@Unique({ properties: ['followed', 'follower'] })
 @ObjectType()
 export class Followership {
-  @PrimaryGeneratedColumn()
+  @PrimaryKey()
   @Field(() => ID)
   id: number;
 
-  @ManyToOne(() => User, (user) => user.followershipsAsFollowed)
+  @ManyToOne(() => User)
+  @Index()
   @Field(() => User)
   followed: User;
 
-  @Column()
+  @ManyToOne(() => User)
   @Index()
-  followedId: number;
-
-  @ManyToOne(() => User, (user) => user.followershipsAsFollower)
   @Field(() => User)
   follower: User;
 
-  @Column()
-  @Index()
-  followerId: number;
-
-  @CreateDateColumn()
+  @Property({ onCreate: () => new Date() })
   @Field(() => GraphQLISODateTime)
-  createdAt: Date;
+  createdAt: Date = new Date();
 
-  @UpdateDateColumn()
+  @Property({ onUpdate: () => new Date() })
   @Field(() => GraphQLISODateTime)
-  updatedAt: Date;
+  updatedAt: Date = new Date();
 }

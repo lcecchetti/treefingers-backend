@@ -1,4 +1,4 @@
-import * as DataLoader from 'dataloader';
+import DataLoader from 'dataloader';
 import { DataloaderProvider } from '@tracworx/nestjs-dataloader';
 import { Forest } from '../forest.entity';
 import { ForestService } from '../forest.service';

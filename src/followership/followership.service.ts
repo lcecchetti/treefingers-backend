@@ -1,7 +1,7 @@
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityRepository } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { QueryService } from 'src/query/query.service';
-import { Repository } from 'typeorm';
 import { Followership } from './followership.entity';
 import { FilterFollowershipInput } from './inputs/filter-followership.input';
 import { FollowInput } from './inputs/follow.input';
@@ -11,7 +11,7 @@ import { UnfollowInput } from './inputs/unfollow.input';
 export class FollowershipService {
   constructor(
     @InjectRepository(Followership)
-    private followershipRepository: Repository<Followership>,
+    private followershipRepository: EntityRepository<Followership>,
     private queryService: QueryService<Followership>,
   ) {}
 
@@ -30,23 +30,25 @@ export class FollowershipService {
   }
 
   async follow(input: FollowInput): Promise<Followership> {
-    return this.followershipRepository.save(input);
+    const followership = await this.followershipRepository.create(input);
+    await this.followershipRepository.persistAndFlush(followership);
+    return followership;
   }
 
   async unfollow({
-    followedId,
-    followerId,
+    followed,
+    follower,
   }: UnfollowInput): Promise<Followership | null> {
     const followership = await this.findOne({
-      followedId: { eq: followedId },
-      followerId: { eq: followerId },
+      followed: { eq: followed },
+      follower: { eq: follower },
     });
 
     if (!followership) {
       return null;
     }
 
-    await this.followershipRepository.delete(followership.id);
+    await this.followershipRepository.removeAndFlush(followership);
 
     return followership;
   }

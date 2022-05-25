@@ -6,48 +6,47 @@ import {
   ObjectType,
 } from '@nestjs/graphql';
 import { isPrivateMiddleware } from './middleware/is-private.middleware';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  Index,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
 import { Followership } from 'src/followership/followership.entity';
 import { Forest } from 'src/forest/forest.entity';
 import { Comment } from 'src/comment/comment.entity';
 import { Like } from 'src/like/like.entity';
 import { Membership } from 'src/membership/membership.entity';
 import { Story } from 'src/story/story.entity';
+import {
+  Entity,
+  Index,
+  OneToMany,
+  PrimaryKey,
+  Property,
+  Unique,
+} from '@mikro-orm/core';
 
 @Entity()
 @ObjectType()
 export class User {
-  @PrimaryGeneratedColumn()
+  @PrimaryKey()
   @Field(() => ID)
   id: number;
 
-  @Column()
-  @Index({ unique: true })
+  @Property()
+  @Unique()
   @Field({ middleware: [isPrivateMiddleware] })
   email: string;
 
-  @Column()
+  @Property()
   password?: string;
 
-  @Column()
-  @Index({ unique: true })
+  @Property()
+  @Unique()
   @Field()
   username: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Property({ type: 'text', nullable: true })
   @Index()
   @Field({ nullable: true })
   bio?: string;
 
-  @Column({ default: false })
+  @Property({ default: false })
   @Index()
   @Field({ defaultValue: false })
   isActive: boolean;
@@ -82,11 +81,11 @@ export class User {
   @Field(() => Int, { defaultValue: 0 })
   followersCount: number;
 
-  @CreateDateColumn()
-  @Field(() => GraphQLISODateTime, { middleware: [isPrivateMiddleware] })
-  createdAt: Date;
+  @Property({ onCreate: () => new Date() })
+  @Field(() => GraphQLISODateTime)
+  createdAt: Date = new Date();
 
-  @UpdateDateColumn()
-  @Field(() => GraphQLISODateTime, { middleware: [isPrivateMiddleware] })
-  updatedAt: Date;
+  @Property({ onUpdate: () => new Date() })
+  @Field(() => GraphQLISODateTime)
+  updatedAt: Date = new Date();
 }

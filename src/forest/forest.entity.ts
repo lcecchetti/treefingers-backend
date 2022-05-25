@@ -7,45 +7,42 @@ import {
 } from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
 import { Commentable } from 'src/comment/interfaces/commentable.interface';
+import { Membership } from 'src/membership/membership.entity';
+import { Story } from 'src/story/story.entity';
 import {
-  Column,
-  CreateDateColumn,
+  Collection,
   Entity,
   Index,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
-import { Membership } from 'src/membership/membership.entity';
-import { Story } from 'src/story/story.entity';
+  PrimaryKey,
+  Property,
+  Unique,
+} from '@mikro-orm/core';
 
 @Entity()
 @ObjectType({
   implements: () => [Commentable],
 })
 export class Forest implements Commentable {
-  @PrimaryGeneratedColumn()
+  @PrimaryKey()
   @Field(() => ID)
   id: number;
 
-  @Column()
-  @Index({ unique: true })
+  @Property()
+  @Unique()
   @Field()
   name: string;
 
-  @Column({ type: 'text' })
+  @Property({ type: 'text' })
   @Index()
   @Field()
   about: string;
 
-  @ManyToOne(() => User, (founder) => founder.forests)
+  @ManyToOne(() => User)
+  @Index()
   @Field(() => User)
   founder: User;
-
-  @Column()
-  @Index()
-  founderId: number;
 
   @Field(() => Int, { defaultValue: 0 })
   commentsCount: number;
@@ -57,16 +54,16 @@ export class Forest implements Commentable {
   storiesCount: number;
 
   @OneToMany(() => Membership, (membership) => membership.member)
-  memberships: Membership[];
+  memberships = new Collection<Membership>(this);
 
   @OneToMany(() => Story, (story) => story.forest)
-  stories: Story[];
+  stories = new Collection<Story>(this);
 
-  @CreateDateColumn()
+  @Property({ onCreate: () => new Date() })
   @Field(() => GraphQLISODateTime)
-  createdAt: Date;
+  createdAt: Date = new Date();
 
-  @UpdateDateColumn()
+  @Property({ onUpdate: () => new Date() })
   @Field(() => GraphQLISODateTime)
-  updatedAt: Date;
+  updatedAt: Date = new Date();
 }

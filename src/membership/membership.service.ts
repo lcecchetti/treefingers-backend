@@ -1,7 +1,7 @@
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityRepository } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { QueryService } from 'src/query/query.service';
-import { Repository } from 'typeorm';
 import { FilterMembershipInput } from './inputs/filter-membership.input';
 import { JoinInput } from './inputs/join.input';
 import { LeaveInput } from './inputs/leave.input';
@@ -11,7 +11,7 @@ import { Membership } from './membership.entity';
 export class MembershipService {
   constructor(
     @InjectRepository(Membership)
-    private membershipRepository: Repository<Membership>,
+    private membershipRepository: EntityRepository<Membership>,
     private queryService: QueryService<Membership>,
   ) {}
 
@@ -28,20 +28,22 @@ export class MembershipService {
   }
 
   async join(input: JoinInput): Promise<Membership> {
-    return this.membershipRepository.save(input);
+    const membership = await this.membershipRepository.create(input);
+    await this.membershipRepository.persistAndFlush(membership);
+    return membership;
   }
 
-  async leave({ forestId, memberId }: LeaveInput): Promise<Membership | null> {
+  async leave({ forest, member }: LeaveInput): Promise<Membership | null> {
     const membership = await this.findOne({
-      forestId: { eq: forestId },
-      memberId: { eq: memberId },
+      forest: { eq: forest },
+      member: { eq: member },
     });
 
     if (!membership) {
       return null;
     }
 
-    await this.membershipRepository.delete(membership.id);
+    await this.membershipRepository.removeAndFlush(membership);
 
     return membership;
   }

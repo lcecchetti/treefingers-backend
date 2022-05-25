@@ -7,15 +7,16 @@ import { PaginationService } from 'src/pagination/pagination.service';
 import { EditUserDataInput } from './inputs/edit-user.input';
 import * as bcrypt from 'bcrypt';
 import { CreateUserInputData } from './inputs/create-user.input';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Brackets, Repository } from 'typeorm';
 import { QueryService } from 'src/query/query.service';
 import { SortUserInput } from './inputs/sort-user.input';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityRepository } from '@mikro-orm/postgresql';
+import { wrap } from '@mikro-orm/core';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(User) private userRepository: EntityRepository<User>,
     private paginationService: PaginationService<User>,
     private queryService: QueryService<User>,
   ) {}
@@ -48,7 +49,9 @@ export class UserService {
       throw new ConflictException('Username already exists');
     }
 
-    return this.userRepository.save(data);
+    const user = await this.userRepository.create(data);
+    await this.userRepository.persistAndFlush(user);
+    return user;
   }
 
   async edit(userId: number, data: EditUserDataInput): Promise<User> {
@@ -56,10 +59,10 @@ export class UserService {
       data.password = await this.encryptPassword(data.password);
     }
 
-    return await this.userRepository.save({
-      userId,
-      ...data,
-    });
+    const user = await this.findById(userId);
+    wrap(user).assign(data);
+    await this.userRepository.persistAndFlush(user);
+    return user;
   }
 
   async paginate({
@@ -83,17 +86,6 @@ export class UserService {
     // add isActive filter
     if (!filter.isActive === false) {
       filter.isActive = true;
-    }
-
-    // add query conditon
-    if (query) {
-      queryBuilder.andWhere(
-        new Brackets((qb) => {
-          qb.where(`"username" ilike :query_username`, {
-            ['query_username']: `%${query}%`,
-          });
-        }),
-      );
     }
 
     return this.queryService.prepareQueryBuilder(queryBuilder, filter, sort);

@@ -3,7 +3,7 @@ import { Field, ID, InputType } from '@nestjs/graphql';
 @InputType()
 export class JoinInput {
   @Field(() => ID)
-  forestId: number;
+  forest: number;
 
-  memberId: number;
+  member: number;
 }

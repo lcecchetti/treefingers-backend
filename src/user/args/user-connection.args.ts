@@ -6,8 +6,8 @@ import { SortUserInput } from '../inputs/sort-user.input';
 @ArgsType()
 export class UserConnectionArgs extends ConnectionArgs {
   @Field(() => FilterUserInput, { nullable: true })
-  readonly filter?: FilterUserInput = new FilterUserInput();
+  filter?: FilterUserInput = new FilterUserInput();
 
   @Field(() => SortUserInput, { nullable: true })
-  readonly sort?: SortUserInput = new SortUserInput();
+  sort?: SortUserInput = new SortUserInput();
 }

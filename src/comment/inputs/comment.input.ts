@@ -9,12 +9,12 @@ export class CommentDataInput {
   content: string;
 
   @Field(() => ID)
-  entityId: number;
+  entity: number;
 
   @Field(() => CommentableEntityType)
   entityType: CommentableEntityType;
 
-  userId: number;
+  user: number;
 }
 
 @InputType({ isAbstract: true })

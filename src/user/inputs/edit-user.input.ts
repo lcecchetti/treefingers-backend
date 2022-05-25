@@ -17,7 +17,7 @@ export class EditUserDataInput {
 @InputType()
 export class EditUserInput {
   @Field({ name: 'user' })
-  userId: number;
+  user: number;
 
   @Field()
   data: EditUserDataInput;

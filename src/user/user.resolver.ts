@@ -82,8 +82,8 @@ export class UserResolver {
     }
 
     return followershipDataloader.load({
-      followedId: user.id,
-      followerId: currentUser.id,
+      followed: user.id,
+      follower: currentUser.id,
     });
   }
 }

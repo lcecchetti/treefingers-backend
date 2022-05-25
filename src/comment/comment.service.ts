@@ -5,15 +5,16 @@ import { CommentConnection } from './dto/comment-connection.dto';
 import { FilterCommentInput } from './inputs/filter-comment.input';
 import { PaginationService } from 'src/pagination/pagination.service';
 import { CommentDataInput } from './inputs/comment.input';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { QueryService } from 'src/query/query.service';
 import { SortCommentInput } from './inputs/sort-comment.input';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityRepository } from '@mikro-orm/postgresql';
 
 @Injectable()
 export class CommentService {
   constructor(
-    @InjectRepository(Comment) private commentRepository: Repository<Comment>,
+    @InjectRepository(Comment)
+    private commentRepository: EntityRepository<Comment>,
     private paginationService: PaginationService<Comment>,
     private queryService: QueryService<Comment>,
   ) {}
@@ -31,7 +32,9 @@ export class CommentService {
   }
 
   async create(data: CommentDataInput): Promise<Comment> {
-    return this.commentRepository.save(data);
+    const comment = await this.commentRepository.create(data);
+    await this.commentRepository.persistAndFlush(comment);
+    return comment;
   }
 
   async paginate(

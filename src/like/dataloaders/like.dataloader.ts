@@ -1,4 +1,4 @@
-import * as DataLoader from 'dataloader';
+import DataLoader from 'dataloader';
 import { DataloaderProvider } from '@tracworx/nestjs-dataloader';
 import { Like } from '../like.entity';
 import { LikeService } from '../like.service';
@@ -10,33 +10,33 @@ export class LikeDataloader {
 
   createDataloader() {
     return new DataLoader<
-      { entityType: LikeableEntityType; entityId: number; userId: number },
+      { entityType: LikeableEntityType; entity: number; user: number },
       Like,
       string
     >(
       async (keys) => {
         // get likes
         const result = await this.likeService.findMany({
-          or: keys.map(({ entityType, entityId, userId }) => ({
+          or: keys.map(({ entityType, entity, user }) => ({
             entityType: { eq: entityType },
-            entityId: { eq: entityId },
-            userId: { eq: userId },
+            entity: { eq: entity },
+            user: { eq: user },
           })),
         });
 
         // map likes to keys
-        return keys.map(({ entityType, entityId, userId }) =>
+        return keys.map(({ entityType, entity, user }) =>
           result.find(
             (r) =>
               r.entityType === entityType &&
-              r.entityId === entityId &&
-              r.userId === userId,
+              r.entity.id === entity &&
+              r.user.id === user,
           ),
         );
       },
       {
-        cacheKeyFn: ({ entityType, entityId, userId }) =>
-          `${entityType}${entityId}${userId}`,
+        cacheKeyFn: ({ entityType, entity, user }) =>
+          `${entityType}${entity}${user}`,
       },
     );
   }

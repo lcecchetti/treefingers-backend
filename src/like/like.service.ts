@@ -3,16 +3,16 @@ import { Like } from './like.entity';
 import { FilterLikeInput } from './inputs/filter-like.input';
 import { LikeInput } from './inputs/like.input';
 import { DislikeInput } from './inputs/dislike.input';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { QueryService } from 'src/query/query.service';
 import { SortUserInput } from 'src/user/inputs/sort-user.input';
 import { FilterUserInput } from 'src/user/inputs/filter-user.input';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityRepository } from '@mikro-orm/postgresql';
 
 @Injectable()
 export class LikeService {
   constructor(
-    @InjectRepository(Like) private likeRepository: Repository<Like>,
+    @InjectRepository(Like) private likeRepository: EntityRepository<Like>,
     private queryService: QueryService<Like>,
   ) {}
 
@@ -29,26 +29,27 @@ export class LikeService {
   }
 
   async like(input: LikeInput): Promise<Like> {
-    return this.likeRepository.save(input);
+    const like = await this.likeRepository.create(input);
+    await this.likeRepository.persistAndFlush(like);
+    return like;
   }
 
   async dislike({
-    entityId,
+    entity,
     entityType,
-    userId,
+    user,
   }: DislikeInput): Promise<Like | null> {
     const like = await this.findOne({
-      entityId: { eq: entityId },
+      entity: { eq: entity },
       entityType: { eq: entityType },
-      userId: { eq: userId },
+      user: { eq: user },
     });
 
     if (!like) {
       return null;
     }
 
-    await this.likeRepository.delete(like.id);
-
+    await this.likeRepository.removeAndFlush(like);
     return like;
   }
 

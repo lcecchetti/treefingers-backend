@@ -1,51 +1,44 @@
+import {
+  Entity,
+  Enum,
+  Index,
+  ManyToOne,
+  PrimaryKey,
+  Property,
+  Unique,
+} from '@mikro-orm/core';
 import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
 import { LikeableEntityType } from './enums/likeable-entity-type.enum';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  Index,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
 import { Likeable } from './interfaces/likeable.interface';
 
 @Entity()
-@Index(['user', 'entityId', 'entityType'], { unique: true })
-@Index(['entityId', 'entityType'])
+@Unique({ properties: ['user', 'entity', 'entityType'] })
+@Index({ properties: ['entity', 'entityType'] })
 @ObjectType()
 export class Like {
-  @PrimaryGeneratedColumn()
+  @PrimaryKey()
   @Field(() => ID)
   id: number;
 
-  @Column({ type: 'enum', name: 'entityType', enum: LikeableEntityType })
+  @Enum(() => LikeableEntityType)
   @Field(() => LikeableEntityType)
   entityType: LikeableEntityType;
 
-  
+  @Property()
   @Field(() => Likeable)
   entity: Likeable;
 
-  @Column()
+  @ManyToOne(() => User)
   @Index()
-  entityId: number;
-
-  @ManyToOne(() => User, (user) => user.likes)
   @Field(() => User)
   user: User;
 
-  @Column()
-  @Index()
-  userId: number;
-
-  @CreateDateColumn()
+  @Property({ onCreate: () => new Date() })
   @Field(() => GraphQLISODateTime)
-  createdAt: Date;
+  createdAt: Date = new Date();
 
-  @UpdateDateColumn()
+  @Property({ onUpdate: () => new Date() })
   @Field(() => GraphQLISODateTime)
-  updatedAt: Date;
+  updatedAt: Date = new Date();
 }

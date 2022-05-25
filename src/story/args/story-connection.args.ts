@@ -6,8 +6,8 @@ import { SortStoryInput } from '../inputs/sort-story.input';
 @ArgsType()
 export class StoryConnectionArgs extends ConnectionArgs {
   @Field(() => FilterStoryInput, { nullable: true })
-  readonly filter?: FilterStoryInput = new FilterStoryInput();
+  filter?: FilterStoryInput = new FilterStoryInput();
 
   @Field(() => SortStoryInput, { nullable: true })
-  readonly sort?: SortStoryInput = new SortStoryInput();
+  sort?: SortStoryInput = new SortStoryInput();
 }

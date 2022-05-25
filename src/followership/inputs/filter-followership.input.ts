@@ -4,10 +4,10 @@ import { FilterIdInput, FilterInput } from 'src/query/inputs/filter.input';
 @InputType()
 export class FilterFollowershipInput extends FilterInput {
   @Field(() => FilterIdInput, { nullable: true })
-  followedId?: FilterIdInput;
+  followed?: FilterIdInput;
 
   @Field(() => FilterIdInput, { nullable: true })
-  followerId?: FilterIdInput;
+  follower?: FilterIdInput;
 
   or?: FilterFollowershipInput[];
 }

@@ -34,7 +34,7 @@ export class MembershipResolver {
     return {
       membership: await this.membershipService.join({
         ...input,
-        memberId: currentUser.id,
+        member: currentUser.id,
       }),
     };
   }
@@ -48,7 +48,7 @@ export class MembershipResolver {
     return {
       membership: await this.membershipService.leave({
         ...input,
-        memberId: currentUser.id,
+        member: currentUser.id,
       }),
     };
   }
@@ -58,7 +58,7 @@ export class MembershipResolver {
     @Parent() membership: Membership,
     @Loader(UserDataloader) userDataloader,
   ): Promise<User> {
-    return userDataloader.load(membership.memberId);
+    return userDataloader.load(membership.member.id);
   }
 
   @ResolveField()
@@ -66,6 +66,6 @@ export class MembershipResolver {
     @Parent() membership: Membership,
     @Loader(ForestDataloader) forestDataloader,
   ): Promise<Forest> {
-    return forestDataloader.load(membership.forestId);
+    return forestDataloader.load(membership.forest.id);
   }
 }

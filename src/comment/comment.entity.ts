@@ -9,49 +9,43 @@ import { User } from 'src/user/user.entity';
 import { Likeable } from 'src/like/interfaces/likeable.interface';
 import { Like } from 'src/like/like.entity';
 import { CommentableEntityType } from './enums/commentable-entity-type.enum';
+import { Commentable } from './interfaces/commentable.interface';
 import {
-  Column,
-  CreateDateColumn,
   Entity,
+  Enum,
   Index,
   ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
-import { Commentable } from './interfaces/commentable.interface';
+  PrimaryKey,
+  Property,
+} from '@mikro-orm/core';
 
 @Entity()
-@Index(['entityType', 'entityId'])
+@Index({ properties: ['entityType', 'entity'] })
 @ObjectType({
   implements: () => [Likeable],
 })
 export class Comment implements Likeable {
-  @PrimaryGeneratedColumn()
+  @PrimaryKey()
   @Field(() => ID)
   id: number;
 
-  @Column({ type: 'text' })
+  @Property({ type: 'text' })
   @Field()
   content: string;
 
-  @ManyToOne(() => User, (user) => user.comments)
+  @ManyToOne(() => User)
   @Field(() => User)
   user: User;
 
-  @Column()
+  @Enum(() => CommentableEntityType)
   @Index()
-  userId: number;
-
-  @Column({ type: 'enum', name: 'entityType', enum: CommentableEntityType })
   @Field(() => CommentableEntityType)
   entityType: CommentableEntityType;
 
+  @Property()
+  @Index()
   @Field(() => Commentable)
   entity: Commentable;
-
-  @Column()
-  @Index()
-  entityId: number;
 
   @Field(() => Int, { defaultValue: 0 })
   likesCount: number;
@@ -59,11 +53,11 @@ export class Comment implements Likeable {
   @Field(() => Like, { nullable: true })
   currentUserLike: Like;
 
-  @CreateDateColumn()
+  @Property({ onCreate: () => new Date() })
   @Field(() => GraphQLISODateTime)
-  createdAt: Date;
+  createdAt: Date = new Date();
 
-  @UpdateDateColumn()
+  @Property({ onUpdate: () => new Date() })
   @Field(() => GraphQLISODateTime)
-  updatedAt: Date;
+  updatedAt: Date = new Date();
 }

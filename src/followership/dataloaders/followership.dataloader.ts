@@ -1,4 +1,4 @@
-import * as DataLoader from 'dataloader';
+import DataLoader from 'dataloader';
 import { DataloaderProvider } from '@tracworx/nestjs-dataloader';
 import { Followership } from '../followership.entity';
 import { FollowershipService } from '../followership.service';
@@ -9,29 +9,28 @@ export class FollowershipDataloader {
 
   createDataloader() {
     return new DataLoader<
-      { followedId: number; followerId: number },
+      { followed: number; follower: number },
       Followership,
       string
     >(
       async (keys) => {
         // get followerships
         const result = await this.followershipService.findMany({
-          or: keys.map(({ followedId, followerId }) => ({
-            followedId: { eq: followedId },
-            followerId: { eq: followerId },
+          or: keys.map(({ followed, follower }) => ({
+            followed: { eq: followed },
+            follower: { eq: follower },
           })),
         });
 
         // map likes to keys
-        return keys.map(({ followedId, followerId }) =>
+        return keys.map(({ followed, follower }) =>
           result.find(
-            (r) => r.followedId === followedId && r.followerId === followerId,
+            (r) => r.followed.id === followed && r.follower.id === follower,
           ),
         );
       },
       {
-        cacheKeyFn: ({ followedId, followerId }) =>
-          `${followedId}${followerId}`,
+        cacheKeyFn: ({ followed, follower }) => `${followed}${follower}`,
       },
     );
   }

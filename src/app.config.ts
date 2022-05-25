@@ -7,7 +7,7 @@ export default () => ({
     schema: 'schema.gql',
   },
   database: {
-    uri: process.env.MONGODB_URI,
+    type: process.env.DATABASE_TYPE,
     host: process.env.DATABASE_HOST,
     port: process.env.DATABASE_PORT,
     user: process.env.DATABASE_USER,

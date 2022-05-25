@@ -8,80 +8,64 @@ import {
 import { User } from 'src/user/user.entity';
 import { Forest } from 'src/forest/forest.entity';
 import { Likeable } from 'src/like/interfaces/likeable.interface';
-import { LikeableEntityType } from 'src/like/enums/likeable-entity-type.enum';
 import { Like } from 'src/like/like.entity';
 import { Commentable } from 'src/comment/interfaces/commentable.interface';
 import {
-  Column,
-  CreateDateColumn,
+  ArrayType,
+  Collection,
   Entity,
   Index,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
-import { Comment } from 'src/comment/comment.entity';
+  PrimaryKey,
+  Property,
+} from '@mikro-orm/core';
 
 @Entity()
 @ObjectType({
   implements: () => [Likeable, Commentable],
 })
 export class Story implements Likeable, Commentable {
-  @PrimaryGeneratedColumn()
+  @PrimaryKey()
   @Field(() => ID)
   id: number;
 
-  likeableEntityType: LikeableEntityType;
-
-  @Column()
+  @Property()
   @Index()
   @Field()
   title: string;
 
-  @Column({ type: 'text' })
+  @Property({ type: 'text' })
   @Index()
   @Field()
   content: string;
 
-  @ManyToOne(() => User, (user) => user.stories)
+  @ManyToOne(() => User)
+  @Index()
   author: User;
 
-  @Column()
+  @OneToMany(() => Story, (chapter) => chapter.parent, { nullable: true })
   @Index()
-  authorId: number;
-
-  @OneToMany(() => Story, (chapter) => chapter.parent)
   parent?: Story;
 
-  @Column({ nullable: true })
+  @OneToMany(() => Story, (root) => root.descendents, { nullable: true })
   @Index()
-  parentId?: number;
-
-  @OneToMany(() => Story, (root) => root.descendents)
   root?: Story;
 
-  @Column({ nullable: true })
-  @Index()
-  rootId?: number;
+  @ManyToOne(() => Story)
+  chapters = new Collection<Story>(this);
 
-  @ManyToOne(() => Story, (parent) => parent.chapters)
-  chapters: Story[];
-
-  @Column({ type: 'simple-array' })
+  @Property({ type: ArrayType, nullable: true })
   @Index()
   @Field(() => [String], { nullable: true, defaultValue: [] })
   tags: string[];
 
-  @ManyToOne(() => Forest, (forest) => forest.stories)
+  @ManyToOne(() => Forest)
+  @Index()
   forest?: Forest;
 
-  @ManyToOne(() => Story, (chapter) => chapter.root)
-  descendents: Story[];
-
-  @Column({ nullable: true })
-  @Index()
-  forestId?: number;
+  @ManyToOne(() => Story)
+  descendents = new Collection<Story>(this);
 
   @Field(() => Int, { defaultValue: 0 })
   commentsCount: number;
@@ -98,11 +82,11 @@ export class Story implements Likeable, Commentable {
   @Field(() => Like, { nullable: true })
   currentUserLike: Like;
 
-  @CreateDateColumn()
+  @Property({ onCreate: () => new Date() })
   @Field(() => GraphQLISODateTime)
-  createdAt: Date;
+  createdAt: Date = new Date();
 
-  @UpdateDateColumn()
+  @Property({ onUpdate: () => new Date() })
   @Field(() => GraphQLISODateTime)
-  updatedAt: Date;
+  updatedAt: Date = new Date();
 }

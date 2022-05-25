@@ -6,8 +6,8 @@ import { SortForestInput } from '../inputs/sort-forest.input';
 @ArgsType()
 export class ForestConnectionArgs extends ConnectionArgs {
   @Field(() => FilterForestInput, { nullable: true })
-  readonly filter?: FilterForestInput = new FilterForestInput();
+  filter?: FilterForestInput = new FilterForestInput();
 
   @Field(() => SortForestInput, { nullable: true })
-  readonly sort?: SortForestInput = new SortForestInput();
+  sort?: SortForestInput = new SortForestInput();
 }

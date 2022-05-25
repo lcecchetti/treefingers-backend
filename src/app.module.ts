@@ -13,7 +13,6 @@ import { DataloaderModule } from '@tracworx/nestjs-dataloader';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import config from './app.config';
 import { QueryModule } from './query/query.module';
 import { FollowershipModule } from './followership/followership.module';
@@ -22,6 +21,7 @@ import { CommentModule } from './comment/comment.module';
 import { LikeModule } from './like/like.module';
 import { MembershipModule } from './membership/membership.module';
 import { StoryModule } from './story/story.module';
+import { MikroOrmModule } from '@mikro-orm/nestjs';
 
 @Module({
   imports: [
@@ -38,24 +38,11 @@ import { StoryModule } from './story/story.module';
           origin: configService.get<string>('frontend.webUrl'),
           credentials: true,
         },
+        bodyParserConfig: false,
       }),
       inject: [ConfigService],
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        autoLoadEntities: true,
-        type: 'postgres',
-        host: configService.get<string>('database.host', 'localhost'),
-        port: configService.get<number>('database.port', 5432),
-        username: configService.get<string>('database.user'),
-        password: configService.get<string>('database.password'),
-        database: configService.get<string>('database.name'),
-        synchronize: configService.get<boolean>('env.isDev'),
-        logging: configService.get<boolean>('env.isDev'),
-      }),
-      inject: [ConfigService],
-    }),
+    MikroOrmModule.forRoot(),
     MailerModule.forRootAsync({
       useFactory: async (configService: ConfigService) => ({
         transport: {

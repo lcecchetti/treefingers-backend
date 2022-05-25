@@ -4,10 +4,10 @@ import { FollowershipResolver } from './followership.resolver';
 import { Followership } from './followership.entity';
 import { FollowershipDataloader } from './dataloaders/followership.dataloader';
 import { QueryModule } from 'src/query/query.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { MikroOrmModule } from '@mikro-orm/nestjs';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Followership]), QueryModule],
+  imports: [MikroOrmModule.forFeature([Followership]), QueryModule],
   providers: [
     FollowershipResolver,
     FollowershipService,

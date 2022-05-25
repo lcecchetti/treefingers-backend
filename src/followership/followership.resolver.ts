@@ -32,7 +32,7 @@ export class FollowershipResolver {
     return {
       followership: await this.followershipService.follow({
         ...input,
-        followerId: currentUser.id,
+        follower: currentUser.id,
       }),
     };
   }
@@ -46,7 +46,7 @@ export class FollowershipResolver {
     return {
       followership: await this.followershipService.unfollow({
         ...input,
-        followerId: currentUser.id,
+        follower: currentUser.id,
       }),
     };
   }
@@ -56,7 +56,7 @@ export class FollowershipResolver {
     @Parent() followership: Followership,
     @Loader(UserDataloader) userDataloader,
   ): Promise<User> {
-    return userDataloader.load(followership.followedId);
+    return userDataloader.load(followership.followed.id);
   }
 
   @ResolveField()
@@ -64,6 +64,6 @@ export class FollowershipResolver {
     @Parent() followership: Followership,
     @Loader(UserDataloader) userDataloader,
   ): Promise<User> {
-    return userDataloader.load(followership.followerId);
+    return userDataloader.load(followership.follower.id);
   }
 }

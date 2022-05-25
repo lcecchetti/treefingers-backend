@@ -11,13 +11,13 @@ class FilterLikeableEntityTypeInput extends FilterInput {
 @InputType()
 export class FilterLikeInput extends FilterInput {
   @Field(() => FilterIdInput, { nullable: true })
-  entityId?: FilterIdInput;
+  entity?: FilterIdInput;
 
   @Field(() => FilterLikeableEntityTypeInput, { nullable: true })
   entityType?: FilterLikeableEntityTypeInput;
 
   @Field(() => FilterIdInput, { nullable: true })
-  userId?: FilterIdInput;
+  user?: FilterIdInput;
 
   or?: FilterLikeInput[];
 }

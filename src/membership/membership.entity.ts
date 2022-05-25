@@ -2,45 +2,37 @@ import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
 import { Forest } from 'src/forest/forest.entity';
 import {
-  Column,
-  CreateDateColumn,
   Entity,
   Index,
-  JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+  PrimaryKey,
+  Property,
+  Unique,
+} from '@mikro-orm/core';
 
 @Entity()
-@Index(['memberId', 'forestId'], { unique: true })
+@Unique({ properties: ['member', 'forest'] })
 @ObjectType()
 export class Membership {
-  @PrimaryGeneratedColumn()
+  @PrimaryKey()
   @Field(() => ID)
   id: number;
 
-  @ManyToOne(() => Forest, (forest) => forest.memberships)
+  @ManyToOne(() => Forest)
+  @Index()
   @Field(() => Forest)
   forest: Forest;
 
-  @Column()
+  @ManyToOne(() => User)
   @Index()
-  forestId: number;
-
-  @ManyToOne(() => User, (user) => user.memberships)
   @Field(() => User)
   member: User;
 
-  @Column()
-  @Index()
-  memberId: number;
-
-  @CreateDateColumn()
+  @Property({ onCreate: () => new Date() })
   @Field(() => GraphQLISODateTime)
-  createdAt: Date;
+  createdAt: Date = new Date();
 
-  @UpdateDateColumn()
+  @Property({ onUpdate: () => new Date() })
   @Field(() => GraphQLISODateTime)
-  updatedAt: Date;
+  updatedAt: Date = new Date();
 }

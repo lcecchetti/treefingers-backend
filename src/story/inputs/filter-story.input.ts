@@ -10,13 +10,13 @@ export class FilterStoryInput extends FilterInput {
   or?: FilterStoryInput[];
 
   @Field(() => FilterIdInput, { nullable: true })
-  authorId?: FilterIdInput;
+  author?: FilterIdInput;
 
   @Field(() => FilterIdInput, { nullable: true })
-  parentId?: FilterIdInput;
+  parent?: FilterIdInput;
 
   @Field(() => FilterIdInput, { nullable: true })
-  forestId?: FilterIdInput;
+  forest?: FilterIdInput;
 
   @Field(() => String, { nullable: true })
   query?: string;

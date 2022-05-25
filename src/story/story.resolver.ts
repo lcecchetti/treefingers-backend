@@ -60,7 +60,7 @@ export class StoryResolver {
     return {
       story: await this.storyService.create({
         ...data,
-        authorId: currentUser.id,
+        author: currentUser.id,
       }),
     };
   }
@@ -77,8 +77,8 @@ export class StoryResolver {
 
     return likeDataloader.load({
       entityType: LikeableEntityType.Story,
-      entityId: story.id,
-      userId: currentUser.id,
+      entity: story.id,
+      user: currentUser.id,
     });
   }
 
@@ -92,7 +92,7 @@ export class StoryResolver {
     @Parent() story: Story,
     @Loader(UserDataloader) userDataloader,
   ): Promise<User> {
-    return userDataloader.load(story.authorId);
+    return userDataloader.load(story.author.id);
   }
 
   @ResolveField(() => Story, { nullable: true })
@@ -100,11 +100,11 @@ export class StoryResolver {
     @Parent() story: Story,
     @Loader(StoryDataloader) storyDataloader,
   ): Promise<Story | null> {
-    if (!story.parentId) {
+    if (!story.parent) {
       return null;
     }
 
-    return storyDataloader.load(story.parentId);
+    return storyDataloader.load(story.parent.id);
   }
 
   @ResolveField(() => Story, { nullable: true })
@@ -112,11 +112,11 @@ export class StoryResolver {
     @Parent() story: Story,
     @Loader(StoryDataloader) storyDataloader,
   ): Promise<Story | null> {
-    if (!story.rootId) {
+    if (!story.root) {
       return null;
     }
 
-    return storyDataloader.load(story.rootId);
+    return storyDataloader.load(story.root.id);
   }
 
   @ResolveField(() => Forest, { nullable: true })
@@ -124,10 +124,10 @@ export class StoryResolver {
     @Parent() story: Story,
     @Loader(ForestDataloader) forestDataloader,
   ): Promise<Forest | null> {
-    if (!story.forestId) {
+    if (!story.forest) {
       return null;
     }
 
-    return forestDataloader.load(story.forestId);
+    return forestDataloader.load(story.forest.id);
   }
 }

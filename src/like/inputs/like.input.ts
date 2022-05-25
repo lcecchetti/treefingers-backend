@@ -4,10 +4,10 @@ import { LikeableEntityType } from '../enums/likeable-entity-type.enum';
 @InputType()
 export class LikeInput {
   @Field(() => ID)
-  entityId: number;
+  entity: number;
 
   @Field(() => LikeableEntityType)
   entityType: LikeableEntityType;
 
-  userId: number;
+  user: number;
 }

@@ -36,7 +36,7 @@ export class LikeResolver {
     return {
       like: await this.likeService.like({
         ...input,
-        userId: currentUser.id,
+        user: currentUser.id,
       }),
     };
   }
@@ -50,7 +50,7 @@ export class LikeResolver {
     return {
       like: await this.likeService.dislike({
         ...input,
-        userId: currentUser.id,
+        user: currentUser.id,
       }),
     };
   }
@@ -60,7 +60,7 @@ export class LikeResolver {
     @Parent() like: Like,
     @Loader(UserDataloader) userDataloader,
   ): Promise<User> {
-    return userDataloader.load(like.userId);
+    return userDataloader.load(like.user.id);
   }
 
   @ResolveField()
@@ -71,9 +71,9 @@ export class LikeResolver {
   ): Promise<Likeable> {
     switch (like.entityType) {
       case LikeableEntityType.Comment:
-        return commentDataloader.load(like.entityId);
+        return commentDataloader.load(like.entity.id);
       case LikeableEntityType.Story:
-        return storyDataloader.load(like.entityId);
+        return storyDataloader.load(like.entity.id);
     }
   }
 }
