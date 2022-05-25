@@ -51,6 +51,11 @@ export class StoryResolver {
     return this.storyService.findOne(filter);
   }
 
+  @Query(() => String)
+  async test(): Promise<string> {
+    return 'test';
+  }
+
   @UseGuards(IsAuthenticatedGuard)
   @Mutation(() => CreateStoryPayload)
   async createStory(

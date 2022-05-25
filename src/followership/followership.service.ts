@@ -18,11 +18,11 @@ export class FollowershipService {
   async findOne(
     filter?: FilterFollowershipInput,
   ): Promise<Followership | null> {
-    return this.prepareQueryBuilder(filter).getOne();
+    return this.prepareQueryBuilder(filter).getSingleResult();
   }
 
   async findMany(filter?: FilterFollowershipInput): Promise<Followership[]> {
-    return this.prepareQueryBuilder(filter).getMany();
+    return this.prepareQueryBuilder(filter).getResult();
   }
 
   async findById(id: number): Promise<Followership | null> {

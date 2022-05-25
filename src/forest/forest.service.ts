@@ -20,11 +20,11 @@ export class ForestService {
   ) {}
 
   async findOne(filter?: FilterForestInput): Promise<Forest | null> {
-    return this.prepareQueryBuilder(filter).getOne();
+    return this.prepareQueryBuilder(filter).getSingleResult();
   }
 
   async findMany(filter?: FilterForestInput): Promise<Forest[]> {
-    return this.prepareQueryBuilder(filter).getMany();
+    return this.prepareQueryBuilder(filter).getResult();
   }
 
   async findById(id: number): Promise<Forest | null> {

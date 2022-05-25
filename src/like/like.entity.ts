@@ -22,12 +22,13 @@ export class Like {
   id: number;
 
   @Enum(() => LikeableEntityType)
+  @Index()
   @Field(() => LikeableEntityType)
   entityType: LikeableEntityType;
 
-  @Property()
-  @Field(() => Likeable)
-  entity: Likeable;
+  @Property({ type: 'number' })
+  @Index()
+  entity: number;
 
   @ManyToOne(() => User)
   @Index()

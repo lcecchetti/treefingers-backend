@@ -1,124 +1,63 @@
+import { QBFilterQuery, QBQueryOrderMap } from '@mikro-orm/core';
+import { QueryBuilder } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
-import { Brackets, SelectQueryBuilder, WhereExpressionBuilder } from 'typeorm';
 import { FilterInput } from './inputs/filter.input';
 import { SortInput } from './inputs/sort.input';
 
 const operatorsMap = {
-  eq: '=',
-  neq: '!=',
-  lt: '<',
-  lte: '<=',
-  gt: '>',
-  gte: '>=',
-  in: 'IN',
-  nin: 'NOT IN',
-  like: 'LIKE',
-  ilike: 'ILIKE',
+  eq: '$eq',
+  neq: '$neq',
+  lt: '$lt',
+  lte: '$lte',
+  gt: '$gt',
+  gte: '$gte',
+  in: '$in',
+  nin: '$nin',
+  like: '$like',
+  ilike: '$ilike',
+  and: '$and',
+  or: '$or',
+  not: '$not',
 };
 
 @Injectable()
 export class QueryService<Entity> {
-  addCondition(
-    where: WhereExpressionBuilder,
-    filter: FilterInput,
-    field: string,
-    paramId: string,
-  ): WhereExpressionBuilder {
-    Object.entries(filter).map(([operator, value]) => {
-      paramId += `_${operator}`;
-      switch (operator) {
-        case 'eq':
-          if (value === null) {
-            where.andWhere(`"${field}" IS NULL`);
-            break;
-          }
-        case 'neq':
-          if (value === null) {
-            where.andWhere(`"${field}" IS NOT NULL`);
-            break;
-          }
-        case 'eq':
-        case 'neq':
-        case 'lt':
-        case 'lte':
-        case 'gt':
-        case 'gte':
-        case 'like':
-        case 'ilike':
-          where.andWhere(`"${field}" ${operatorsMap[operator]} :${paramId}`, {
-            [`${paramId}`]: value,
-          });
-          break;
-        case 'in':
-        case 'nin':
-          where.andWhere(
-            `"${field}" ${operatorsMap[operator]} (:...${paramId})`,
-            {
-              [`${paramId}`]: value,
-            },
-          );
-          break;
-      }
-    });
-
-    return where;
-  }
-
-  addFilter(
-    where: WhereExpressionBuilder,
-    filter: FilterInput,
-    field = '',
-    paramId = 'filter',
-  ) {
+  prepareFilter(filter: FilterInput): QBFilterQuery<Entity> {
     if (!filter) {
-      return where;
+      return {};
     }
 
-    Object.entries(filter).map(([key, value]) => {
-      paramId += `_${key}`;
-      switch (key) {
-        case 'or':
-        case 'and':
-          where.andWhere(
-            new Brackets((qb) =>
-              value.forEach((subFilter, index) => {
-                paramId += `_${index}`;
-                qb[`${key}Where`](
-                  new Brackets((andOrQb) =>
-                    this.addFilter(andOrQb, subFilter, key, paramId),
-                  ),
-                );
-              }),
-            ),
-          );
-          break;
-        default:
-          if (operatorsMap[key]) {
-            this.addCondition(where, filter, field, paramId);
-          } else {
-            this.addFilter(where, value, key, paramId);
-          }
-      }
+    // convert filters to string
+    let filterString = JSON.stringify(filter);
+
+    // replace gql to db
+    Object.entries(operatorsMap).forEach(([gqlOperator, dbOperator]) => {
+      filterString = filterString.replace(
+        new RegExp(`"${gqlOperator}":`, 'g'),
+        `"${dbOperator}":`,
+      );
     });
+
+    return JSON.parse(filterString);
   }
 
-  addSort(queryBuilder: SelectQueryBuilder<Entity>, sort: SortInput) {
-    if (!sort) {
-      return queryBuilder;
-    }
+  prepareSort(sort: SortInput): QBQueryOrderMap<Entity> {
+    const orderBy = {};
 
     Object.entries(sort).map(([key, value]) => {
-      queryBuilder.addOrderBy(`"${key}"`, value);
+      orderBy[key] = value;
     });
+
+    return orderBy;
   }
 
   prepareQueryBuilder(
-    queryBuilder: SelectQueryBuilder<Entity>,
+    queryBuilder: QueryBuilder<Entity>,
     filter: FilterInput,
     sort: SortInput = new SortInput(),
-  ): SelectQueryBuilder<Entity> {
-    queryBuilder.andWhere(new Brackets((qb) => this.addFilter(qb, filter)));
-    this.addSort(queryBuilder, sort);
+  ): QueryBuilder<Entity> {
+    queryBuilder.andWhere(this.prepareFilter(filter));
+    queryBuilder.orderBy(this.prepareSort(sort));
     return queryBuilder;
   }
 }

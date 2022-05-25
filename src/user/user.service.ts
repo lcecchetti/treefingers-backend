@@ -22,11 +22,11 @@ export class UserService {
   ) {}
 
   async findOne(filter?: FilterUserInput): Promise<User | null> {
-    return this.prepareQueryBuilder(filter).getOne();
+    return this.prepareQueryBuilder(filter).getSingleResult();
   }
 
   async findMany(filter?: FilterUserInput): Promise<User[]> {
-    return this.prepareQueryBuilder(filter).getMany();
+    return this.prepareQueryBuilder(filter).getResult();
   }
 
   async findById(id: number): Promise<User | null> {
@@ -49,7 +49,11 @@ export class UserService {
       throw new ConflictException('Username already exists');
     }
 
-    const user = await this.userRepository.create(data);
+    const user = await this.userRepository.create({
+      ...data,
+      password: await this.encryptPassword(data.password),
+    });
+
     await this.userRepository.persistAndFlush(user);
     return user;
   }

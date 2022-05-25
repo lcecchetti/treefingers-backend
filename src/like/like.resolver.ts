@@ -63,7 +63,7 @@ export class LikeResolver {
     return userDataloader.load(like.user.id);
   }
 
-  @ResolveField()
+  @ResolveField(() => Likeable)
   async entity(
     @Parent() like: Like,
     @Loader(CommentDataloader) commentDataloader,
@@ -71,9 +71,9 @@ export class LikeResolver {
   ): Promise<Likeable> {
     switch (like.entityType) {
       case LikeableEntityType.Comment:
-        return commentDataloader.load(like.entity.id);
+        return commentDataloader.load(like.entity);
       case LikeableEntityType.Story:
-        return storyDataloader.load(like.entity.id);
+        return storyDataloader.load(like.entity);
     }
   }
 }

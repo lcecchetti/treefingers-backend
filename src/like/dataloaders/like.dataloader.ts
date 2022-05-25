@@ -29,7 +29,7 @@ export class LikeDataloader {
           result.find(
             (r) =>
               r.entityType === entityType &&
-              r.entity.id === entity &&
+              r.entity === entity &&
               r.user.id === user,
           ),
         );

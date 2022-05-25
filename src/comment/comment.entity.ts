@@ -34,6 +34,7 @@ export class Comment implements Likeable {
   content: string;
 
   @ManyToOne(() => User)
+  @Index()
   @Field(() => User)
   user: User;
 
@@ -42,10 +43,9 @@ export class Comment implements Likeable {
   @Field(() => CommentableEntityType)
   entityType: CommentableEntityType;
 
-  @Property()
+  @Property({ type: 'number' })
   @Index()
-  @Field(() => Commentable)
-  entity: Commentable;
+  entity: number;
 
   @Field(() => Int, { defaultValue: 0 })
   likesCount: number;

@@ -78,7 +78,7 @@ export class CommentResolver {
     return userDataloader.load(comment.user.id);
   }
 
-  @ResolveField()
+  @ResolveField(() => Commentable)
   async entity(
     @Parent() comment: Comment,
     @Loader(ForestDataloader) forestDataloader,
@@ -86,9 +86,9 @@ export class CommentResolver {
   ): Promise<Commentable> {
     switch (comment.entityType) {
       case CommentableEntityType.Forest:
-        return forestDataloader.load(comment.entity.id);
+        return forestDataloader.load(comment.entity);
       case CommentableEntityType.Story:
-        return storyDataloader.load(comment.entity.id);
+        return storyDataloader.load(comment.entity);
     }
   }
 }

@@ -17,11 +17,11 @@ export class LikeService {
   ) {}
 
   async findOne(filter?: FilterLikeInput): Promise<Like | null> {
-    return this.prepareQueryBuilder(filter).getOne();
+    return this.prepareQueryBuilder(filter).getSingleResult();
   }
 
   async findMany(filter?: FilterLikeInput): Promise<Like[]> {
-    return this.prepareQueryBuilder(filter).getMany();
+    return this.prepareQueryBuilder(filter).getResult();
   }
 
   async findById(id: number): Promise<Like | null> {

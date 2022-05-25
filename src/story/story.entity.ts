@@ -12,11 +12,10 @@ import { Like } from 'src/like/like.entity';
 import { Commentable } from 'src/comment/interfaces/commentable.interface';
 import {
   ArrayType,
-  Collection,
   Entity,
   Index,
   ManyToOne,
-  OneToMany,
+  OneToOne,
   PrimaryKey,
   Property,
 } from '@mikro-orm/core';
@@ -44,28 +43,22 @@ export class Story implements Likeable, Commentable {
   @Index()
   author: User;
 
-  @OneToMany(() => Story, (chapter) => chapter.parent, { nullable: true })
+  @ManyToOne(() => Story, { nullable: true })
   @Index()
   parent?: Story;
 
-  @OneToMany(() => Story, (root) => root.descendents, { nullable: true })
+  @ManyToOne(() => Story, { nullable: true })
   @Index()
   root?: Story;
 
-  @ManyToOne(() => Story)
-  chapters = new Collection<Story>(this);
-
-  @Property({ type: ArrayType, nullable: true })
+  @Property({ type: ArrayType })
   @Index()
   @Field(() => [String], { nullable: true, defaultValue: [] })
   tags: string[];
 
-  @ManyToOne(() => Forest)
+  @ManyToOne(() => Forest, { nullable: true })
   @Index()
   forest?: Forest;
-
-  @ManyToOne(() => Story)
-  descendents = new Collection<Story>(this);
 
   @Field(() => Int, { defaultValue: 0 })
   commentsCount: number;

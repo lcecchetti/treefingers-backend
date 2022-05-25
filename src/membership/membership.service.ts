@@ -16,11 +16,11 @@ export class MembershipService {
   ) {}
 
   async findOne(filter?: FilterMembershipInput): Promise<Membership | null> {
-    return this.prepareQueryBuilder(filter).getOne();
+    return this.prepareQueryBuilder(filter).getSingleResult();
   }
 
   async findMany(filter?: FilterMembershipInput): Promise<Membership[]> {
-    return this.prepareQueryBuilder(filter).getMany();
+    return this.prepareQueryBuilder(filter).getResult();
   }
 
   async findById(id: number): Promise<Membership | null> {

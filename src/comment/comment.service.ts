@@ -20,11 +20,11 @@ export class CommentService {
   ) {}
 
   async findOne(filter?: FilterCommentInput): Promise<Comment | null> {
-    return this.prepareQueryBuilder(filter).getOne();
+    return this.prepareQueryBuilder(filter).getSingleResult();
   }
 
   async findMany(filter?: FilterCommentInput): Promise<Comment[]> {
-    return this.prepareQueryBuilder(filter).getMany();
+    return this.prepareQueryBuilder(filter).getResult();
   }
 
   async findById(id: number): Promise<Comment | null> {

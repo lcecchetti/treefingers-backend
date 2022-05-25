@@ -19,11 +19,11 @@ export class StoryService {
   ) {}
 
   async findOne(filter?: FilterStoryInput): Promise<Story | null> {
-    return this.prepareQueryBuilder(filter).getOne();
+    return this.prepareQueryBuilder(filter).getSingleResult();
   }
 
   async findMany(filter?: FilterStoryInput): Promise<Story[]> {
-    return this.prepareQueryBuilder(filter).getMany();
+    return this.prepareQueryBuilder(filter).getResult();
   }
 
   async findById(id: number): Promise<Story | null> {
@@ -37,7 +37,7 @@ export class StoryService {
 
     if (data.parent) {
       const parent = await this.findById(data.parent);
-      data.root = parent.root.id || parent.id;
+      data.root = parent.root ? parent.root.id : parent.id;
       data.forest = undefined;
     }
 

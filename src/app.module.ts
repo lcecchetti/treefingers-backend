@@ -32,6 +32,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
     }),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
+      inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         autoSchemaFile: configService.get<string>('graphql.schema'),
         cors: {
@@ -40,10 +41,23 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
         },
         bodyParserConfig: false,
       }),
-      inject: [ConfigService],
     }),
-    MikroOrmModule.forRoot(),
+    MikroOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgresql',
+        dbName: configService.get<string>('database.name'),
+        user: configService.get<string>('database.user'),
+        password: configService.get<string>('database.password'),
+        host: configService.get<string>('database.host'),
+        port: configService.get<number>('database.port'),
+        debug: configService.get<boolean>('env.isDev'),
+        autoLoadEntities: true,
+      }),
+    }),
     MailerModule.forRootAsync({
+      inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         transport: {
           service: configService.get<string>('email.service'),
@@ -63,7 +77,6 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
           },
         },
       }),
-      inject: [ConfigService],
     }),
     UtilsModule,
     DataloaderModule,

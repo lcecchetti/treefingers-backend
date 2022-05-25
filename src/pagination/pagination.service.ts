@@ -1,16 +1,10 @@
+import { QueryBuilder } from '@mikro-orm/postgresql';
 import { BadRequestException } from '@nestjs/common';
 import { SortInput, SORT_DIRECTION } from 'src/query/inputs/sort.input';
-import {
-  Brackets,
-  ObjectLiteral,
-  SelectQueryBuilder,
-  WhereExpressionBuilder,
-} from 'typeorm';
+//@todo convert pagination to mikroorm
 import { ConnectionArgs } from './args/connection.args';
 import { IConnection } from './dto/pagination.dto';
-
-const paramPre = 'cursor_';
-export class PaginationService<Entity extends ObjectLiteral> {
+export class PaginationService<Entity> {
   encodeCursor(node: any, sort: SortInput): string {
     if (!node) {
       return '';
@@ -36,12 +30,12 @@ export class PaginationService<Entity extends ObjectLiteral> {
   }
 
   prepareCursorFilter(
-    where: WhereExpressionBuilder,
     cursor,
     sortArray: [string, SORT_DIRECTION][],
     { ascComparison, descComparison },
-    paramId = 0,
   ) {
+    const filter: any = {};
+
     // current sort field
     const [field, direction] = sortArray.shift();
 
@@ -49,41 +43,29 @@ export class PaginationService<Entity extends ObjectLiteral> {
     const comparison =
       direction === SORT_DIRECTION.ASC ? ascComparison : descComparison;
 
-    // add non unique constraint
-    paramId++;
-    where.where(`"${field}" ${comparison} :${paramPre}${paramId}`, {
-      [`${paramPre}${paramId}`]: cursor[field],
-    });
+    filter.$or = [
+      {
+        [field]: { [comparison]: cursor[field] },
+      },
+    ];
 
     if (!sortArray.length) {
-      return;
+      return filter;
     }
 
-    // add subi
-    where.orWhere(
-      new Brackets((orQb) => {
-        paramId++;
-        orQb.where(`"${field}" = :${paramPre}${paramId}`, {
-          [`${paramPre}${paramId}`]: cursor[field],
-        });
-
-        orQb.andWhere(
-          new Brackets((andQb) => {
-            this.prepareCursorFilter(
-              andQb,
-              cursor,
-              sortArray,
-              { ascComparison, descComparison },
-              paramId,
-            );
-          }),
-        );
-      }),
-    );
+    filter.$or.push({
+      $and: [
+        { [field]: { $eq: cursor[field] } },
+        this.prepareCursorFilter(cursor, sortArray, {
+          ascComparison,
+          descComparison,
+        }),
+      ],
+    });
   }
 
   addCursorFilter(
-    queryBuilder: SelectQueryBuilder<Entity>,
+    queryBuilder: QueryBuilder<Entity>,
     sort: SortInput = new SortInput(),
     { after, before }: ConnectionArgs,
   ) {
@@ -103,21 +85,19 @@ export class PaginationService<Entity extends ObjectLiteral> {
     const cursor = this.decodeCursor(after) || this.decodeCursor(before);
 
     // sort fields as ordered array (order defined by class keys)
-    const sortFields = Object.entries(sort);
+    const sortArray = Object.entries(sort);
 
     // add cursor filter
     queryBuilder.andWhere(
-      new Brackets((where) => {
-        this.prepareCursorFilter(where, cursor, sortFields, {
-          ascComparison: after ? '>' : '<',
-          descComparison: after ? '<' : '>',
-        });
+      this.prepareCursorFilter(cursor, sortArray, {
+        ascComparison: after ? '$gt' : '$lt',
+        descComparison: after ? '$lt' : '$gt',
       }),
     );
   }
 
   async paginate(
-    queryBuilder: SelectQueryBuilder<Entity>,
+    queryBuilder: QueryBuilder<Entity>,
     sort: SortInput,
     { first, last, before, after }: ConnectionArgs,
   ): Promise<IConnection<Entity>> {
@@ -140,8 +120,7 @@ export class PaginationService<Entity extends ObjectLiteral> {
 
     // get nodes
     //@todo improve performances by removing skip and querying first item in reversed order
-    const nodes = await queryBuilder.take(limit).skip(skip).getMany();
-
+    const nodes = await queryBuilder.limit(limit).offset(skip).getResult();
     const result: IConnection<Entity> = {};
 
     // build edges

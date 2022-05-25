@@ -53,7 +53,7 @@ export class Forest implements Commentable {
   @Field(() => Int, { defaultValue: 0 })
   storiesCount: number;
 
-  @OneToMany(() => Membership, (membership) => membership.member)
+  @OneToMany(() => Membership, (membership) => membership.forest)
   memberships = new Collection<Membership>(this);
 
   @OneToMany(() => Story, (story) => story.forest)
