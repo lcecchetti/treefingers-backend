@@ -1,7 +1,6 @@
 import { QueryBuilder } from '@mikro-orm/postgresql';
 import { BadRequestException } from '@nestjs/common';
 import { SortInput, SORT_DIRECTION } from 'src/query/inputs/sort.input';
-//@todo convert pagination to mikroorm
 import { ConnectionArgs } from './args/connection.args';
 import { IConnection } from './dto/pagination.dto';
 export class PaginationService<Entity> {
@@ -13,7 +12,7 @@ export class PaginationService<Entity> {
     const cursor = {};
 
     Object.keys(sort).forEach((key) => {
-      if (node[key]) {
+      if (node[key] !== undefined) {
         cursor[key] = node[key];
       }
     });
@@ -62,6 +61,8 @@ export class PaginationService<Entity> {
         }),
       ],
     });
+
+    return filter;
   }
 
   addCursorFilter(
