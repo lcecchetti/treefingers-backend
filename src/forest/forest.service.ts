@@ -8,11 +8,13 @@ import { PaginationService } from 'src/pagination/pagination.service';
 import { QueryService } from 'src/query/query.service';
 import { SortForestInput } from './inputs/sort-forest.input';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { EntityRepository } from '@mikro-orm/postgresql';
+import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
+import { Story } from 'src/story/story.entity';
 
 @Injectable()
 export class ForestService {
   constructor(
+    private readonly em: EntityManager,
     @InjectRepository(Forest)
     private forestRepository: EntityRepository<Forest>,
     private paginationService: PaginationService<Forest>,

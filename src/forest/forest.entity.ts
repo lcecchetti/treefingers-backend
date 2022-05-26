@@ -12,6 +12,7 @@ import { Story } from 'src/story/story.entity';
 import {
   Collection,
   Entity,
+  Formula,
   Index,
   ManyToOne,
   OneToMany,
@@ -44,12 +45,21 @@ export class Forest implements Commentable {
   @Field(() => User)
   founder: User;
 
+  @Formula(
+    '(select count(distinct c.id) as cnt from comment as c where c.entity = f0.id)',
+  )
   @Field(() => Int, { defaultValue: 0 })
   commentsCount: number;
 
+  @Formula(
+    '(select count(distinct m.id) as cnt from membership as m where m.forest_id = f0.id)',
+  )
   @Field(() => Int, { defaultValue: 0 })
   membersCount: number;
 
+  @Formula(
+    '(select count(distinct s.id) as cnt from story as s where s.forest_id = f0.id)',
+  )
   @Field(() => Int, { defaultValue: 0 })
   storiesCount: number;
 
