@@ -6,7 +6,14 @@ import {
   ObjectType,
 } from '@nestjs/graphql';
 import { isPrivateMiddleware } from './middleware/is-private.middleware';
-import { Entity, Formula, Index, PrimaryKey, Property, Unique } from '@mikro-orm/core';
+import {
+  Entity,
+  Formula,
+  Index,
+  PrimaryKey,
+  Property,
+  Unique,
+} from '@mikro-orm/core';
 
 @Entity()
 @ObjectType()

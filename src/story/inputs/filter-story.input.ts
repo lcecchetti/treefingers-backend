@@ -22,18 +22,6 @@ export class FilterStoryInput extends FilterInput {
   @Field(() => FilterIdInput, { nullable: true })
   forest?: FilterIdInput;
 
-  @Field(() => FilterIntInput, { nullable: true })
-  likesCount?: FilterIntInput;
-
-  @Field(() => FilterIntInput, { nullable: true })
-  childrenCount?: FilterIntInput;
-
-  @Field(() => FilterIntInput, { nullable: true })
-  descendetnsCount?: FilterIntInput;
-
-  @Field(() => FilterIntInput, { nullable: true })
-  commentsCount?: FilterIntInput;
-
   @Field(() => String, { nullable: true })
   query?: string;
 }
