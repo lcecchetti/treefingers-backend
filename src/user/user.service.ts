@@ -85,14 +85,27 @@ export class UserService {
     { query, ...filter }: FilterUserInput = new FilterUserInput(),
     sort: SortUserInput = new SortUserInput(),
   ) {
-    const queryBuilder = this.userRepository.createQueryBuilder();
-
     // add isActive filter
     if (!filter.isActive === false) {
       filter.isActive = true;
     }
 
-    return this.queryService.prepareQueryBuilder(queryBuilder, filter, sort);
+    const queryBuilder = this.queryService.prepareQueryBuilder(
+      this.userRepository.createQueryBuilder(),
+      filter,
+      sort,
+    );
+
+    if (query) {
+      queryBuilder.andWhere({
+        $or: [
+          { username: { $ilike: `%${query}%` } },
+          { bio: { $ilike: `%${query}%` } },
+        ],
+      });
+    }
+
+    return queryBuilder;
   }
 
   async encryptPassword(password: string): Promise<string> {

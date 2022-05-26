@@ -53,7 +53,7 @@ export class Story implements Likeable, Commentable {
   @Index()
   root?: Story;
 
-  @Property({ type: ArrayType })
+  @Property()
   @Index()
   @Field(() => [String], { nullable: true, defaultValue: [] })
   tags: string[];

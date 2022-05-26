@@ -64,10 +64,21 @@ export class ForestService {
     { query, ...filter }: FilterForestInput = new FilterForestInput(),
     sort: SortForestInput = new SortForestInput(),
   ) {
-    return this.queryService.prepareQueryBuilder(
+    const queryBuilder = this.queryService.prepareQueryBuilder(
       this.forestRepository.createQueryBuilder(),
       filter,
       sort,
     );
+
+    if (query) {
+      queryBuilder.andWhere({
+        $or: [
+          { name: { $ilike: `%${query}%` } },
+          { about: { $ilike: `%${query}%` } },
+        ],
+      });
+    }
+
+    return queryBuilder;
   }
 }

@@ -64,7 +64,22 @@ export class StoryService {
     { query, ...filter }: FilterStoryInput = new FilterStoryInput(),
     sort: SortStoryInput = new SortStoryInput(),
   ) {
-    const queryBuilder = this.storyRepository.createQueryBuilder();
-    return this.queryService.prepareQueryBuilder(queryBuilder, filter, sort);
+    const queryBuilder = this.queryService.prepareQueryBuilder(
+      this.storyRepository.createQueryBuilder(),
+      filter,
+      sort,
+    );
+
+    if (query) {
+      queryBuilder.andWhere({
+        $or: [
+          { title: { $ilike: `%${query}%` } },
+          { content: { $ilike: `%${query}%` } },
+          { 'tags::text': { $ilike: `%${query}%` } },
+        ],
+      });
+    }
+
+    return queryBuilder;
   }
 }
