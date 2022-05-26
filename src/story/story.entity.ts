@@ -13,12 +13,14 @@ import { Commentable } from 'src/comment/interfaces/commentable.interface';
 import {
   ArrayType,
   Entity,
+  Formula,
   Index,
   ManyToOne,
-  OneToOne,
   PrimaryKey,
   Property,
 } from '@mikro-orm/core';
+import { LikeableEntityType } from 'src/like/enums/likeable-entity-type.enum';
+import { CommentableEntityType } from 'src/comment/enums/commentable-entity-type.enum';
 
 @Entity()
 @ObjectType({
@@ -60,15 +62,27 @@ export class Story implements Likeable, Commentable {
   @Index()
   forest?: Forest;
 
+  @Formula(
+    `(select count(distinct c.id) as cnt from comment as c where c.entity = s0.id and c.entity_type = '${CommentableEntityType.Story}')`,
+  )
   @Field(() => Int, { defaultValue: 0 })
   commentsCount: number;
 
+  @Formula(
+    `(select count(distinct l.id) as cnt from "like" as l where l.entity = s0.id and l.entity_type = '${LikeableEntityType.Story}')`,
+  )
   @Field(() => Int, { defaultValue: 0 })
   likesCount: number;
 
+  @Formula(
+    '(select count(distinct r.id) as cnt from story as r where r.id = s0.id)',
+  )
   @Field(() => Int, { defaultValue: 0 })
   descendentsCount: number;
 
+  @Formula(
+    '(select count(distinct p.id) as cnt from story as p where p.id = s0.id)',
+  )
   @Field(() => Int, { defaultValue: 0 })
   childrenCount: number;
 

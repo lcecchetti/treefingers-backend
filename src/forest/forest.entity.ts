@@ -20,6 +20,7 @@ import {
   Property,
   Unique,
 } from '@mikro-orm/core';
+import { CommentableEntityType } from 'src/comment/enums/commentable-entity-type.enum';
 
 @Entity()
 @ObjectType({
@@ -46,7 +47,7 @@ export class Forest implements Commentable {
   founder: User;
 
   @Formula(
-    '(select count(distinct c.id) as cnt from comment as c where c.entity = f0.id)',
+    `(select count(distinct c.id) as cnt from comment as c where c.entity = f0.id and c.entity_type = '${CommentableEntityType.Forest}')`,
   )
   @Field(() => Int, { defaultValue: 0 })
   commentsCount: number;

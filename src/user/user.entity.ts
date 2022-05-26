@@ -6,7 +6,7 @@ import {
   ObjectType,
 } from '@nestjs/graphql';
 import { isPrivateMiddleware } from './middleware/is-private.middleware';
-import { Entity, Index, PrimaryKey, Property, Unique } from '@mikro-orm/core';
+import { Entity, Formula, Index, PrimaryKey, Property, Unique } from '@mikro-orm/core';
 
 @Entity()
 @ObjectType()
@@ -38,12 +38,15 @@ export class User {
   @Field({ defaultValue: false })
   isActive: boolean;
 
-  @Field(() => Int, { defaultValue: 0 })
-  likesCount: number;
-
+  @Formula(
+    '(select count(distinct s.id) as cnt from story as s where s.author_id = u0.id)',
+  )
   @Field(() => Int, { defaultValue: 0 })
   storiesCount: number;
 
+  @Formula(
+    '(select count(distinct f.id) as cnt from followership as f where f.followed_id = u0.id)',
+  )
   @Field(() => Int, { defaultValue: 0 })
   followersCount: number;
 

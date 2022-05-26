@@ -64,7 +64,10 @@ export class ForestService {
     { query, ...filter }: FilterForestInput = new FilterForestInput(),
     sort: SortForestInput = new SortForestInput(),
   ) {
-    const queryBuilder = this.forestRepository.createQueryBuilder();
-    return this.queryService.prepareQueryBuilder(queryBuilder, filter, sort);
+    return this.queryService.prepareQueryBuilder(
+      this.forestRepository.createQueryBuilder(),
+      filter,
+      sort,
+    );
   }
 }

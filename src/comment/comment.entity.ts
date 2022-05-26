@@ -9,15 +9,16 @@ import { User } from 'src/user/user.entity';
 import { Likeable } from 'src/like/interfaces/likeable.interface';
 import { Like } from 'src/like/like.entity';
 import { CommentableEntityType } from './enums/commentable-entity-type.enum';
-import { Commentable } from './interfaces/commentable.interface';
 import {
   Entity,
   Enum,
+  Formula,
   Index,
   ManyToOne,
   PrimaryKey,
   Property,
 } from '@mikro-orm/core';
+import { LikeableEntityType } from 'src/like/enums/likeable-entity-type.enum';
 
 @Entity()
 @Index({ properties: ['entityType', 'entity'] })
@@ -47,6 +48,9 @@ export class Comment implements Likeable {
   @Index()
   entity: number;
 
+  @Formula(
+    `(select count(distinct l.id) as cnt from "like" as l where l.entity = c0.id and l.entity_type = '${LikeableEntityType.Comment}')`,
+  )
   @Field(() => Int, { defaultValue: 0 })
   likesCount: number;
 

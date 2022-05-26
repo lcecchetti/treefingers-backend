@@ -1,5 +1,9 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { FilterIdInput, FilterInput } from 'src/query/inputs/filter.input';
+import {
+  FilterIdInput,
+  FilterInput,
+  FilterIntInput,
+} from 'src/query/inputs/filter.input';
 
 @InputType()
 export class FilterStoryInput extends FilterInput {
@@ -17,6 +21,18 @@ export class FilterStoryInput extends FilterInput {
 
   @Field(() => FilterIdInput, { nullable: true })
   forest?: FilterIdInput;
+
+  @Field(() => FilterIntInput, { nullable: true })
+  likesCount?: FilterIntInput;
+
+  @Field(() => FilterIntInput, { nullable: true })
+  childrenCount?: FilterIntInput;
+
+  @Field(() => FilterIntInput, { nullable: true })
+  descendetnsCount?: FilterIntInput;
+
+  @Field(() => FilterIntInput, { nullable: true })
+  commentsCount?: FilterIntInput;
 
   @Field(() => String, { nullable: true })
   query?: string;

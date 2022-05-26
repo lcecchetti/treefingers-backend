@@ -4,5 +4,8 @@ import { SORT_DIRECTION } from 'src/query/inputs/sort.input';
 @InputType()
 export class SortCommentInput {
   @Field(() => SORT_DIRECTION, { nullable: true })
+  likesCount: SORT_DIRECTION;
+
+  @Field(() => SORT_DIRECTION, { nullable: true })
   id: SORT_DIRECTION = SORT_DIRECTION.DESC;
 }
