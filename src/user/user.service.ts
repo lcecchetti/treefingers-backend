@@ -61,6 +61,8 @@ export class UserService {
   async edit(userId: number, data: EditUserDataInput): Promise<User> {
     if (data.password) {
       data.password = await this.encryptPassword(data.password);
+    } else {
+      delete data.password;
     }
 
     const user = await this.findById(userId);
