@@ -1,5 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { Matches, MaxLength } from 'class-validator';
+import { Type } from 'class-transformer';
+import { Matches, MaxLength, ValidateNested } from 'class-validator';
 
 @InputType()
 export class CreateForestDataInput {
@@ -17,5 +18,7 @@ export class CreateForestDataInput {
 @InputType()
 export class CreateForestInput {
   @Field(() => CreateForestDataInput)
+  @ValidateNested()
+  @Type(() => CreateForestDataInput)
   data: CreateForestDataInput;
 }

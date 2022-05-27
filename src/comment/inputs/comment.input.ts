@@ -1,5 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { MaxLength } from 'class-validator';
+import { Type } from 'class-transformer';
+import { MaxLength, ValidateNested } from 'class-validator';
 import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
 import { CommentableEntityType } from '../enums/commentable-entity-type.enum';
 
@@ -21,5 +22,7 @@ export class CommentDataInput {
 @InputType({ isAbstract: true })
 export abstract class CommentInput {
   @Field(() => CommentDataInput)
+  @ValidateNested()
+  @Type(() => CommentDataInput)
   data: CommentDataInput;
 }

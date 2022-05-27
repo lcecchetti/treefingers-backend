@@ -1,5 +1,12 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { ArrayMaxSize, MaxLength } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  ArrayMaxSize,
+  ArrayUnique,
+  Matches,
+  MaxLength,
+  ValidateNested,
+} from 'class-validator';
 import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
 
 @InputType()
@@ -19,7 +26,9 @@ export class CreateStoryDataInput {
   @MaxLength(16, {
     each: true,
   })
+  @Matches(/^[a-zA-Z0-9_]*$/g, { each: true })
   @ArrayMaxSize(5)
+  @ArrayUnique()
   tags?: string[];
 
   @Field(() => EncodedID, { nullable: true })
@@ -32,5 +41,7 @@ export class CreateStoryDataInput {
 @InputType()
 export class CreateStoryInput {
   @Field(() => CreateStoryDataInput)
+  @ValidateNested()
+  @Type(() => CreateStoryDataInput)
   data: CreateStoryDataInput;
 }

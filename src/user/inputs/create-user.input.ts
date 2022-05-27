@@ -1,10 +1,12 @@
 import { Field, InputType } from '@nestjs/graphql';
+import { Type } from 'class-transformer';
 import {
   IsEmail,
   Length,
   Matches,
   MaxLength,
   MinLength,
+  ValidateNested,
 } from 'class-validator';
 
 @InputType()
@@ -30,5 +32,7 @@ export class CreateUserInputData {
 @InputType()
 export class CreateUserInput {
   @Field()
+  @ValidateNested()
+  @Type(() => CreateUserInput)
   data: CreateUserInput;
 }

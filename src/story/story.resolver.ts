@@ -57,6 +57,8 @@ export class StoryResolver {
     @Args('input') { data }: CreateStoryInput,
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<CreateStoryPayload> {
+    console.log('hereeeee');
+    console.log(data);
     return {
       story: await this.storyService.create({
         ...data,
