@@ -99,7 +99,7 @@ export class AuthService {
     }
 
     return {
-      registrationResult: true,
+      result: true,
     };
   }
 
@@ -137,7 +137,7 @@ export class AuthService {
 
     // always return true to avoid user enumeration
     return {
-      emailSent: true,
+      result: true,
     };
   }
 
@@ -165,7 +165,7 @@ export class AuthService {
     });
 
     return {
-      passwordChanged: true,
+      result: true,
     };
   }
 
@@ -193,7 +193,7 @@ export class AuthService {
     });
 
     return {
-      accountActivated: true,
+      result: true,
     };
   }
 }

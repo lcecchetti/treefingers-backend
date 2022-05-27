@@ -3,5 +3,5 @@ import { Field, ObjectType } from '@nestjs/graphql';
 @ObjectType()
 export class RegisterPayload {
   @Field()
-  registrationResult: boolean;
+  result: boolean;
 }
