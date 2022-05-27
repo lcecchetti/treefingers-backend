@@ -8,13 +8,13 @@ import {
   Property,
   Unique,
 } from '@mikro-orm/core';
-import { HashedIDScalar } from 'src/common/scalars/hashed-id.scalar';
+import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
 
 @Entity()
 @ObjectType()
 export class User {
   @PrimaryKey()
-  @Field(() => HashedIDScalar)
+  @Field(() => EncodedID)
   id: number;
 
   @Property()

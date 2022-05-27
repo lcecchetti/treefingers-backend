@@ -6,7 +6,7 @@ import { SortInput } from './inputs/sort.input';
 
 const operatorsMap = {
   eq: '$eq',
-  neq: '$neq',
+  ne: '$ne',
   lt: '$lt',
   lte: '$lte',
   gt: '$gt',

@@ -1,9 +1,9 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { HashedIDScalar } from 'src/common/scalars/hashed-id.scalar';
+import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
 
 @InputType()
 export class FollowInput {
-  @Field(() => HashedIDScalar)
+  @Field(() => EncodedID)
   followed: number;
 
   follower: number;

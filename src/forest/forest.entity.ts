@@ -15,7 +15,7 @@ import {
   Unique,
 } from '@mikro-orm/core';
 import { CommentableEntityType } from 'src/comment/enums/commentable-entity-type.enum';
-import { HashedIDScalar } from 'src/common/scalars/hashed-id.scalar';
+import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
 
 @Entity()
 @ObjectType({
@@ -23,7 +23,7 @@ import { HashedIDScalar } from 'src/common/scalars/hashed-id.scalar';
 })
 export class Forest implements Commentable {
   @PrimaryKey()
-  @Field(() => HashedIDScalar)
+  @Field(() => EncodedID)
   id: number;
 
   @Property()

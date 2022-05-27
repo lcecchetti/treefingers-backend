@@ -14,7 +14,7 @@ import {
 } from '@mikro-orm/core';
 import { LikeableEntityType } from 'src/like/enums/likeable-entity-type.enum';
 import { CommentableEntityType } from 'src/comment/enums/commentable-entity-type.enum';
-import { HashedIDScalar } from 'src/common/scalars/hashed-id.scalar';
+import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
 
 @Entity()
 @ObjectType({
@@ -22,7 +22,7 @@ import { HashedIDScalar } from 'src/common/scalars/hashed-id.scalar';
 })
 export class Story implements Likeable, Commentable {
   @PrimaryKey()
-  @Field(() => HashedIDScalar)
+  @Field(() => EncodedID)
   id: number;
 
   @Property()
@@ -49,7 +49,7 @@ export class Story implements Likeable, Commentable {
 
   @Property({ type: 'number[]', default: [] })
   @Index()
-  @Field(() => [HashedIDScalar])
+  @Field(() => [EncodedID])
   path: number[];
 
   @Property({ default: [] })

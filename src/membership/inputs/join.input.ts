@@ -1,9 +1,9 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { HashedIDScalar } from 'src/common/scalars/hashed-id.scalar';
+import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
 
 @InputType()
 export class JoinInput {
-  @Field(() => HashedIDScalar)
+  @Field(() => EncodedID)
   forest: number;
 
   member: number;

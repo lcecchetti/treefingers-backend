@@ -9,14 +9,14 @@ import {
   Property,
   Unique,
 } from '@mikro-orm/core';
-import { HashedIDScalar } from 'src/common/scalars/hashed-id.scalar';
+import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
 
 @Entity()
 @Unique({ properties: ['member', 'forest'] })
 @ObjectType()
 export class Membership {
   @PrimaryKey()
-  @Field(() => HashedIDScalar)
+  @Field(() => EncodedID)
   id: number;
 
   @ManyToOne(() => Forest, { onDelete: 'cascade' })

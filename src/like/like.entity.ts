@@ -8,7 +8,7 @@ import {
   Unique,
 } from '@mikro-orm/core';
 import { Field, GraphQLISODateTime, ObjectType } from '@nestjs/graphql';
-import { HashedIDScalar } from 'src/common/scalars/hashed-id.scalar';
+import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
 import { User } from 'src/user/user.entity';
 import { LikeableEntityType } from './enums/likeable-entity-type.enum';
 
@@ -18,7 +18,7 @@ import { LikeableEntityType } from './enums/likeable-entity-type.enum';
 @ObjectType()
 export class Like {
   @PrimaryKey()
-  @Field(() => HashedIDScalar)
+  @Field(() => EncodedID)
   id: number;
 
   @Enum(() => LikeableEntityType)

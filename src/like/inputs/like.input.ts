@@ -1,10 +1,10 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { HashedIDScalar } from 'src/common/scalars/hashed-id.scalar';
+import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
 import { LikeableEntityType } from '../enums/likeable-entity-type.enum';
 
 @InputType()
 export class LikeInput {
-  @Field(() => HashedIDScalar)
+  @Field(() => EncodedID)
   entity: number;
 
   @Field(() => LikeableEntityType)

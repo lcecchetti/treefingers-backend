@@ -1,5 +1,5 @@
-import { Field, ID, InputType, Int } from '@nestjs/graphql';
-import { HashedIDScalar } from 'src/common/scalars/hashed-id.scalar';
+import { Field, InputType, Int } from '@nestjs/graphql';
+import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
 
 @InputType()
 export class FilterStringInput {
@@ -28,21 +28,21 @@ export class FilterBooleanInput {
   eq?: boolean;
 
   @Field(() => Boolean, { nullable: true })
-  neq?: boolean;
+  ne?: boolean;
 }
 
 @InputType()
 export class FilterIdInput {
-  @Field(() => HashedIDScalar, { nullable: true })
+  @Field(() => EncodedID, { nullable: true })
   eq?: number;
 
-  @Field(() => HashedIDScalar, { nullable: true })
+  @Field(() => EncodedID, { nullable: true })
   ne?: number;
 
-  @Field(() => [HashedIDScalar], { nullable: true })
+  @Field(() => [EncodedID], { nullable: true })
   in?: number[];
 
-  @Field(() => [HashedIDScalar], { nullable: true })
+  @Field(() => [EncodedID], { nullable: true })
   nin?: number[];
 }
 

@@ -13,7 +13,7 @@ import {
   Property,
 } from '@mikro-orm/core';
 import { LikeableEntityType } from 'src/like/enums/likeable-entity-type.enum';
-import { HashedIDScalar } from 'src/common/scalars/hashed-id.scalar';
+import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
 
 @Entity()
 @Index({ properties: ['entityType', 'entity'] })
@@ -22,7 +22,7 @@ import { HashedIDScalar } from 'src/common/scalars/hashed-id.scalar';
 })
 export class Comment implements Likeable {
   @PrimaryKey()
-  @Field(() => HashedIDScalar)
+  @Field(() => EncodedID)
   id: number;
 
   @Property({ type: 'text' })

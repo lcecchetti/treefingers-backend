@@ -1,6 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { MaxLength } from 'class-validator';
-import { HashedIDScalar } from 'src/common/scalars/hashed-id.scalar';
+import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
 import { CommentableEntityType } from '../enums/commentable-entity-type.enum';
 
 @InputType()
@@ -9,7 +9,7 @@ export class CommentDataInput {
   @MaxLength(512)
   content: string;
 
-  @Field(() => HashedIDScalar)
+  @Field(() => EncodedID)
   entity: number;
 
   @Field(() => CommentableEntityType)

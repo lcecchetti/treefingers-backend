@@ -1,6 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { ArrayMaxSize, MaxLength } from 'class-validator';
-import { HashedIDScalar } from 'src/common/scalars/hashed-id.scalar';
+import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
 
 @InputType()
 export class CreateStoryDataInput {
@@ -12,7 +12,7 @@ export class CreateStoryDataInput {
   @MaxLength(4096)
   content: string;
 
-  @Field(() => HashedIDScalar, { nullable: true })
+  @Field(() => EncodedID, { nullable: true })
   parent?: number;
 
   @Field(() => [String], { nullable: true })
@@ -22,7 +22,7 @@ export class CreateStoryDataInput {
   @ArrayMaxSize(5)
   tags?: string[];
 
-  @Field(() => HashedIDScalar, { nullable: true })
+  @Field(() => EncodedID, { nullable: true })
   forest?: number;
 
   author: number;

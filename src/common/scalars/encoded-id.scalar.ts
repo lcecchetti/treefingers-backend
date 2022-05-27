@@ -3,7 +3,7 @@ import { Kind, ValueNode } from 'graphql';
 import Hashids from 'hashids';
 
 @Scalar('HashedID')
-export class HashedIDScalar implements CustomScalar<string, number> {
+export class EncodedID implements CustomScalar<string, number> {
   description = 'Hashed ID custom scalar type';
   hashids = new Hashids('Treefingers', 10);
 
