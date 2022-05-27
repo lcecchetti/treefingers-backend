@@ -1,10 +1,4 @@
-import {
-  Field,
-  GraphQLISODateTime,
-  ID,
-  Int,
-  ObjectType,
-} from '@nestjs/graphql';
+import { Field, GraphQLISODateTime, Int, ObjectType } from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
 import { Commentable } from 'src/comment/interfaces/commentable.interface';
 import { Membership } from 'src/membership/membership.entity';
@@ -21,6 +15,7 @@ import {
   Unique,
 } from '@mikro-orm/core';
 import { CommentableEntityType } from 'src/comment/enums/commentable-entity-type.enum';
+import { HashedIDScalar } from 'src/common/scalars/hashed-id.scalar';
 
 @Entity()
 @ObjectType({
@@ -28,7 +23,7 @@ import { CommentableEntityType } from 'src/comment/enums/commentable-entity-type
 })
 export class Forest implements Commentable {
   @PrimaryKey()
-  @Field(() => ID)
+  @Field(() => HashedIDScalar)
   id: number;
 
   @Property()

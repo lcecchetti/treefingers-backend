@@ -7,10 +7,10 @@ import {
   Property,
   Unique,
 } from '@mikro-orm/core';
-import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
+import { Field, GraphQLISODateTime, ObjectType } from '@nestjs/graphql';
+import { HashedIDScalar } from 'src/common/scalars/hashed-id.scalar';
 import { User } from 'src/user/user.entity';
 import { LikeableEntityType } from './enums/likeable-entity-type.enum';
-import { Likeable } from './interfaces/likeable.interface';
 
 @Entity()
 @Unique({ properties: ['user', 'entity', 'entityType'] })
@@ -18,7 +18,7 @@ import { Likeable } from './interfaces/likeable.interface';
 @ObjectType()
 export class Like {
   @PrimaryKey()
-  @Field(() => ID)
+  @Field(() => HashedIDScalar)
   id: number;
 
   @Enum(() => LikeableEntityType)

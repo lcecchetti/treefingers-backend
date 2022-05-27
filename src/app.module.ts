@@ -4,7 +4,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
-import { UtilsModule } from './utils/utils.module';
 import { PaginationModule } from './pagination/pagination.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { APP_GUARD, APP_PIPE } from '@nestjs/core';
@@ -22,6 +21,7 @@ import { LikeModule } from './like/like.module';
 import { MembershipModule } from './membership/membership.module';
 import { StoryModule } from './story/story.module';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { CommonModule } from './common/utils.module';
 
 @Module({
   imports: [
@@ -78,7 +78,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
         },
       }),
     }),
-    UtilsModule,
+    CommonModule,
     DataloaderModule,
     QueryModule,
     PaginationModule,

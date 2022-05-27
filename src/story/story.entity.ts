@@ -1,17 +1,10 @@
-import {
-  Field,
-  GraphQLISODateTime,
-  ID,
-  Int,
-  ObjectType,
-} from '@nestjs/graphql';
+import { Field, GraphQLISODateTime, Int, ObjectType } from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
 import { Forest } from 'src/forest/forest.entity';
 import { Likeable } from 'src/like/interfaces/likeable.interface';
 import { Like } from 'src/like/like.entity';
 import { Commentable } from 'src/comment/interfaces/commentable.interface';
 import {
-  ArrayType,
   Entity,
   Formula,
   Index,
@@ -21,6 +14,7 @@ import {
 } from '@mikro-orm/core';
 import { LikeableEntityType } from 'src/like/enums/likeable-entity-type.enum';
 import { CommentableEntityType } from 'src/comment/enums/commentable-entity-type.enum';
+import { HashedIDScalar } from 'src/common/scalars/hashed-id.scalar';
 
 @Entity()
 @ObjectType({
@@ -28,7 +22,7 @@ import { CommentableEntityType } from 'src/comment/enums/commentable-entity-type
 })
 export class Story implements Likeable, Commentable {
   @PrimaryKey()
-  @Field(() => ID)
+  @Field(() => HashedIDScalar)
   id: number;
 
   @Property()

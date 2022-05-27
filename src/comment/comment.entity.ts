@@ -1,10 +1,4 @@
-import {
-  Field,
-  GraphQLISODateTime,
-  ID,
-  Int,
-  ObjectType,
-} from '@nestjs/graphql';
+import { Field, GraphQLISODateTime, Int, ObjectType } from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
 import { Likeable } from 'src/like/interfaces/likeable.interface';
 import { Like } from 'src/like/like.entity';
@@ -19,6 +13,7 @@ import {
   Property,
 } from '@mikro-orm/core';
 import { LikeableEntityType } from 'src/like/enums/likeable-entity-type.enum';
+import { HashedIDScalar } from 'src/common/scalars/hashed-id.scalar';
 
 @Entity()
 @Index({ properties: ['entityType', 'entity'] })
@@ -27,7 +22,7 @@ import { LikeableEntityType } from 'src/like/enums/likeable-entity-type.enum';
 })
 export class Comment implements Likeable {
   @PrimaryKey()
-  @Field(() => ID)
+  @Field(() => HashedIDScalar)
   id: number;
 
   @Property({ type: 'text' })

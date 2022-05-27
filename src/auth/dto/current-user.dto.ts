@@ -1,8 +1,9 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { HashedIDScalar } from 'src/common/scalars/hashed-id.scalar';
 
 @ObjectType()
 export class CurrentUser {
-  @Field(() => ID)
+  @Field(() => HashedIDScalar)
   id: number;
 
   @Field()

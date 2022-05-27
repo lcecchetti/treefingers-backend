@@ -13,7 +13,7 @@ import { CreateForestPayload } from './payloads/create-forest.payload';
 import { CreateForestInput } from './inputs/create-forest.input';
 import { FilterForestInput } from './inputs/filter-forest.input';
 import { User } from 'src/user/user.entity';
-import { StringService } from 'src/utils/services/string.service';
+import { StringService } from 'src/common/services/string.service';
 import { ForestConnection } from './dto/forest-connection.dto';
 import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';

@@ -1,4 +1,4 @@
-import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
+import { Field, GraphQLISODateTime, ObjectType } from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
 import { Forest } from 'src/forest/forest.entity';
 import {
@@ -9,13 +9,14 @@ import {
   Property,
   Unique,
 } from '@mikro-orm/core';
+import { HashedIDScalar } from 'src/common/scalars/hashed-id.scalar';
 
 @Entity()
 @Unique({ properties: ['member', 'forest'] })
 @ObjectType()
 export class Membership {
   @PrimaryKey()
-  @Field(() => ID)
+  @Field(() => HashedIDScalar)
   id: number;
 
   @ManyToOne(() => Forest)

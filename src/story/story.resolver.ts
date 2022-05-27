@@ -12,7 +12,7 @@ import { User } from 'src/user/user.entity';
 import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
 import { StoryConnectionArgs } from './args/story-connection.args';
 import { Forest } from 'src/forest/forest.entity';
-import { StringService } from 'src/utils/services/string.service';
+import { StringService } from 'src/common/services/string.service';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
 import { StoryConnection } from './dto/story-connection.dto';
 import { CreateStoryPayload } from './payloads/create-story.payload';

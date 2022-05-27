@@ -10,7 +10,7 @@ import { UserService } from './user.service';
 import { User } from './user.entity';
 import { UserConnectionArgs } from './args/user-connection.args';
 import { GetCurrentUser } from '../auth/decorators/get-current-user.decorator';
-import { StringService } from 'src/utils/services/string.service';
+import { StringService } from 'src/common/services/string.service';
 import { CurrentUser } from 'src/auth/dto/current-user.dto';
 import { UserConnection } from './dto/user-connection.dto';
 import { FilterUserInput } from './inputs/filter-user.input';

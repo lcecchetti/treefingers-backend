@@ -6,7 +6,8 @@ import {
   Property,
   Unique,
 } from '@mikro-orm/core';
-import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
+import { Field, GraphQLISODateTime, ObjectType } from '@nestjs/graphql';
+import { HashedIDScalar } from 'src/common/scalars/hashed-id.scalar';
 import { User } from 'src/user/user.entity';
 
 @Entity()
@@ -14,7 +15,7 @@ import { User } from 'src/user/user.entity';
 @ObjectType()
 export class Followership {
   @PrimaryKey()
-  @Field(() => ID)
+  @Field(() => HashedIDScalar)
   id: number;
 
   @ManyToOne(() => User)

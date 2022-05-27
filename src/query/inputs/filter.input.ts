@@ -1,4 +1,5 @@
 import { Field, ID, InputType, Int } from '@nestjs/graphql';
+import { HashedIDScalar } from 'src/common/scalars/hashed-id.scalar';
 
 @InputType()
 export class FilterStringInput {
@@ -32,16 +33,16 @@ export class FilterBooleanInput {
 
 @InputType()
 export class FilterIdInput {
-  @Field(() => ID, { nullable: true })
+  @Field(() => HashedIDScalar, { nullable: true })
   eq?: number;
 
-  @Field(() => ID, { nullable: true })
+  @Field(() => HashedIDScalar, { nullable: true })
   ne?: number;
 
-  @Field(() => [ID], { nullable: true })
+  @Field(() => [HashedIDScalar], { nullable: true })
   in?: number[];
 
-  @Field(() => [ID], { nullable: true })
+  @Field(() => [HashedIDScalar], { nullable: true })
   nin?: number[];
 }
 

@@ -1,10 +1,4 @@
-import {
-  Field,
-  GraphQLISODateTime,
-  ID,
-  Int,
-  ObjectType,
-} from '@nestjs/graphql';
+import { Field, GraphQLISODateTime, Int, ObjectType } from '@nestjs/graphql';
 import { isPrivateMiddleware } from './middleware/is-private.middleware';
 import {
   Entity,
@@ -14,12 +8,13 @@ import {
   Property,
   Unique,
 } from '@mikro-orm/core';
+import { HashedIDScalar } from 'src/common/scalars/hashed-id.scalar';
 
 @Entity()
 @ObjectType()
 export class User {
   @PrimaryKey()
-  @Field(() => ID)
+  @Field(() => HashedIDScalar)
   id: number;
 
   @Property()
