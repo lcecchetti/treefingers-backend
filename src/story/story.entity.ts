@@ -43,6 +43,10 @@ export class Story implements Likeable, Commentable {
   @Index()
   parent?: Story;
 
+  @ManyToOne(() => Story, { nullable: true, onDelete: 'cascade' })
+  @Index()
+  root?: Story;
+
   @Property({ type: 'number[]', default: [] })
   @Index()
   @Field(() => [HashedIDScalar])

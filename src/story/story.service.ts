@@ -39,6 +39,7 @@ export class StoryService {
       const parent = await this.findById(data.parent);
       data.forest = undefined;
       data.path = [...parent.path];
+      data.root = parent.root ? parent.root.id : parent.id;
     }
 
     const story = await this.storyRepository.create(data);

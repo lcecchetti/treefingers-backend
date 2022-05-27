@@ -27,6 +27,7 @@ export class CreateStoryDataInput {
 
   author: number;
   path: number[];
+  root: number;
 }
 @InputType()
 export class CreateStoryInput {

@@ -112,10 +112,11 @@ export class StoryResolver {
     @Parent() story: Story,
     @Loader(StoryDataloader) storyDataloader,
   ): Promise<Story | null> {
-    if (!story.parent || story.path.length <= 1) {
+    if (!story.root) {
       return null;
     }
-    return storyDataloader.load(story.path[0]);
+
+    return storyDataloader.load(story.root.id);
   }
 
   @ResolveField(() => Forest, { nullable: true })
