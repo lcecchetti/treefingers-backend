@@ -26,8 +26,7 @@ export class CreateStoryDataInput {
   forest?: number;
 
   author: number;
-  root: number;
-  level: number;
+  path: number[];
 }
 @InputType()
 export class CreateStoryInput {

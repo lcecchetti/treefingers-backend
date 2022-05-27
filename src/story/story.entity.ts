@@ -39,17 +39,18 @@ export class Story implements Likeable, Commentable {
   @Index()
   author: User;
 
-  @ManyToOne(() => Story, { nullable: true })
+  @ManyToOne(() => Story, { nullable: true, onDelete: 'cascade' })
   @Index()
   parent?: Story;
 
-  @ManyToOne(() => Story, { nullable: true })
+  @Property({ type: 'number[]', default: [] })
   @Index()
-  root?: Story;
+  @Field(() => [HashedIDScalar])
+  path: number[];
 
-  @Property()
+  @Property({ default: [] })
   @Index()
-  @Field(() => [String], { nullable: true, defaultValue: [] })
+  @Field(() => [String], { defaultValue: [] })
   tags: string[];
 
   @ManyToOne(() => Forest, { nullable: true })

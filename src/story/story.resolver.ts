@@ -51,11 +51,6 @@ export class StoryResolver {
     return this.storyService.findOne(filter);
   }
 
-  @Query(() => String)
-  async test(): Promise<string> {
-    return 'test';
-  }
-
   @UseGuards(IsAuthenticatedGuard)
   @Mutation(() => CreateStoryPayload)
   async createStory(
@@ -117,11 +112,10 @@ export class StoryResolver {
     @Parent() story: Story,
     @Loader(StoryDataloader) storyDataloader,
   ): Promise<Story | null> {
-    if (!story.root) {
+    if (!story.parent || story.path.length <= 1) {
       return null;
     }
-
-    return storyDataloader.load(story.root.id);
+    return storyDataloader.load(story.path[0]);
   }
 
   @ResolveField(() => Forest, { nullable: true })

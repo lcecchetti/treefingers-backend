@@ -37,12 +37,17 @@ export class StoryService {
 
     if (data.parent) {
       const parent = await this.findById(data.parent);
-      data.root = parent.root ? parent.root.id : parent.id;
       data.forest = undefined;
+      data.path = [...parent.path];
     }
 
     const story = await this.storyRepository.create(data);
     await this.storyRepository.persistAndFlush(story);
+
+    // update path
+    story.path.push(story.id);
+    await this.storyRepository.persistAndFlush(story);
+
     return story;
   }
 
