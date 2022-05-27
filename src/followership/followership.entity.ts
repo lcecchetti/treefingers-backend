@@ -18,12 +18,12 @@ export class Followership {
   @Field(() => HashedIDScalar)
   id: number;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { onDelete: 'cascade' })
   @Index()
   @Field(() => User)
   followed: User;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { onDelete: 'cascade' })
   @Index()
   @Field(() => User)
   follower: User;

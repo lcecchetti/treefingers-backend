@@ -19,12 +19,12 @@ export class Membership {
   @Field(() => HashedIDScalar)
   id: number;
 
-  @ManyToOne(() => Forest)
+  @ManyToOne(() => Forest, { onDelete: 'cascade' })
   @Index()
   @Field(() => Forest)
   forest: Forest;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { onDelete: 'cascade' })
   @Index()
   @Field(() => User)
   member: User;
