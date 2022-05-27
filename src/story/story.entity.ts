@@ -61,6 +61,10 @@ export class Story implements Likeable, Commentable {
   @Index()
   forest?: Forest;
 
+  @Formula(`(cardinality(s0.path))`)
+  @Field(() => Int)
+  depth: number;
+
   @Formula(
     `(select count(distinct c.id) as cnt from comment as c where c.entity = s0.id and c.entity_type = '${CommentableEntityType.Story}')`,
   )
