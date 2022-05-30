@@ -16,8 +16,6 @@ import { CommentConnection } from './dto/comment-connection.dto';
 import { Like } from 'src/like/like.entity';
 import { CommentInput } from './inputs/comment.input';
 import { CommentPayload } from './payloads/comment.payload';
-import { Commentable } from './interfaces/commentable.interface';
-import { CommentableEntityType } from './enums/commentable-entity-type.enum';
 import { UseGuards } from '@nestjs/common';
 import { IsAuthenticatedGuard } from 'src/auth/guards/is-authenticated.guard';
 import { UserDataloader } from 'src/user/dataloaders/user.dataloader';
@@ -25,6 +23,8 @@ import { Loader } from '@tracworx/nestjs-dataloader';
 import { ForestDataloader } from 'src/forest/dataloaders/forest.dataloader';
 import { LikeDataloader } from 'src/like/dataloaders/like.dataloader';
 import { StoryDataloader } from 'src/story/dataloaders/story.dataloader';
+import { Story } from 'src/story/story.entity';
+import { Forest } from 'src/forest/forest.entity';
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -76,17 +76,25 @@ export class CommentResolver {
     return userDataloader.load(comment.user.id);
   }
 
-  @ResolveField(() => Commentable)
-  async entity(
+  @ResolveField(() => Story, { nullable: true })
+  async story(
+    @Parent() comment: Comment,
+    @Loader(StoryDataloader) storyDataloader,
+  ): Promise<Story> {
+    if (!comment.story) {
+      return null;
+    }
+    return storyDataloader.load(comment.story.id);
+  }
+
+  @ResolveField(() => Forest, { nullable: true})
+  async forest(
     @Parent() comment: Comment,
     @Loader(ForestDataloader) forestDataloader,
-    @Loader(StoryDataloader) storyDataloader,
-  ): Promise<Commentable> {
-    switch (comment.entityType) {
-      case CommentableEntityType.Forest:
-        return forestDataloader.load(comment.entity);
-      case CommentableEntityType.Story:
-        return storyDataloader.load(comment.entity);
+  ): Promise<Story> {
+    if (!comment.forest) {
+      return null;
     }
+    return forestDataloader.load(comment.forest.id);
   }
 }

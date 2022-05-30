@@ -11,7 +11,6 @@ import {
   PrimaryKey,
   Property,
 } from '@mikro-orm/core';
-import { CommentableEntityType } from 'src/comment/enums/commentable-entity-type.enum';
 import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
 import { Likeable } from 'src/like/interfaces/likeable.interface';
 
@@ -65,7 +64,7 @@ export class Story implements Likeable, Commentable {
   depth: number;
 
   @Formula(
-    `(select count(distinct c.id) as cnt from comment as c where c.entity = s0.id and c.entity_type = '${CommentableEntityType.Story}')`,
+    '(select count(distinct c.id) as cnt from comment as c where c.story_id = s0.id)',
   )
   @Field(() => Int, { defaultValue: 0 })
   commentsCount: number;

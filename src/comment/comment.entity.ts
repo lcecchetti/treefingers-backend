@@ -1,10 +1,9 @@
 import { Field, GraphQLISODateTime, Int, ObjectType } from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
 import { Like } from 'src/like/like.entity';
-import { CommentableEntityType } from './enums/commentable-entity-type.enum';
 import {
+  Check,
   Entity,
-  Enum,
   Formula,
   Index,
   ManyToOne,
@@ -13,9 +12,13 @@ import {
 } from '@mikro-orm/core';
 import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
 import { Likeable } from 'src/like/interfaces/likeable.interface';
+import { Story } from 'src/story/story.entity';
+import { Forest } from 'src/forest/forest.entity';
 
 @Entity()
-@Index({ properties: ['entityType', 'entity'] })
+@Check({
+  expression: () => `story_id IS NOT NULL OR forest_id IS NOT NULL`,
+})
 @ObjectType()
 export class Comment implements Likeable {
   @PrimaryKey()
@@ -31,14 +34,15 @@ export class Comment implements Likeable {
   @Field(() => User)
   user: User;
 
-  @Enum(() => CommentableEntityType)
+  @ManyToOne(() => Story, { nullable: true, onDelete: 'cascade' })
   @Index()
-  @Field(() => CommentableEntityType)
-  entityType: CommentableEntityType;
+  @Field(() => Story, { nullable: true })
+  story?: Story;
 
-  @Property({ type: 'number' })
+  @ManyToOne(() => Forest, { nullable: true, onDelete: 'cascade' })
   @Index()
-  entity: number;
+  @Field(() => Forest, { nullable: true })
+  forest?: Forest;
 
   @Formula(
     `(select count(distinct l.id) as cnt from "like" as l where l.comment_id = c0.id)`,

@@ -4,14 +4,6 @@ import {
   FilterInput,
   FilterIntInput,
 } from 'src/query/inputs/filter.input';
-import { CommentableEntityType } from '../enums/commentable-entity-type.enum';
-
-@InputType()
-class FilterCommentableEntityTypeInput extends FilterInput {
-  @Field(() => CommentableEntityType, { nullable: true })
-  eq: CommentableEntityType;
-}
-
 @InputType()
 export class FilterCommentInput extends FilterInput {
   @Field(() => [FilterCommentInput], { nullable: true })
@@ -21,10 +13,10 @@ export class FilterCommentInput extends FilterInput {
   or?: FilterCommentInput[];
 
   @Field(() => FilterIdInput, { nullable: true })
-  entity?: FilterIdInput;
+  story?: FilterIdInput;
 
-  @Field(() => FilterCommentableEntityTypeInput, { nullable: true })
-  entityType?: FilterCommentableEntityTypeInput;
+  @Field(() => FilterIdInput, { nullable: true })
+  forest?: FilterIdInput;
 
   @Field(() => FilterIntInput, { nullable: true })
   likesCount?: FilterIntInput;

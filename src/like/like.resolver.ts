@@ -62,7 +62,7 @@ export class LikeResolver {
     return userDataloader.load(like.user.id);
   }
 
-  @ResolveField(() => Story)
+  @ResolveField(() => Story, { nullable: true })
   async story(
     @Parent() like: Like,
     @Loader(StoryDataloader) storyDataloader,
@@ -73,7 +73,7 @@ export class LikeResolver {
     return storyDataloader.load(like.story.id);
   }
 
-  @ResolveField(() => Comment)
+  @ResolveField(() => Comment, { nullable: true })
   async comment(
     @Parent() like: Like,
     @Loader(CommentDataloader) commentDataloader,
