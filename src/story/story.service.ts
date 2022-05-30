@@ -9,6 +9,7 @@ import { QueryService } from 'src/query/query.service';
 import { SortStoryInput } from './inputs/sort-story.input';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
+import { CurrentUser } from 'src/auth/dto/current-user.dto';
 
 @Injectable()
 export class StoryService {
@@ -53,11 +54,13 @@ export class StoryService {
       filter,
       sort,
       query,
+      liked,
       ...connectionArgs
     }: StoryConnectionArgs = new StoryConnectionArgs(),
+    currentUser?: CurrentUser,
   ): Promise<StoryConnection> {
     return this.paginationService.paginate(
-      this.prepareQueryBuilder(filter, sort, { query }),
+      this.prepareQueryBuilder(filter, sort, currentUser, { query, liked }),
       sort,
       connectionArgs,
     );
@@ -66,7 +69,8 @@ export class StoryService {
   prepareQueryBuilder(
     filter: FilterStoryInput = new FilterStoryInput(),
     sort: SortStoryInput = new SortStoryInput(),
-    { query }: { query?: string } = {},
+    currentUser?: CurrentUser,
+    { query, liked }: { query?: string; liked?: boolean } = {},
   ) {
     const queryBuilder = this.queryService.prepareQueryBuilder(
       this.storyRepository.createQueryBuilder(),
@@ -81,6 +85,12 @@ export class StoryService {
           { content: { $ilike: `%${query}%` } },
           { 'tags::text': { $ilike: `%${query}%` } },
         ],
+      });
+    }
+
+    if (liked) {
+      queryBuilder.andWhere({
+        likes: { user: currentUser.id },
       });
     }
 

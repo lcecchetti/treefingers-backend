@@ -87,7 +87,7 @@ export class CommentResolver {
     return storyDataloader.load(comment.story.id);
   }
 
-  @ResolveField(() => Forest, { nullable: true})
+  @ResolveField(() => Forest, { nullable: true })
   async forest(
     @Parent() comment: Comment,
     @Loader(ForestDataloader) forestDataloader,

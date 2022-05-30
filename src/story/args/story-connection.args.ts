@@ -13,4 +13,7 @@ export class StoryConnectionArgs extends ConnectionArgs {
 
   @Field({ nullable: true })
   query?: string;
+
+  @Field({ nullable: true })
+  liked?: boolean;
 }

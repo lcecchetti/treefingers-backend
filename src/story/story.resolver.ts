@@ -38,8 +38,9 @@ export class StoryResolver {
   async stories(
     @Args({ nullable: true })
     args: StoryConnectionArgs = new StoryConnectionArgs(),
+    @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<StoryConnection> {
-    return this.storyService.paginate(args);
+    return this.storyService.paginate(args, currentUser);
   }
 
   @Query(() => Story, { nullable: true })

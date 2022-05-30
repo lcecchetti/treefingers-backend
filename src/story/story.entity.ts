@@ -4,15 +4,18 @@ import { Forest } from 'src/forest/forest.entity';
 import { Like } from 'src/like/like.entity';
 import { Commentable } from 'src/comment/interfaces/commentable.interface';
 import {
+  Collection,
   Entity,
   Formula,
   Index,
   ManyToOne,
+  OneToMany,
   PrimaryKey,
   Property,
 } from '@mikro-orm/core';
 import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
 import { Likeable } from 'src/like/interfaces/likeable.interface';
+import { Comment } from 'src/comment/comment.entity';
 
 @Entity()
 @ObjectType({
@@ -62,6 +65,12 @@ export class Story implements Likeable, Commentable {
   @Formula(`(cardinality(s0.path))`)
   @Field(() => Int)
   depth: number;
+
+  @OneToMany(() => Comment, (comment) => comment.story)
+  comments = new Collection<Comment>(this);
+
+  @OneToMany(() => Like, (like) => like.story)
+  likes = new Collection<Like>(this);
 
   @Formula(
     '(select count(distinct c.id) as cnt from comment as c where c.story_id = s0.id)',
