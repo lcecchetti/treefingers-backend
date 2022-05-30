@@ -56,19 +56,21 @@ export class StoryService {
     {
       filter,
       sort,
+      query,
       ...connectionArgs
     }: StoryConnectionArgs = new StoryConnectionArgs(),
   ): Promise<StoryConnection> {
     return this.paginationService.paginate(
-      this.prepareQueryBuilder(filter, sort),
+      this.prepareQueryBuilder(filter, sort, { query }),
       sort,
       connectionArgs,
     );
   }
 
   prepareQueryBuilder(
-    { query, ...filter }: FilterStoryInput = new FilterStoryInput(),
+    filter: FilterStoryInput = new FilterStoryInput(),
     sort: SortStoryInput = new SortStoryInput(),
+    { query }: { query?: string } = {},
   ) {
     const queryBuilder = this.queryService.prepareQueryBuilder(
       this.storyRepository.createQueryBuilder(),

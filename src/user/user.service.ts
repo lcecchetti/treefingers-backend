@@ -74,18 +74,20 @@ export class UserService {
   async paginate({
     filter,
     sort,
+    query,
     ...connectionArgs
   }: UserConnectionArgs): Promise<UserConnection> {
     return this.paginationService.paginate(
-      this.prepareQueryBuilder(filter, sort),
+      this.prepareQueryBuilder(filter, sort, { query }),
       sort,
       connectionArgs,
     );
   }
 
   prepareQueryBuilder(
-    { query, ...filter }: FilterUserInput = new FilterUserInput(),
+    filter: FilterUserInput = new FilterUserInput(),
     sort: SortUserInput = new SortUserInput(),
+    { query }: { query?: string } = {},
   ) {
     // add isActive filter
     if (!filter.isActive === false) {

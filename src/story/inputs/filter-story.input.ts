@@ -17,7 +17,4 @@ export class FilterStoryInput extends FilterInput {
 
   @Field(() => FilterIdInput, { nullable: true })
   forest?: FilterIdInput;
-
-  @Field(() => String, { nullable: true })
-  query?: string;
 }

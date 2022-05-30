@@ -22,8 +22,5 @@ export class FilterUserInput extends FilterInput {
   @Field(() => FilterIntInput, { nullable: true })
   storiesCount?: FilterIntInput;
 
-  @Field(() => String, { nullable: true })
-  query?: string;
-
   isActive?: boolean;
 }

@@ -8,13 +8,11 @@ import { PaginationService } from 'src/pagination/pagination.service';
 import { QueryService } from 'src/query/query.service';
 import { SortForestInput } from './inputs/sort-forest.input';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
-import { Story } from 'src/story/story.entity';
+import { EntityRepository } from '@mikro-orm/postgresql';
 
 @Injectable()
 export class ForestService {
   constructor(
-    private readonly em: EntityManager,
     @InjectRepository(Forest)
     private forestRepository: EntityRepository<Forest>,
     private paginationService: PaginationService<Forest>,
@@ -50,19 +48,21 @@ export class ForestService {
     {
       filter,
       sort,
+      query,
       ...connectionArgs
     }: ForestConnectionArgs = new ForestConnectionArgs(),
   ): Promise<ForestConnection> {
     return this.paginationService.paginate(
-      this.prepareQueryBuilder(filter, sort),
+      this.prepareQueryBuilder(filter, sort, { query }),
       sort,
       connectionArgs,
     );
   }
 
   prepareQueryBuilder(
-    { query, ...filter }: FilterForestInput = new FilterForestInput(),
+    filter: FilterForestInput = new FilterForestInput(),
     sort: SortForestInput = new SortForestInput(),
+    { query }: { query?: string } = {},
   ) {
     const queryBuilder = this.queryService.prepareQueryBuilder(
       this.forestRepository.createQueryBuilder(),
