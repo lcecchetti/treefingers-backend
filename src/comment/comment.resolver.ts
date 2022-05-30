@@ -18,7 +18,6 @@ import { CommentInput } from './inputs/comment.input';
 import { CommentPayload } from './payloads/comment.payload';
 import { Commentable } from './interfaces/commentable.interface';
 import { CommentableEntityType } from './enums/commentable-entity-type.enum';
-import { LikeableEntityType } from 'src/like/enums/likeable-entity-type.enum';
 import { UseGuards } from '@nestjs/common';
 import { IsAuthenticatedGuard } from 'src/auth/guards/is-authenticated.guard';
 import { UserDataloader } from 'src/user/dataloaders/user.dataloader';
@@ -64,8 +63,7 @@ export class CommentResolver {
     }
 
     return likeDataloader.load({
-      entityType: LikeableEntityType.Comment,
-      entity: comment.id,
+      comment: comment.id,
       user: currentUser.id,
     });
   }

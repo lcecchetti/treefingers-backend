@@ -19,7 +19,6 @@ import { CreateStoryPayload } from './payloads/create-story.payload';
 import { CreateStoryInput } from './inputs/create-story.input';
 import { FilterStoryInput } from './inputs/filter-story.input';
 import { Like } from 'src/like/like.entity';
-import { LikeableEntityType } from 'src/like/enums/likeable-entity-type.enum';
 import { UseGuards } from '@nestjs/common';
 import { IsAuthenticatedGuard } from 'src/auth/guards/is-authenticated.guard';
 import { UserDataloader } from 'src/user/dataloaders/user.dataloader';
@@ -57,8 +56,6 @@ export class StoryResolver {
     @Args('input') { data }: CreateStoryInput,
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<CreateStoryPayload> {
-    console.log('hereeeee');
-    console.log(data);
     return {
       story: await this.storyService.create({
         ...data,
@@ -78,8 +75,7 @@ export class StoryResolver {
     }
 
     return likeDataloader.load({
-      entityType: LikeableEntityType.Story,
-      entity: story.id,
+      story: story.id,
       user: currentUser.id,
     });
   }

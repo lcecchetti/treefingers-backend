@@ -1,6 +1,6 @@
 import {
+  Check,
   Entity,
-  Enum,
   Index,
   ManyToOne,
   PrimaryKey,
@@ -9,26 +9,31 @@ import {
 } from '@mikro-orm/core';
 import { Field, GraphQLISODateTime, ObjectType } from '@nestjs/graphql';
 import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
+import { Story } from 'src/story/story.entity';
 import { User } from 'src/user/user.entity';
-import { LikeableEntityType } from './enums/likeable-entity-type.enum';
-
+import { Comment } from 'src/comment/comment.entity';
 @Entity()
-@Unique({ properties: ['user', 'entity', 'entityType'] })
-@Index({ properties: ['entity', 'entityType'] })
+@Check({
+  expression: () => `story_id IS NOT NULL OR comment_id IS NOT NULL`,
+})
+@Unique({ properties: ['user', 'story', 'comment'] })
+@Index({ properties: ['user', 'comment'] })
+@Index({ properties: ['user', 'story'] })
 @ObjectType()
 export class Like {
   @PrimaryKey()
   @Field(() => EncodedID)
   id: number;
 
-  @Enum(() => LikeableEntityType)
+  @ManyToOne(() => Story, { nullable: true, onDelete: 'cascade' })
   @Index()
-  @Field(() => LikeableEntityType)
-  entityType: LikeableEntityType;
+  @Field(() => Story, { nullable: true })
+  story?: Story;
 
-  @Property({ type: 'number' })
+  @ManyToOne(() => Comment, { nullable: true, onDelete: 'cascade' })
   @Index()
-  entity: number;
+  @Field(() => Comment, { nullable: true })
+  comment?: Comment;
 
   @ManyToOne(() => User)
   @Index()

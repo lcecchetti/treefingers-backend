@@ -14,14 +14,13 @@ import { LikePayload } from './payloads/like.payload';
 import { LikeInput } from './inputs/like.input';
 import { DislikeInput } from './inputs/dislike.input';
 import { DislikePayload } from './payloads/dislike.payload';
-import { Likeable } from './interfaces/likeable.interface';
-import { LikeableEntityType } from './enums/likeable-entity-type.enum';
 import { UseGuards } from '@nestjs/common';
 import { IsAuthenticatedGuard } from 'src/auth/guards/is-authenticated.guard';
 import { UserDataloader } from 'src/user/dataloaders/user.dataloader';
 import { Loader } from '@tracworx/nestjs-dataloader';
 import { CommentDataloader } from 'src/comment/dataloaders/comment.dataloader';
 import { StoryDataloader } from 'src/story/dataloaders/story.dataloader';
+import { Story } from 'src/story/story.entity';
 
 @Resolver(() => Like)
 export class LikeResolver {
@@ -63,17 +62,25 @@ export class LikeResolver {
     return userDataloader.load(like.user.id);
   }
 
-  @ResolveField(() => Likeable)
-  async entity(
+  @ResolveField(() => Story)
+  async story(
+    @Parent() like: Like,
+    @Loader(StoryDataloader) storyDataloader,
+  ): Promise<Story> {
+    if (!like.story) {
+      return null;
+    }
+    return storyDataloader.load(like.story.id);
+  }
+
+  @ResolveField(() => Comment)
+  async comment(
     @Parent() like: Like,
     @Loader(CommentDataloader) commentDataloader,
-    @Loader(StoryDataloader) storyDataloader,
-  ): Promise<Likeable> {
-    switch (like.entityType) {
-      case LikeableEntityType.Comment:
-        return commentDataloader.load(like.entity);
-      case LikeableEntityType.Story:
-        return storyDataloader.load(like.entity);
+  ): Promise<Comment> {
+    if (!like.comment) {
+      return null;
     }
+    return commentDataloader.load(like.comment.id);
   }
 }

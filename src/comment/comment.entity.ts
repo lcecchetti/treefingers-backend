@@ -1,6 +1,5 @@
 import { Field, GraphQLISODateTime, Int, ObjectType } from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
-import { Likeable } from 'src/like/interfaces/likeable.interface';
 import { Like } from 'src/like/like.entity';
 import { CommentableEntityType } from './enums/commentable-entity-type.enum';
 import {
@@ -12,14 +11,12 @@ import {
   PrimaryKey,
   Property,
 } from '@mikro-orm/core';
-import { LikeableEntityType } from 'src/like/enums/likeable-entity-type.enum';
 import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
+import { Likeable } from 'src/like/interfaces/likeable.interface';
 
 @Entity()
 @Index({ properties: ['entityType', 'entity'] })
-@ObjectType({
-  implements: () => [Likeable],
-})
+@ObjectType()
 export class Comment implements Likeable {
   @PrimaryKey()
   @Field(() => EncodedID)
@@ -44,7 +41,7 @@ export class Comment implements Likeable {
   entity: number;
 
   @Formula(
-    `(select count(distinct l.id) as cnt from "like" as l where l.entity = c0.id and l.entity_type = '${LikeableEntityType.Comment}')`,
+    `(select count(distinct l.id) as cnt from "like" as l where l.comment_id = c0.id)`,
   )
   @Field(() => Int, { defaultValue: 0 })
   likesCount: number;

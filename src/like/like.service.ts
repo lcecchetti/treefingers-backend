@@ -34,14 +34,10 @@ export class LikeService {
     return like;
   }
 
-  async dislike({
-    entity,
-    entityType,
-    user,
-  }: DislikeInput): Promise<Like | null> {
+  async dislike({ comment, story, user }: DislikeInput): Promise<Like | null> {
     const like = await this.findOne({
-      entity: { eq: entity },
-      entityType: { eq: entityType },
+      comment: comment ? { eq: comment } : null,
+      story: story ? { eq: story } : null,
       user: { eq: user },
     });
 
