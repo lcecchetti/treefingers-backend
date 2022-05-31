@@ -47,11 +47,7 @@ import { CommonModule } from './common/utils.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgresql',
-        dbName: configService.get<string>('database.name'),
-        user: configService.get<string>('database.user'),
-        password: configService.get<string>('database.password'),
-        host: configService.get<string>('database.host'),
-        port: configService.get<number>('database.port'),
+        clientUrl: configService.get<string>('database.url'),
         debug: configService.get<boolean>('env.isDev'),
         autoLoadEntities: true,
       }),
