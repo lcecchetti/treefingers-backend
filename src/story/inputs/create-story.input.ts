@@ -5,6 +5,7 @@ import {
   ArrayUnique,
   Matches,
   MaxLength,
+  MinLength,
   ValidateNested,
 } from 'class-validator';
 import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
@@ -24,6 +25,9 @@ export class CreateStoryDataInput {
 
   @Field(() => [String], { nullable: true })
   @MaxLength(16, {
+    each: true,
+  })
+  @MinLength(2, {
     each: true,
   })
   @Matches(/^[a-zA-Z0-9_]*$/g, { each: true })
