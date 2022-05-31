@@ -53,24 +53,21 @@ export class StoryService {
     {
       filter,
       sort,
-      query,
-      liked,
       ...connectionArgs
     }: StoryConnectionArgs = new StoryConnectionArgs(),
     currentUser?: CurrentUser,
   ): Promise<StoryConnection> {
     return this.paginationService.paginate(
-      this.prepareQueryBuilder(filter, sort, currentUser, { query, liked }),
+      this.prepareQueryBuilder(filter, sort, currentUser),
       sort,
       connectionArgs,
     );
   }
 
   prepareQueryBuilder(
-    filter: FilterStoryInput = new FilterStoryInput(),
+    { query, liked, ...filter }: FilterStoryInput = new FilterStoryInput(),
     sort: SortStoryInput = new SortStoryInput(),
     currentUser?: CurrentUser,
-    { query, liked }: { query?: string; liked?: boolean } = {},
   ) {
     const queryBuilder = this.queryService.prepareQueryBuilder(
       this.storyRepository.createQueryBuilder(),

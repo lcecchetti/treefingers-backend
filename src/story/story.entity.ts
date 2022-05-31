@@ -66,9 +66,6 @@ export class Story implements Likeable, Commentable {
   @Field(() => Int)
   depth: number;
 
-  @OneToMany(() => Comment, (comment) => comment.story)
-  comments = new Collection<Comment>(this);
-
   @OneToMany(() => Like, (like) => like.story)
   likes = new Collection<Like>(this);
 

@@ -10,10 +10,4 @@ export class StoryConnectionArgs extends ConnectionArgs {
 
   @Field(() => SortStoryInput, { nullable: true })
   sort?: SortStoryInput = new SortStoryInput();
-
-  @Field({ nullable: true })
-  query?: string;
-
-  @Field({ nullable: true })
-  liked?: boolean;
 }

@@ -5,7 +5,6 @@ import { LikeInput } from './inputs/like.input';
 import { DislikeInput } from './inputs/dislike.input';
 import { QueryService } from 'src/query/query.service';
 import { SortUserInput } from 'src/user/inputs/sort-user.input';
-import { FilterUserInput } from 'src/user/inputs/filter-user.input';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 
@@ -50,7 +49,7 @@ export class LikeService {
   }
 
   prepareQueryBuilder(
-    filter: FilterUserInput = new FilterUserInput(),
+    filter: FilterLikeInput = new FilterLikeInput(),
     sort: SortUserInput = new SortUserInput(),
   ) {
     return this.queryService.prepareQueryBuilder(

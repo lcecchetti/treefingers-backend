@@ -1,14 +1,17 @@
 import { Field, GraphQLISODateTime, Int, ObjectType } from '@nestjs/graphql';
 import { isPrivateMiddleware } from './middleware/is-private.middleware';
 import {
+  Collection,
   Entity,
   Formula,
   Index,
+  OneToMany,
   PrimaryKey,
   Property,
   Unique,
 } from '@mikro-orm/core';
 import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
+import { Followership } from 'src/followership/followership.entity';
 
 @Entity()
 @ObjectType()
@@ -45,6 +48,9 @@ export class User {
   )
   @Field(() => Int, { defaultValue: 0 })
   storiesCount: number;
+
+  @OneToMany(() => Followership, (followership) => followership.follower)
+  followershipsAsFollower = new Collection<Followership>(this);
 
   @Formula(
     '(select count(distinct f.id) as cnt from followership as f where f.followed_id = u0.id)',

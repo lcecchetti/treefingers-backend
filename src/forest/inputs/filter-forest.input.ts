@@ -25,4 +25,10 @@ export class FilterForestInput extends FilterInput {
 
   @Field(() => FilterIntInput, { nullable: true })
   storiesCount?: FilterIntInput;
+
+  @Field({ nullable: true })
+  query?: string;
+
+  @Field({ nullable: true })
+  joined?: boolean;
 }

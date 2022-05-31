@@ -35,8 +35,9 @@ export class ForestResolver {
   async forests(
     @Args()
     args: ForestConnectionArgs = new ForestConnectionArgs(),
+    @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<ForestConnection> {
-    return this.forestService.paginate(args);
+    return this.forestService.paginate(args, currentUser);
   }
 
   @Query(() => Forest, { nullable: true })

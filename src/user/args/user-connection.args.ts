@@ -10,7 +10,4 @@ export class UserConnectionArgs extends ConnectionArgs {
 
   @Field(() => SortUserInput, { nullable: true })
   sort?: SortUserInput = new SortUserInput();
-
-  @Field({ nullable: true })
-  query?: string;
 }

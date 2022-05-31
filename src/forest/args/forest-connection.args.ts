@@ -10,7 +10,4 @@ export class ForestConnectionArgs extends ConnectionArgs {
 
   @Field(() => SortForestInput, { nullable: true })
   sort?: SortForestInput = new SortForestInput();
-
-  @Field({ nullable: true })
-  query?: string;
 }

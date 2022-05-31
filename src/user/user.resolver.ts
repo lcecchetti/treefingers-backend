@@ -33,8 +33,9 @@ export class UserResolver {
   async users(
     @Args()
     args: UserConnectionArgs = new UserConnectionArgs(),
+    @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<UserConnection> {
-    return this.userService.paginate(args);
+    return this.userService.paginate(args, currentUser);
   }
 
   @Query(() => User, { nullable: true })

@@ -12,6 +12,7 @@ import { SortUserInput } from './inputs/sort-user.input';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { wrap } from '@mikro-orm/core';
+import { CurrentUser } from 'src/auth/dto/current-user.dto';
 
 @Injectable()
 export class UserService {
@@ -71,23 +72,21 @@ export class UserService {
     return user;
   }
 
-  async paginate({
-    filter,
-    sort,
-    query,
-    ...connectionArgs
-  }: UserConnectionArgs): Promise<UserConnection> {
+  async paginate(
+    { filter, sort, ...connectionArgs }: UserConnectionArgs,
+    currentUser?: CurrentUser,
+  ): Promise<UserConnection> {
     return this.paginationService.paginate(
-      this.prepareQueryBuilder(filter, sort, { query }),
+      this.prepareQueryBuilder(filter, sort, currentUser),
       sort,
       connectionArgs,
     );
   }
 
   prepareQueryBuilder(
-    filter: FilterUserInput = new FilterUserInput(),
+    { query, followed, ...filter }: FilterUserInput = new FilterUserInput(),
     sort: SortUserInput = new SortUserInput(),
-    { query }: { query?: string } = {},
+    currentUser?: CurrentUser,
   ) {
     // add isActive filter
     if (!filter.isActive === false) {
@@ -106,6 +105,12 @@ export class UserService {
           { username: { $ilike: `%${query}%` } },
           { bio: { $ilike: `%${query}%` } },
         ],
+      });
+    }
+
+    if (followed) {
+      queryBuilder.andWhere({
+        followershipsAsFollower: { follower: currentUser.id },
       });
     }
 

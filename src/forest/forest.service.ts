@@ -9,6 +9,7 @@ import { QueryService } from 'src/query/query.service';
 import { SortForestInput } from './inputs/sort-forest.input';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
+import { CurrentUser } from 'src/auth/dto/current-user.dto';
 
 @Injectable()
 export class ForestService {
@@ -48,21 +49,21 @@ export class ForestService {
     {
       filter,
       sort,
-      query,
       ...connectionArgs
     }: ForestConnectionArgs = new ForestConnectionArgs(),
+    currentUser?: CurrentUser,
   ): Promise<ForestConnection> {
     return this.paginationService.paginate(
-      this.prepareQueryBuilder(filter, sort, { query }),
+      this.prepareQueryBuilder(filter, sort, currentUser),
       sort,
       connectionArgs,
     );
   }
 
   prepareQueryBuilder(
-    filter: FilterForestInput = new FilterForestInput(),
+    { query, joined, ...filter }: FilterForestInput = new FilterForestInput(),
     sort: SortForestInput = new SortForestInput(),
-    { query }: { query?: string } = {},
+    currentUser?: CurrentUser,
   ) {
     const queryBuilder = this.queryService.prepareQueryBuilder(
       this.forestRepository.createQueryBuilder(),
@@ -76,6 +77,12 @@ export class ForestService {
           { name: { $ilike: `%${query}%` } },
           { about: { $ilike: `%${query}%` } },
         ],
+      });
+    }
+
+    if (joined) {
+      queryBuilder.andWhere({
+        memberships: { member: currentUser.id },
       });
     }
 
