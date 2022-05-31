@@ -26,6 +26,7 @@ export class Comment implements Likeable {
   id: number;
 
   @Property({ type: 'text' })
+  @Index()
   @Field()
   content: string;
 
@@ -45,7 +46,7 @@ export class Comment implements Likeable {
   forest?: Forest;
 
   @Formula(
-    `(select count(distinct l.id) as cnt from "like" as l where l.comment_id = c0.id)`,
+    '(select count(distinct l.id) as cnt from "like" as l where l.comment_id = c0.id)',
   )
   @Field(() => Int, { defaultValue: 0 })
   likesCount: number;

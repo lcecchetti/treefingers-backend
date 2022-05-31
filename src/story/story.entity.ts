@@ -15,7 +15,6 @@ import {
 } from '@mikro-orm/core';
 import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
 import { Likeable } from 'src/like/interfaces/likeable.interface';
-import { Comment } from 'src/comment/comment.entity';
 
 @Entity()
 @ObjectType({
@@ -63,6 +62,7 @@ export class Story implements Likeable, Commentable {
   forest?: Forest;
 
   @Formula(`(cardinality(s0.path))`)
+  @Index()
   @Field(() => Int)
   depth: number;
 
