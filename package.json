@@ -95,7 +95,7 @@
     "testEnvironment": "node"
   },
   "mikro-orm": {
-    "useTsNode": true,
+    "useTsNode": false,
     "configPaths": [
       "./src/mikro-orm.config.ts",
       "./dist/mikro-orm.config.js"
