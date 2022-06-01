@@ -51,7 +51,11 @@ import { CommonModule } from './common/utils.module';
         debug: configService.get<boolean>('env.isDev'),
         autoLoadEntities: true,
         driverOptions: {
-          connection: { ssl: true },
+          connection: { ssl: !configService.get<boolean>('env.isDev') },
+        },
+        migrations: {
+          pathTs: 'src/migrations',
+          path: 'dist/migrations',
         },
       }),
     }),

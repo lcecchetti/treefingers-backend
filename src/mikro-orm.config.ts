@@ -6,7 +6,11 @@ const MikroOrmConfig: Options = {
   type: 'postgresql',
   clientUrl: process.env.DATABASE_URL,
   driverOptions: {
-    connection: { ssl: true },
+    connection: { ssl: process.env.NODE_ENV !== 'development' },
+  },
+  migrations: {
+    pathTs: 'src/migrations',
+    path: 'dist/migrations',
   },
   debug: true,
 };
