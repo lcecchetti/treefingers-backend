@@ -50,6 +50,9 @@ import { CommonModule } from './common/utils.module';
         clientUrl: configService.get<string>('database.url'),
         debug: configService.get<boolean>('env.isDev'),
         autoLoadEntities: true,
+        driverOptions: {
+          connection: { ssl: true },
+        },
       }),
     }),
     MailerModule.forRootAsync({

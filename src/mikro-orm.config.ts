@@ -5,6 +5,9 @@ const MikroOrmConfig: Options = {
   entities: ['./dist/**/*.entity.js'],
   type: 'postgresql',
   clientUrl: process.env.DATABASE_URL,
+  driverOptions: {
+    connection: { ssl: true },
+  },
   debug: true,
 };
 
