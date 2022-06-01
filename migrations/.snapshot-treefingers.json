@@ -145,127 +145,6 @@
           "nullable": false,
           "mappedType": "integer"
         },
-        "followed_id": {
-          "name": "followed_id",
-          "type": "int",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "integer"
-        },
-        "follower_id": {
-          "name": "follower_id",
-          "type": "int",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "integer"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        }
-      },
-      "name": "followership",
-      "schema": "public",
-      "indexes": [
-        {
-          "columnNames": [
-            "followed_id"
-          ],
-          "composite": false,
-          "keyName": "followership_followed_id_index",
-          "primary": false,
-          "unique": false
-        },
-        {
-          "columnNames": [
-            "follower_id"
-          ],
-          "composite": false,
-          "keyName": "followership_follower_id_index",
-          "primary": false,
-          "unique": false
-        },
-        {
-          "keyName": "followership_followed_id_follower_id_unique",
-          "columnNames": [
-            "followed_id",
-            "follower_id"
-          ],
-          "composite": true,
-          "primary": false,
-          "unique": true
-        },
-        {
-          "keyName": "followership_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "followership_followed_id_foreign": {
-          "constraintName": "followership_followed_id_foreign",
-          "columnNames": [
-            "followed_id"
-          ],
-          "localTableName": "public.followership",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.user",
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
-        },
-        "followership_follower_id_foreign": {
-          "constraintName": "followership_follower_id_foreign",
-          "columnNames": [
-            "follower_id"
-          ],
-          "localTableName": "public.followership",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.user",
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
-        }
-      }
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "unsigned": true,
-          "autoincrement": true,
-          "primary": true,
-          "nullable": false,
-          "mappedType": "integer"
-        },
         "name": {
           "name": "name",
           "type": "varchar(255)",
@@ -733,6 +612,127 @@
           ],
           "referencedTableName": "public.forest",
           "deleteRule": "set null",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "followed_id": {
+          "name": "followed_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "follower_id": {
+          "name": "follower_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        }
+      },
+      "name": "followership",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "followed_id"
+          ],
+          "composite": false,
+          "keyName": "followership_followed_id_index",
+          "primary": false,
+          "unique": false
+        },
+        {
+          "columnNames": [
+            "follower_id"
+          ],
+          "composite": false,
+          "keyName": "followership_follower_id_index",
+          "primary": false,
+          "unique": false
+        },
+        {
+          "keyName": "followership_followed_id_follower_id_unique",
+          "columnNames": [
+            "followed_id",
+            "follower_id"
+          ],
+          "composite": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "followership_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "followership_followed_id_foreign": {
+          "constraintName": "followership_followed_id_foreign",
+          "columnNames": [
+            "followed_id"
+          ],
+          "localTableName": "public.followership",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.user",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        },
+        "followership_follower_id_foreign": {
+          "constraintName": "followership_follower_id_foreign",
+          "columnNames": [
+            "follower_id"
+          ],
+          "localTableName": "public.followership",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.user",
+          "deleteRule": "cascade",
           "updateRule": "cascade"
         }
       }
