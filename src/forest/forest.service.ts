@@ -4,12 +4,12 @@ import { ForestConnectionArgs } from './args/forest-connection.args';
 import { CreateForestDataInput } from './inputs/create-forest.input';
 import { ForestConnection } from './dto/forest-connection.dto';
 import { FilterForestInput } from './inputs/filter-forest.input';
-import { PaginationService } from 'src/pagination/pagination.service';
-import { QueryService } from 'src/query/query.service';
+import { PaginationService } from '../pagination/pagination.service';
+import { QueryService } from '../query/query.service';
 import { SortForestInput } from './inputs/sort-forest.input';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
-import { CurrentUser } from 'src/auth/dto/current-user.dto';
+import { CurrentUser } from '../auth/dto/current-user.dto';
 
 @Injectable()
 export class ForestService {

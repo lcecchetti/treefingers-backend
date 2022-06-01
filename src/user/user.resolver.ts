@@ -10,16 +10,16 @@ import { UserService } from './user.service';
 import { User } from './user.entity';
 import { UserConnectionArgs } from './args/user-connection.args';
 import { GetCurrentUser } from '../auth/decorators/get-current-user.decorator';
-import { StringService } from 'src/common/services/string.service';
-import { CurrentUser } from 'src/auth/dto/current-user.dto';
+import { StringService } from '../common/services/string.service';
+import { CurrentUser } from '../auth/dto/current-user.dto';
 import { UserConnection } from './dto/user-connection.dto';
 import { FilterUserInput } from './inputs/filter-user.input';
-import { IsAuthenticatedGuard } from 'src/auth/guards/is-authenticated.guard';
+import { IsAuthenticatedGuard } from '../auth/guards/is-authenticated.guard';
 import { UseGuards } from '@nestjs/common';
 import { EditUserPayload } from './payloads/edit-user.payload';
 import { EditUserInput } from './inputs/edit-user.input';
-import { Followership } from 'src/followership/followership.entity';
-import { FollowershipDataloader } from 'src/followership/dataloaders/followership.dataloader';
+import { Followership } from '../followership/followership.entity';
+import { FollowershipDataloader } from '../followership/dataloaders/followership.dataloader';
 import { Loader } from '@tracworx/nestjs-dataloader';
 
 @Resolver(() => User)

@@ -1,6 +1,6 @@
 import { QueryBuilder } from '@mikro-orm/postgresql';
 import { BadRequestException } from '@nestjs/common';
-import { SortInput, SORT_DIRECTION } from 'src/query/inputs/sort.input';
+import { SortInput, SORT_DIRECTION } from '../query/inputs/sort.input';
 import { ConnectionArgs } from './args/connection.args';
 import { IConnection } from './dto/pagination.dto';
 export class PaginationService<Entity> {

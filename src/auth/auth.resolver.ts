@@ -2,7 +2,7 @@ import { UseGuards } from '@nestjs/common';
 import { Resolver, Mutation, Args } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
+import { GetCurrentUser } from './decorators/get-current-user.decorator';
 import { LoginPayload } from './payloads/login.payload';
 import { LoginInput } from './inputs/login.input';
 import { RegisterPayload } from './payloads/register.payload';
@@ -13,7 +13,7 @@ import { ChangePasswordPayload } from './payloads/change-password.payload';
 import { ChangePasswordInput } from './inputs/change-password.input';
 import { ActivateAccountPayload } from './payloads/activate-account.payload';
 import { ActivateAccountInput } from './inputs/activate-account.input';
-import { User } from 'src/user/user.entity';
+import { User } from '../user/user.entity';
 
 @Resolver()
 export class AuthResolver {

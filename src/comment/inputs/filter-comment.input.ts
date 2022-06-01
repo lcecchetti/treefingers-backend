@@ -3,7 +3,7 @@ import {
   FilterIdInput,
   FilterInput,
   FilterIntInput,
-} from 'src/query/inputs/filter.input';
+} from '../../query/inputs/filter.input';
 @InputType()
 export class FilterCommentInput extends FilterInput {
   @Field(() => [FilterCommentInput], { nullable: true })

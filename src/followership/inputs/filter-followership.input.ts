@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { FilterIdInput, FilterInput } from 'src/query/inputs/filter.input';
+import { FilterIdInput, FilterInput } from '../../query/inputs/filter.input';
 
 @InputType()
 export class FilterFollowershipInput extends FilterInput {

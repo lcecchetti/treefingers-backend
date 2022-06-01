@@ -1,7 +1,7 @@
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
-import { QueryService } from 'src/query/query.service';
+import { QueryService } from '../query/query.service';
 import { Followership } from './followership.entity';
 import { FilterFollowershipInput } from './inputs/filter-followership.input';
 import { FollowInput } from './inputs/follow.input';

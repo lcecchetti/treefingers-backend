@@ -3,16 +3,16 @@ import { User } from './user.entity';
 import { UserConnectionArgs } from './args/user-connection.args';
 import { UserConnection } from './dto/user-connection.dto';
 import { FilterUserInput } from './inputs/filter-user.input';
-import { PaginationService } from 'src/pagination/pagination.service';
+import { PaginationService } from '../pagination/pagination.service';
 import { EditUserDataInput } from './inputs/edit-user.input';
 import * as bcrypt from 'bcrypt';
 import { CreateUserInputData } from './inputs/create-user.input';
-import { QueryService } from 'src/query/query.service';
+import { QueryService } from '../query/query.service';
 import { SortUserInput } from './inputs/sort-user.input';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { wrap } from '@mikro-orm/core';
-import { CurrentUser } from 'src/auth/dto/current-user.dto';
+import { CurrentUser } from '../auth/dto/current-user.dto';
 
 @Injectable()
 export class UserService {

@@ -8,24 +8,24 @@ import {
 } from '@nestjs/graphql';
 import { StoryService } from './story.service';
 import { Story } from './story.entity';
-import { User } from 'src/user/user.entity';
-import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
+import { User } from '../user/user.entity';
+import { GetCurrentUser } from '../auth/decorators/get-current-user.decorator';
 import { StoryConnectionArgs } from './args/story-connection.args';
-import { Forest } from 'src/forest/forest.entity';
-import { StringService } from 'src/common/services/string.service';
-import { CurrentUser } from 'src/auth/dto/current-user.dto';
+import { Forest } from '../forest/forest.entity';
+import { StringService } from '../common/services/string.service';
+import { CurrentUser } from '../auth/dto/current-user.dto';
 import { StoryConnection } from './dto/story-connection.dto';
 import { CreateStoryPayload } from './payloads/create-story.payload';
 import { CreateStoryInput } from './inputs/create-story.input';
 import { FilterStoryInput } from './inputs/filter-story.input';
-import { Like } from 'src/like/like.entity';
+import { Like } from '../like/like.entity';
 import { UseGuards } from '@nestjs/common';
-import { IsAuthenticatedGuard } from 'src/auth/guards/is-authenticated.guard';
-import { UserDataloader } from 'src/user/dataloaders/user.dataloader';
+import { IsAuthenticatedGuard } from '../auth/guards/is-authenticated.guard';
+import { UserDataloader } from '../user/dataloaders/user.dataloader';
 import { Loader } from '@tracworx/nestjs-dataloader';
 import { StoryDataloader } from './dataloaders/story.dataloader';
-import { ForestDataloader } from 'src/forest/dataloaders/forest.dataloader';
-import { LikeDataloader } from 'src/like/dataloaders/like.dataloader';
+import { ForestDataloader } from '../forest/dataloaders/forest.dataloader';
+import { LikeDataloader } from '../like/dataloaders/like.dataloader';
 
 @Resolver(() => Story)
 export class StoryResolver {

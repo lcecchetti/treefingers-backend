@@ -8,23 +8,23 @@ import {
 } from '@nestjs/graphql';
 import { CommentService } from './comment.service';
 import { Comment } from './comment.entity';
-import { User } from 'src/user/user.entity';
-import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
+import { User } from '../user/user.entity';
+import { GetCurrentUser } from '../auth/decorators/get-current-user.decorator';
 import { CommentConnectionArgs } from './args/comment-connection.args';
-import { CurrentUser } from 'src/auth/dto/current-user.dto';
+import { CurrentUser } from '../auth/dto/current-user.dto';
 import { CommentConnection } from './dto/comment-connection.dto';
-import { Like } from 'src/like/like.entity';
+import { Like } from '../like/like.entity';
 import { CommentInput } from './inputs/comment.input';
 import { CommentPayload } from './payloads/comment.payload';
 import { UseGuards } from '@nestjs/common';
-import { IsAuthenticatedGuard } from 'src/auth/guards/is-authenticated.guard';
-import { UserDataloader } from 'src/user/dataloaders/user.dataloader';
+import { IsAuthenticatedGuard } from '../auth/guards/is-authenticated.guard';
+import { UserDataloader } from '../user/dataloaders/user.dataloader';
 import { Loader } from '@tracworx/nestjs-dataloader';
-import { ForestDataloader } from 'src/forest/dataloaders/forest.dataloader';
-import { LikeDataloader } from 'src/like/dataloaders/like.dataloader';
-import { StoryDataloader } from 'src/story/dataloaders/story.dataloader';
-import { Story } from 'src/story/story.entity';
-import { Forest } from 'src/forest/forest.entity';
+import { ForestDataloader } from '../forest/dataloaders/forest.dataloader';
+import { LikeDataloader } from '../like/dataloaders/like.dataloader';
+import { StoryDataloader } from '../story/dataloaders/story.dataloader';
+import { Story } from '../story/story.entity';
+import { Forest } from '../forest/forest.entity';
 
 @Resolver(() => Comment)
 export class CommentResolver {

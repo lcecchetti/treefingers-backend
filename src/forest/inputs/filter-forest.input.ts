@@ -4,7 +4,7 @@ import {
   FilterInput,
   FilterIntInput,
   FilterStringInput,
-} from 'src/query/inputs/filter.input';
+} from '../../query/inputs/filter.input';
 
 @InputType()
 export class FilterForestInput extends FilterInput {

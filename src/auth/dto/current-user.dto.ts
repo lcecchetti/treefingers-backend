@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
+import { EncodedID } from '../../common/scalars/encoded-id.scalar';
 
 @ObjectType()
 export class CurrentUser {

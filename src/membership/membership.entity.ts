@@ -1,6 +1,6 @@
 import { Field, GraphQLISODateTime, ObjectType } from '@nestjs/graphql';
-import { User } from 'src/user/user.entity';
-import { Forest } from 'src/forest/forest.entity';
+import { User } from '../user/user.entity';
+import { Forest } from '../forest/forest.entity';
 import {
   Entity,
   Index,
@@ -9,7 +9,7 @@ import {
   Property,
   Unique,
 } from '@mikro-orm/core';
-import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
+import { EncodedID } from '../common/scalars/encoded-id.scalar';
 
 @Entity()
 @Unique({ properties: ['member', 'forest'] })

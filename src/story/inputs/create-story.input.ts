@@ -8,7 +8,7 @@ import {
   MinLength,
   ValidateNested,
 } from 'class-validator';
-import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
+import { EncodedID } from '../../common/scalars/encoded-id.scalar';
 
 @InputType()
 export class CreateStoryDataInput {

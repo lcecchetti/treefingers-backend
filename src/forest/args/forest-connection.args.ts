@@ -1,5 +1,5 @@
 import { ArgsType, Field } from '@nestjs/graphql';
-import { ConnectionArgs } from 'src/pagination/args/connection.args';
+import { ConnectionArgs } from '../../pagination/args/connection.args';
 import { FilterForestInput } from '../inputs/filter-forest.input';
 import { SortForestInput } from '../inputs/sort-forest.input';
 

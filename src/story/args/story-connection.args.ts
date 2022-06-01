@@ -1,5 +1,5 @@
 import { ArgsType, Field } from '@nestjs/graphql';
-import { ConnectionArgs } from 'src/pagination/args/connection.args';
+import { ConnectionArgs } from '../../pagination/args/connection.args';
 import { FilterStoryInput } from '../inputs/filter-story.input';
 import { SortStoryInput } from '../inputs/sort-story.input';
 

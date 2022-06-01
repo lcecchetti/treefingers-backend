@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { SORT_DIRECTION } from 'src/query/inputs/sort.input';
+import { SORT_DIRECTION } from '../../query/inputs/sort.input';
 
 @InputType()
 export class SortUserInput {

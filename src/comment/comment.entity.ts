@@ -1,6 +1,6 @@
 import { Field, GraphQLISODateTime, Int, ObjectType } from '@nestjs/graphql';
-import { User } from 'src/user/user.entity';
-import { Like } from 'src/like/like.entity';
+import { User } from '../user/user.entity';
+import { Like } from '../like/like.entity';
 import {
   Check,
   Entity,
@@ -10,10 +10,10 @@ import {
   PrimaryKey,
   Property,
 } from '@mikro-orm/core';
-import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
-import { Likeable } from 'src/like/interfaces/likeable.interface';
-import { Story } from 'src/story/story.entity';
-import { Forest } from 'src/forest/forest.entity';
+import { EncodedID } from '../common/scalars/encoded-id.scalar';
+import { Likeable } from '../like/interfaces/likeable.interface';
+import { Story } from '../story/story.entity';
+import { Forest } from '../forest/forest.entity';
 
 @Entity()
 @Check({

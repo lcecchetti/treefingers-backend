@@ -4,12 +4,12 @@ import { StoryConnectionArgs } from './args/story-connection.args';
 import { CreateStoryDataInput } from './inputs/create-story.input';
 import { StoryConnection } from './dto/story-connection.dto';
 import { FilterStoryInput } from './inputs/filter-story.input';
-import { PaginationService } from 'src/pagination/pagination.service';
-import { QueryService } from 'src/query/query.service';
+import { PaginationService } from '../pagination/pagination.service';
+import { QueryService } from '../query/query.service';
 import { SortStoryInput } from './inputs/sort-story.input';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
-import { CurrentUser } from 'src/auth/dto/current-user.dto';
+import { CurrentUser } from '../auth/dto/current-user.dto';
 
 @Injectable()
 export class StoryService {

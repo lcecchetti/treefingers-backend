@@ -1,8 +1,8 @@
 import { Field, GraphQLISODateTime, Int, ObjectType } from '@nestjs/graphql';
-import { User } from 'src/user/user.entity';
-import { Commentable } from 'src/comment/interfaces/commentable.interface';
-import { Membership } from 'src/membership/membership.entity';
-import { Story } from 'src/story/story.entity';
+import { User } from '../user/user.entity';
+import { Commentable } from '../comment/interfaces/commentable.interface';
+import { Membership } from '../membership/membership.entity';
+import { Story } from '../story/story.entity';
 import {
   Collection,
   Entity,
@@ -14,7 +14,7 @@ import {
   Property,
   Unique,
 } from '@mikro-orm/core';
-import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
+import { EncodedID } from '../common/scalars/encoded-id.scalar';
 
 @Entity()
 @ObjectType({

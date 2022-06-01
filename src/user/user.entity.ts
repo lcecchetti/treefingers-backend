@@ -10,8 +10,8 @@ import {
   Property,
   Unique,
 } from '@mikro-orm/core';
-import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
-import { Followership } from 'src/followership/followership.entity';
+import { EncodedID } from '../common/scalars/encoded-id.scalar';
+import { Followership } from '../followership/followership.entity';
 
 @Entity()
 @ObjectType()

@@ -3,8 +3,8 @@ import { Like } from './like.entity';
 import { FilterLikeInput } from './inputs/filter-like.input';
 import { LikeInput } from './inputs/like.input';
 import { DislikeInput } from './inputs/dislike.input';
-import { QueryService } from 'src/query/query.service';
-import { SortUserInput } from 'src/user/inputs/sort-user.input';
+import { QueryService } from '../query/query.service';
+import { SortUserInput } from '../user/inputs/sort-user.input';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 

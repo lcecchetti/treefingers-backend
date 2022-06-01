@@ -12,17 +12,17 @@ import { ForestConnectionArgs } from './args/forest-connection.args';
 import { CreateForestPayload } from './payloads/create-forest.payload';
 import { CreateForestInput } from './inputs/create-forest.input';
 import { FilterForestInput } from './inputs/filter-forest.input';
-import { User } from 'src/user/user.entity';
-import { StringService } from 'src/common/services/string.service';
+import { User } from '../user/user.entity';
+import { StringService } from '../common/services/string.service';
 import { ForestConnection } from './dto/forest-connection.dto';
-import { GetCurrentUser } from 'src/auth/decorators/get-current-user.decorator';
-import { CurrentUser } from 'src/auth/dto/current-user.dto';
+import { GetCurrentUser } from '../auth/decorators/get-current-user.decorator';
+import { CurrentUser } from '../auth/dto/current-user.dto';
 import { UseGuards } from '@nestjs/common';
-import { IsAuthenticatedGuard } from 'src/auth/guards/is-authenticated.guard';
+import { IsAuthenticatedGuard } from '../auth/guards/is-authenticated.guard';
 import { Loader } from '@tracworx/nestjs-dataloader';
 import { ForestDataloader } from './dataloaders/forest.dataloader';
-import { Membership } from 'src/membership/membership.entity';
-import { MembershipDataloader } from 'src/membership/dataloaders/membership.dataloader';
+import { Membership } from '../membership/membership.entity';
+import { MembershipDataloader } from '../membership/dataloaders/membership.dataloader';
 
 @Resolver(() => Forest)
 export class ForestResolver {

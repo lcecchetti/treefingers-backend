@@ -7,8 +7,8 @@ import {
   Unique,
 } from '@mikro-orm/core';
 import { Field, GraphQLISODateTime, ObjectType } from '@nestjs/graphql';
-import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
-import { User } from 'src/user/user.entity';
+import { EncodedID } from '../common/scalars/encoded-id.scalar';
+import { User } from '../user/user.entity';
 
 @Entity()
 @Unique({ properties: ['followed', 'follower'] })

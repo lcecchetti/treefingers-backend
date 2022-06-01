@@ -8,10 +8,10 @@ import {
   Unique,
 } from '@mikro-orm/core';
 import { Field, GraphQLISODateTime, ObjectType } from '@nestjs/graphql';
-import { EncodedID } from 'src/common/scalars/encoded-id.scalar';
-import { Story } from 'src/story/story.entity';
-import { User } from 'src/user/user.entity';
-import { Comment } from 'src/comment/comment.entity';
+import { EncodedID } from '../common/scalars/encoded-id.scalar';
+import { Story } from '../story/story.entity';
+import { User } from '../user/user.entity';
+import { Comment } from '../comment/comment.entity';
 @Entity()
 @Check({
   expression: () => `story_id IS NOT NULL OR comment_id IS NOT NULL`,

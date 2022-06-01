@@ -1,7 +1,7 @@
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
-import { QueryService } from 'src/query/query.service';
+import { QueryService } from '../query/query.service';
 import { FilterMembershipInput } from './inputs/filter-membership.input';
 import { JoinInput } from './inputs/join.input';
 import { LeaveInput } from './inputs/leave.input';
