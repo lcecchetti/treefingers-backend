@@ -56,6 +56,7 @@ import { CommonModule } from './common/utils.module';
         migrations: {
           pathTs: 'src/migrations',
           path: 'dist/migrations',
+          disableForeignKeys: false,
         },
       }),
     }),
