@@ -30,7 +30,7 @@ export class CreateStoryDataInput {
   @MinLength(2, {
     each: true,
   })
-  @Matches(/^[a-zA-Z0-9_]*$/g, { each: true })
+  @Matches(/^[a-zA-Z0-9_]*$/, { each: true })
   @ArrayMaxSize(5)
   @ArrayUnique()
   tags?: string[];
