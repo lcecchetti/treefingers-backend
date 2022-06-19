@@ -8,8 +8,11 @@ export class StoryDataloader {
   constructor(private readonly storyService: StoryService) {}
 
   createDataloader() {
-    return new DataLoader<number, Story>(async (ids) =>
-      this.storyService.findMany({ id: { in: [...ids] } }),
-    );
+    return new DataLoader<number, Story>(async (ids) => {
+      const stories = await this.storyService.findMany({
+        id: { in: [...ids] },
+      });
+      return ids.map((id) => stories.find((story) => story.id === id));
+    });
   }
 }

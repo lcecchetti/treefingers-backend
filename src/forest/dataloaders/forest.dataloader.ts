@@ -8,8 +8,11 @@ export class ForestDataloader {
   constructor(private readonly forestService: ForestService) {}
 
   createDataloader() {
-    return new DataLoader<number, Forest>(async (ids) =>
-      this.forestService.findMany({ id: { in: [...ids] } }),
-    );
+    return new DataLoader<number, Forest>(async (ids) => {
+      const forests = await this.forestService.findMany({
+        id: { in: [...ids] },
+      });
+      return ids.map((id) => forests.find((forest) => forest.id === id));
+    });
   }
 }
