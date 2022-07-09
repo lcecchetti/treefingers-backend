@@ -1,11 +1,11 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { SORT_DIRECTION } from '../../query/inputs/sort.input';
+import { SortDirection } from '../../query/inputs/sort.input';
 
 @InputType()
 export class SortUserInput {
-  @Field(() => SORT_DIRECTION, { nullable: true })
-  followersCount: SORT_DIRECTION;
+  @Field(() => SortDirection, { nullable: true })
+  followersCount: SortDirection;
 
-  @Field(() => SORT_DIRECTION, { nullable: true })
-  id: SORT_DIRECTION = SORT_DIRECTION.DESC;
+  @Field(() => SortDirection, { nullable: true })
+  id: SortDirection = SortDirection.DESC;
 }

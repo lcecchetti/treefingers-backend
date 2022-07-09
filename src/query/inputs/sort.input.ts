@@ -1,14 +1,14 @@
 import { Field, InputType, registerEnumType } from '@nestjs/graphql';
 
-export enum SORT_DIRECTION {
+export enum SortDirection {
   ASC = 'ASC',
   DESC = 'DESC',
 }
 
 @InputType()
 export class SortInput {
-  @Field(() => SORT_DIRECTION, { nullable: true })
-  id: SORT_DIRECTION = SORT_DIRECTION.DESC;
+  @Field(() => SortDirection, { nullable: true })
+  id: SortDirection = SortDirection.DESC;
 }
 
-registerEnumType(SORT_DIRECTION, { name: 'SortDirection' });
+registerEnumType(SortDirection, { name: 'SortDirection' });

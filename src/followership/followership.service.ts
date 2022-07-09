@@ -1,6 +1,10 @@
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
+import { NotificationReferenceType } from '../notification/enum/notification-reference-type.enum';
+import { NotificationSourceType } from '../notification/enum/notification-source-type.enum';
+import { NotificationWhat } from '../notification/enum/notification-what.enum';
+import { NotificationService } from '../notification/notification.service';
 import { QueryService } from '../query/query.service';
 import { Followership } from './followership.entity';
 import { FilterFollowershipInput } from './inputs/filter-followership.input';
@@ -12,6 +16,7 @@ export class FollowershipService {
   constructor(
     @InjectRepository(Followership)
     private followershipRepository: EntityRepository<Followership>,
+    private notificationService: NotificationService,
     private queryService: QueryService<Followership>,
   ) {}
 
@@ -32,6 +37,20 @@ export class FollowershipService {
   async follow(input: FollowInput): Promise<Followership> {
     const followership = await this.followershipRepository.create(input);
     await this.followershipRepository.persistAndFlush(followership);
+
+    await this.notificationService.create(
+      {
+        what: NotificationWhat.FOLLOW,
+        who: followership.follower.id,
+        referenceId: followership.follower.id,
+        referenceType: NotificationReferenceType.USER,
+        sourceId: followership.id,
+        sourceType: NotificationSourceType.FOLLOWERSHIP,
+        user: followership.followed.id,
+      },
+      true,
+    );
+
     return followership;
   }
 

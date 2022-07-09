@@ -1,6 +1,6 @@
 import { QueryBuilder } from '@mikro-orm/postgresql';
 import { BadRequestException } from '@nestjs/common';
-import { SortInput, SORT_DIRECTION } from '../query/inputs/sort.input';
+import { SortInput, SortDirection } from '../query/inputs/sort.input';
 import { ConnectionArgs } from './args/connection.args';
 import { IConnection } from './dto/pagination.dto';
 export class PaginationService<Entity> {
@@ -30,7 +30,7 @@ export class PaginationService<Entity> {
 
   prepareCursorFilter(
     cursor,
-    sortArray: [string, SORT_DIRECTION][],
+    sortArray: [string, SortDirection][],
     { ascComparison, descComparison },
   ) {
     const filter: any = {};
@@ -40,7 +40,7 @@ export class PaginationService<Entity> {
 
     // comparison operator
     const comparison =
-      direction === SORT_DIRECTION.ASC ? ascComparison : descComparison;
+      direction === SortDirection.ASC ? ascComparison : descComparison;
 
     filter.$or = [
       {

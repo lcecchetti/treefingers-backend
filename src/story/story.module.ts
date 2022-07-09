@@ -6,9 +6,17 @@ import { StoryDataloader } from './dataloaders/story.dataloader';
 import { Story } from './story.entity';
 import { QueryModule } from '../query/query.module';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { NotificationModule } from '../notification/notification.module';
+import { ForestModule } from '../forest/forest.module';
 
 @Module({
-  imports: [MikroOrmModule.forFeature([Story]), PaginationModule, QueryModule],
+  imports: [
+    MikroOrmModule.forFeature([Story]),
+    PaginationModule,
+    QueryModule,
+    NotificationModule,
+    ForestModule,
+  ],
   providers: [StoryService, StoryResolver, StoryDataloader],
   exports: [StoryService, StoryDataloader],
 })

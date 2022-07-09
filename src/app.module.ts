@@ -21,7 +21,8 @@ import { LikeModule } from './like/like.module';
 import { MembershipModule } from './membership/membership.module';
 import { StoryModule } from './story/story.module';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { CommonModule } from './common/utils.module';
+import { CommonModule } from './common/common.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -94,6 +95,7 @@ import { CommonModule } from './common/utils.module';
     LikeModule,
     MembershipModule,
     StoryModule,
+    NotificationModule,
   ],
   providers: [
     {
