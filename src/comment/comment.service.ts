@@ -15,6 +15,8 @@ import { NotificationSourceType } from '../notification/enum/notification-source
 import { NotificationType } from '../notification/enum/notification-type.enum';
 import { StringService } from '../common/services/string.service';
 import { wrap } from '@mikro-orm/core';
+import { NotificationTargetType } from '../notification/enum/notification-target-type.enum';
+import { UrlService } from '../common/services/url.service';
 
 @Injectable()
 export class CommentService {
@@ -25,6 +27,7 @@ export class CommentService {
     private queryService: QueryService<Comment>,
     private notificationService: NotificationService,
     private stringService: StringService,
+    private urlService: UrlService,
   ) {}
 
   async findOne(filter?: FilterCommentInput): Promise<Comment | null> {
@@ -41,44 +44,46 @@ export class CommentService {
 
   async sendSubmitCommentNotification(comment: Comment): Promise<Notification> {
     await wrap(comment.user).init();
+    const commentExcerpt = this.stringService.createExcerpt(
+      comment.content,
+      20,
+    );
 
     if (comment.forest) {
       await wrap(comment.forest).init();
+      const forestExcerpt = this.stringService.createExcerpt(
+        comment.forest.name,
+        20,
+      );
       return this.notificationService.create({
         type: NotificationType.COMMENT,
         actor: comment.user.id,
+        targetId: comment.forest.id,
+        targetType: NotificationTargetType.FOREST,
         sourceId: comment.id,
         sourceType: NotificationSourceType.COMMENT,
         user: comment.forest.founder.id,
-        content: `${
-          comment.user.username
-        } commented "${this.stringService.createExcerpt(
-          comment.content,
-          20,
-        )}" on your forest "${this.stringService.createExcerpt(
-          comment.forest.name,
-          20,
-        )}"`,
+        link: this.urlService.getForestUrl(comment.forest),
+        content: `${comment.user.username} commented "${commentExcerpt}" on your forest "${forestExcerpt}"`,
       });
     }
 
     if (comment.story) {
       await wrap(comment.story).init();
+      const storyExcerpt = this.stringService.createExcerpt(
+        comment.story.title,
+        20,
+      );
       return this.notificationService.create({
         type: NotificationType.COMMENT,
         actor: comment.user.id,
+        targetId: comment.story.id,
+        targetType: NotificationTargetType.STORY,
         sourceId: comment.id,
         sourceType: NotificationSourceType.COMMENT,
         user: comment.story.author.id,
-        content: `${
-          comment.user.username
-        } commented "${this.stringService.createExcerpt(
-          comment.content,
-          20,
-        )}" on your forest "${this.stringService.createExcerpt(
-          comment.story.title,
-          20,
-        )}"`,
+        link: this.urlService.getStoryUrl(comment.story),
+        content: `${comment.user.username} commented "${commentExcerpt}" on your forest "${storyExcerpt}"`,
       });
     }
   }

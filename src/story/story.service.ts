@@ -15,6 +15,8 @@ import { NotificationSourceType } from '../notification/enum/notification-source
 import { StringService } from '../common/services/string.service';
 import { wrap } from '@mikro-orm/core';
 import { NotificationType } from '../notification/enum/notification-type.enum';
+import { NotificationTargetType } from '../notification/enum/notification-target-type.enum';
+import { UrlService } from '../common/services/url.service';
 
 @Injectable()
 export class StoryService {
@@ -24,6 +26,7 @@ export class StoryService {
     private notificationService: NotificationService,
     private queryService: QueryService<Story>,
     private stringService: StringService,
+    private urlService: UrlService,
   ) {}
 
   async findOne(filter?: FilterStoryInput): Promise<Story | null> {
@@ -42,55 +45,59 @@ export class StoryService {
     await wrap(story.author).init();
     if (story.root) {
       await wrap(story.root).init();
+      const rootExcerpt = this.stringService.createExcerpt(
+        story.root.title,
+        20,
+      );
       await this.notificationService.create({
         type: NotificationType.STORY_CREATE,
         actor: story.author.id,
+        targetId: story.id,
+        targetType: NotificationTargetType.STORY,
         sourceId: story.id,
         sourceType: NotificationSourceType.STORY,
         user: story.root.author.id,
-        content: `${
-          story.author.username
-        } continued your story "${this.stringService.createExcerpt(
-          story.root.title,
-          20,
-        )}"`,
+        link: this.urlService.getStoryUrl(story),
+        content: `${story.author.username} continued your story "${rootExcerpt}"`,
       });
     }
 
     if (story.parent && story.parent.id !== story.root.id) {
       await wrap(story.parent).init();
+      const parentExcerpt = this.stringService.createExcerpt(
+        story.parent.title,
+        20,
+      );
       await this.notificationService.create({
         type: NotificationType.STORY_CREATE,
         actor: story.author.id,
+        targetId: story.id,
+        targetType: NotificationTargetType.STORY,
         sourceId: story.id,
         sourceType: NotificationSourceType.STORY,
         user: story.parent.author.id,
-        content: `${
-          story.author.username
-        } continued your chapter "${this.stringService.createExcerpt(
-          story.parent.title,
-          20,
-        )}"`,
+        link: this.urlService.getStoryUrl(story),
+        content: `${story.author.username} continued your chapter "${parentExcerpt}"`,
       });
     }
 
     if (story.forest) {
       await wrap(story.forest).init();
+      const storyExcerpt = this.stringService.createExcerpt(story.title, 20);
+      const forestExcerpt = this.stringService.createExcerpt(
+        story.forest.name,
+        20,
+      );
       await this.notificationService.create({
         type: NotificationType.STORY_CREATE,
         actor: story.author.id,
+        targetId: story.id,
+        targetType: NotificationTargetType.STORY,
         sourceId: story.id,
         sourceType: NotificationSourceType.STORY,
         user: story.forest.founder.id,
-        content: `${
-          story.author.username
-        } planted a story "${this.stringService.createExcerpt(
-          story.title,
-          20,
-        )}" on your forest "${this.stringService.createExcerpt(
-          story.forest.name,
-          20,
-        )}"`,
+        link: this.urlService.getStoryUrl(story),
+        content: `${story.author.username} planted a story "${storyExcerpt}" on your forest "${forestExcerpt}"`,
       });
     }
   }

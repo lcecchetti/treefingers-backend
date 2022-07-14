@@ -12,6 +12,8 @@ import { NotificationSourceType } from '../notification/enum/notification-source
 import { StringService } from '../common/services/string.service';
 import { wrap } from '@mikro-orm/core';
 import { NotificationType } from '../notification/enum/notification-type.enum';
+import { UrlService } from '../common/services/url.service';
+import { NotificationTargetType } from '../notification/enum/notification-target-type.enum';
 
 @Injectable()
 export class MembershipService {
@@ -21,6 +23,7 @@ export class MembershipService {
     private notificationService: NotificationService,
     private queryService: QueryService<Membership>,
     private stringService: StringService,
+    private urlService: UrlService,
   ) {}
 
   async findOne(filter?: FilterMembershipInput): Promise<Membership | null> {
@@ -38,19 +41,21 @@ export class MembershipService {
   async sendJoinNotification(membership: Membership): Promise<Notification> {
     await wrap(membership.forest).init();
     await wrap(membership.member).init();
+    const forestExcerpt = this.stringService.createExcerpt(
+      membership.forest.name,
+      20,
+    );
     return this.notificationService.create(
       {
         type: NotificationType.JOIN,
         actor: membership.member.id,
+        targetId: membership.forest.id,
+        targetType: NotificationTargetType.FOREST,
         sourceId: membership.id,
         sourceType: NotificationSourceType.MEMBERSHIP,
         user: membership.forest.founder.id,
-        content: `${
-          membership.member.username
-        } joined your forest "${this.stringService.createExcerpt(
-          membership.forest.name,
-          20,
-        )}"`,
+        link: this.urlService.getForestUrl(membership.forest),
+        content: `${membership.member.username} joined your forest "${forestExcerpt}"`,
       },
       true,
     );

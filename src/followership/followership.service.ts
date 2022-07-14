@@ -2,7 +2,9 @@ import { wrap } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
+import { UrlService } from '../common/services/url.service';
 import { NotificationSourceType } from '../notification/enum/notification-source-type.enum';
+import { NotificationTargetType } from '../notification/enum/notification-target-type.enum';
 import { NotificationType } from '../notification/enum/notification-type.enum';
 import { NotificationService } from '../notification/notification.service';
 import { QueryService } from '../query/query.service';
@@ -18,6 +20,7 @@ export class FollowershipService {
     private followershipRepository: EntityRepository<Followership>,
     private notificationService: NotificationService,
     private queryService: QueryService<Followership>,
+    private urlService: UrlService,
   ) {}
 
   async findOne(
@@ -44,9 +47,12 @@ export class FollowershipService {
       {
         type: NotificationType.FOLLOW,
         actor: followership.follower.id,
+        targetId: followership.follower.id,
+        targetType: NotificationTargetType.USER,
         sourceId: followership.id,
         sourceType: NotificationSourceType.FOLLOWERSHIP,
         user: followership.followed.id,
+        link: this.urlService.getUserUrl(followership.follower),
         content: `${followership.follower.username} started following you`,
       },
       true,

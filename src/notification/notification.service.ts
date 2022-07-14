@@ -48,8 +48,8 @@ export class NotificationService {
       const existingNotification = await this.findOne({
         actor: { eq: data.actor },
         type: { eq: data.type },
-        referenceId: { eq: data.referenceId },
-        referenceType: { eq: data.referenceType },
+        targetId: { eq: data.targetId },
+        targetType: { eq: data.targetType },
       });
 
       if (existingNotification) {

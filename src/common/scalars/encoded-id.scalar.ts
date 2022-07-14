@@ -1,18 +1,19 @@
 import { Scalar, CustomScalar } from '@nestjs/graphql';
 import { Kind, ValueNode } from 'graphql';
-import Hashids from 'hashids';
+import { UrlService } from '../services/url.service';
 
 @Scalar('HashedID')
 export class EncodedID implements CustomScalar<string, number> {
   description = 'Hashed ID custom scalar type';
-  hashids = new Hashids('Treefingers', 10);
+
+  constructor(private urlService: UrlService) {}
 
   parseValue(value: string): number {
-    return value && (this.hashids.decode(value)[0] as number);
+    return this.urlService.decodeId(value);
   }
 
   serialize(value: number): string {
-    return this.hashids.encode(value);
+    return this.urlService.encodeId(value);
   }
 
   parseLiteral(ast: ValueNode): number | null {

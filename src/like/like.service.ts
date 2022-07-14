@@ -13,6 +13,8 @@ import { NotificationSourceType } from '../notification/enum/notification-source
 import { NotificationType } from '../notification/enum/notification-type.enum';
 import { wrap } from '@mikro-orm/core';
 import { StringService } from '../common/services/string.service';
+import { NotificationTargetType } from '../notification/enum/notification-target-type.enum';
+import { UrlService } from '../common/services/url.service';
 
 @Injectable()
 export class LikeService {
@@ -21,6 +23,7 @@ export class LikeService {
     private notificationService: NotificationService,
     private queryService: QueryService<Like>,
     private stringService: StringService,
+    private urlService: UrlService,
   ) {}
 
   async findOne(filter?: FilterLikeInput): Promise<Like | null> {
@@ -39,19 +42,25 @@ export class LikeService {
     await wrap(like.user).init();
     if (like.comment) {
       await wrap(like.comment).init();
+      const commentExcerpt = this.stringService.createExcerpt(
+        like.comment.content,
+        20,
+      );
       return this.notificationService.create(
         {
           type: NotificationType.LIKE,
           actor: like.user.id,
+          targetId: like.comment.story?.id || like.comment.forest?.id,
+          targetType: like.comment.story
+            ? NotificationTargetType.STORY
+            : NotificationTargetType.FOREST,
           sourceId: like.id,
           sourceType: NotificationSourceType.LIKE,
           user: like.comment.user.id,
-          content: `${
-            like.user.username
-          } likes your comment "${this.stringService.createExcerpt(
-            like.comment.content,
-            20,
-          )}"`,
+          link: like.comment.story
+            ? this.urlService.getStoryUrl(like.comment.story)
+            : this.urlService.getForestUrl(like.comment.forest),
+          content: `${like.user.username} likes your comment "${commentExcerpt}"`,
         },
         true,
       );
@@ -59,16 +68,22 @@ export class LikeService {
 
     if (like.story) {
       await wrap(like.story).init();
+      const storyExcerpt = this.stringService.createExcerpt(
+        like.story.title,
+        20,
+      );
+      const storyType = like.story.parent ? 'chapter' : 'story';
       return this.notificationService.create(
         {
           type: NotificationType.LIKE,
           actor: like.user.id,
+          targetId: like.story.id,
+          targetType: NotificationTargetType.STORY,
           sourceId: like.id,
           sourceType: NotificationSourceType.LIKE,
           user: like.story.author.id,
-          content: `${like.user.username} likes your ${
-            like.story.parent ? 'chapter' : 'story'
-          } "${this.stringService.createExcerpt(like.story.title, 20)}"`,
+          link: this.urlService.getStoryUrl(like.story),
+          content: `${like.user.username} likes your ${storyType} "${storyExcerpt}"`,
         },
         true,
       );

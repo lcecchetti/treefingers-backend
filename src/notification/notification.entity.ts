@@ -11,10 +11,11 @@ import {
 import { EncodedID } from '../common/scalars/encoded-id.scalar';
 import { NotificationSourceType } from './enum/notification-source-type.enum';
 import { NotificationType } from './enum/notification-type.enum';
+import { NotificationTargetType } from './enum/notification-target-type.enum';
 
 @Entity()
 @Index({
-  properties: ['type', 'actor', 'referenceId', 'referenceType', 'read'],
+  properties: ['type', 'actor', 'targetId', 'targetType', 'read'],
 })
 @ObjectType()
 export class Notification {
@@ -50,6 +51,14 @@ export class Notification {
   @Enum({ items: () => NotificationSourceType, nullable: true })
   @Field(() => NotificationSourceType, { nullable: true })
   sourceType?: NotificationSourceType;
+
+  @Property({ nullable: true })
+  @Field(() => EncodedID, { nullable: true })
+  targetId?: number;
+
+  @Enum({ items: () => NotificationTargetType, nullable: true })
+  @Field(() => NotificationTargetType, { nullable: true })
+  targetType?: NotificationTargetType;
 
   @ManyToOne(() => User, { onDelete: 'cascade' })
   @Index()
