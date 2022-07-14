@@ -9,13 +9,13 @@ import {
   Property,
 } from '@mikro-orm/core';
 import { EncodedID } from '../common/scalars/encoded-id.scalar';
-import { NotificationReferenceType } from './enum/notification-reference-type.enum';
-import { NotificationWhat } from './enum/notification-what.enum';
-import { NotificationDetails } from './dto/notification-details';
 import { NotificationSourceType } from './enum/notification-source-type.enum';
+import { NotificationType } from './enum/notification-type.enum';
 
 @Entity()
-@Index({ properties: ['what', 'who', 'referenceId', 'referenceType'] })
+@Index({
+  properties: ['type', 'actor', 'referenceId', 'referenceType', 'read'],
+})
 @ObjectType()
 export class Notification {
   @PrimaryKey()
@@ -27,13 +27,21 @@ export class Notification {
   @Field()
   read: boolean;
 
-  @Enum(() => NotificationWhat)
-  @Field(() => NotificationWhat)
-  what: NotificationWhat;
+  @Property({ nullable: true })
+  @Field(() => String, { nullable: true })
+  link?: string;
+
+  @Property()
+  @Field(() => String)
+  content: string;
+
+  @Enum(() => NotificationType)
+  @Field(() => NotificationType)
+  type: NotificationType;
 
   @ManyToOne(() => User, { onDelete: 'cascade', nullable: true })
   @Field(() => User, { nullable: true })
-  who?: User;
+  actor?: User;
 
   @Property({ nullable: true })
   @Field(() => EncodedID, { nullable: true })
@@ -42,14 +50,6 @@ export class Notification {
   @Enum({ items: () => NotificationSourceType, nullable: true })
   @Field(() => NotificationSourceType, { nullable: true })
   sourceType?: NotificationSourceType;
-
-  @Property({ nullable: true })
-  @Field(() => EncodedID, { nullable: true })
-  referenceId?: number;
-
-  @Enum({ items: () => NotificationReferenceType, nullable: true })
-  @Field(() => NotificationReferenceType, { nullable: true })
-  referenceType?: NotificationReferenceType;
 
   @ManyToOne(() => User, { onDelete: 'cascade' })
   @Index()

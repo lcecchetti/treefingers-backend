@@ -11,20 +11,19 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { CurrentUser } from '../auth/dto/current-user.dto';
 import { NotificationService } from '../notification/notification.service';
-import { NotificationWhat } from '../notification/enum/notification-what.enum';
-import { NotificationReferenceType } from '../notification/enum/notification-reference-type.enum';
-import { ForestService } from '../forest/forest.service';
-import { Notification } from '../notification/notification.entity';
 import { NotificationSourceType } from '../notification/enum/notification-source-type.enum';
+import { StringService } from '../common/services/string.service';
+import { wrap } from '@mikro-orm/core';
+import { NotificationType } from '../notification/enum/notification-type.enum';
 
 @Injectable()
 export class StoryService {
   constructor(
     @InjectRepository(Story) private storyRepository: EntityRepository<Story>,
     private paginationService: PaginationService<Story>,
-    private forestService: ForestService,
     private notificationService: NotificationService,
     private queryService: QueryService<Story>,
+    private stringService: StringService,
   ) {}
 
   async findOne(filter?: FilterStoryInput): Promise<Story | null> {
@@ -40,42 +39,58 @@ export class StoryService {
   }
 
   async sendCreateStoryNotifications(story: Story) {
+    await wrap(story.author).init();
     if (story.root) {
-      const root = await this.findById(story.root.id);
+      await wrap(story.root).init();
       await this.notificationService.create({
-        what: NotificationWhat.STORY_CONTINUE,
-        who: story.author.id,
-        referenceId: story.id,
-        referenceType: NotificationReferenceType.STORY,
+        type: NotificationType.STORY_CREATE,
+        actor: story.author.id,
         sourceId: story.id,
         sourceType: NotificationSourceType.STORY,
-        user: root.author.id,
+        user: story.root.author.id,
+        content: `${
+          story.author.username
+        } continued your story "${this.stringService.createExcerpt(
+          story.root.title,
+          20,
+        )}"`,
       });
     }
 
     if (story.parent && story.parent.id !== story.root.id) {
-      const parent = await this.findById(story.parent.id);
+      await wrap(story.parent).init();
       await this.notificationService.create({
-        what: NotificationWhat.CHAPTER_CONTINUE,
-        who: story.author.id,
-        referenceId: story.id,
-        referenceType: NotificationReferenceType.STORY,
+        type: NotificationType.STORY_CREATE,
+        actor: story.author.id,
         sourceId: story.id,
         sourceType: NotificationSourceType.STORY,
-        user: parent.author.id,
+        user: story.parent.author.id,
+        content: `${
+          story.author.username
+        } continued your chapter "${this.stringService.createExcerpt(
+          story.parent.title,
+          20,
+        )}"`,
       });
     }
 
     if (story.forest) {
-      const forest = await this.forestService.findById(story.forest.id);
+      await wrap(story.forest).init();
       await this.notificationService.create({
-        what: NotificationWhat.STORY_CREATE,
-        who: forest.founder.id,
-        referenceId: story.id,
-        referenceType: NotificationReferenceType.STORY,
+        type: NotificationType.STORY_CREATE,
+        actor: story.author.id,
         sourceId: story.id,
         sourceType: NotificationSourceType.STORY,
-        user: forest.founder.id,
+        user: story.forest.founder.id,
+        content: `${
+          story.author.username
+        } planted a story "${this.stringService.createExcerpt(
+          story.title,
+          20,
+        )}" on your forest "${this.stringService.createExcerpt(
+          story.forest.name,
+          20,
+        )}"`,
       });
     }
   }

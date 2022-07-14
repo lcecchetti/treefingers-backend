@@ -38,10 +38,16 @@ export class NotificationService {
     data: NotificationDataInput,
     once?: boolean,
   ): Promise<Notification | null> {
+    // avoid sending notification to self
+    if (data.actor === data.user) {
+      return null;
+    }
+
+    // avoid sending notification twice
     if (once) {
       const existingNotification = await this.findOne({
-        who: { eq: data.who },
-        what: { eq: data.what },
+        actor: { eq: data.actor },
+        type: { eq: data.type },
         referenceId: { eq: data.referenceId },
         referenceType: { eq: data.referenceType },
       });

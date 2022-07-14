@@ -8,21 +8,19 @@ import { SortUserInput } from '../user/inputs/sort-user.input';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { NotificationService } from '../notification/notification.service';
-import { NotificationWhat } from '../notification/enum/notification-what.enum';
-import { StoryService } from '../story/story.service';
-import { CommentService } from '../comment/comment.service';
-import { NotificationReferenceType } from '../notification/enum/notification-reference-type.enum';
 import { Notification } from '../notification/notification.entity';
 import { NotificationSourceType } from '../notification/enum/notification-source-type.enum';
+import { NotificationType } from '../notification/enum/notification-type.enum';
+import { wrap } from '@mikro-orm/core';
+import { StringService } from '../common/services/string.service';
 
 @Injectable()
 export class LikeService {
   constructor(
     @InjectRepository(Like) private likeRepository: EntityRepository<Like>,
-    private commentService: CommentService,
-    private storyService: StoryService,
     private notificationService: NotificationService,
     private queryService: QueryService<Like>,
+    private stringService: StringService,
   ) {}
 
   async findOne(filter?: FilterLikeInput): Promise<Like | null> {
@@ -38,37 +36,39 @@ export class LikeService {
   }
 
   async sendLikeNotification(like: Like): Promise<Notification> {
+    await wrap(like.user).init();
     if (like.comment) {
-      const comment = await this.commentService.findById(like.comment.id);
+      await wrap(like.comment).init();
       return this.notificationService.create(
         {
-          what: NotificationWhat.LIKE_COMMENT,
-          who: like.user.id,
-          referenceId: comment.story?.id || comment.forest?.id,
-          referenceType: comment.story?.id
-            ? NotificationReferenceType.STORY
-            : NotificationReferenceType.FOREST,
+          type: NotificationType.LIKE,
+          actor: like.user.id,
           sourceId: like.id,
           sourceType: NotificationSourceType.LIKE,
-          user: comment.user.id,
+          user: like.comment.user.id,
+          content: `${
+            like.user.username
+          } likes your comment "${this.stringService.createExcerpt(
+            like.comment.content,
+            20,
+          )}"`,
         },
         true,
       );
     }
 
     if (like.story) {
-      const story = await this.storyService.findById(like.story.id);
+      await wrap(like.story).init();
       return this.notificationService.create(
         {
-          what: story.parent
-            ? NotificationWhat.LIKE_CHAPTER
-            : NotificationWhat.LIKE_STORY,
-          who: like.user.id,
-          referenceId: story.id,
-          referenceType: NotificationReferenceType.STORY,
+          type: NotificationType.LIKE,
+          actor: like.user.id,
           sourceId: like.id,
           sourceType: NotificationSourceType.LIKE,
-          user: story.author.id,
+          user: like.story.author.id,
+          content: `${like.user.username} likes your ${
+            like.story.parent ? 'chapter' : 'story'
+          } "${this.stringService.createExcerpt(like.story.title, 20)}"`,
         },
         true,
       );

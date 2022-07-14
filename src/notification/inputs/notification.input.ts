@@ -1,13 +1,12 @@
-import { NotificationReferenceType } from '../enum/notification-reference-type.enum';
 import { NotificationSourceType } from '../enum/notification-source-type.enum';
-import { NotificationWhat } from '../enum/notification-what.enum';
+import { NotificationType } from '../enum/notification-type.enum';
 
 export class NotificationDataInput {
+  type: NotificationType;
   user: number;
-  what: NotificationWhat;
-  who?: number;
-  referenceId?: number;
-  referenceType?: NotificationReferenceType;
+  content: string;
+  link?: string;
+  actor?: number;
   sourceId?: number;
   sourceType?: NotificationSourceType;
 }

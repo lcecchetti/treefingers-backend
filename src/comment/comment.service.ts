@@ -10,12 +10,11 @@ import { SortCommentInput } from './inputs/sort-comment.input';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { NotificationService } from '../notification/notification.service';
-import { ForestService } from '../forest/forest.service';
-import { StoryService } from '../story/story.service';
-import { NotificationWhat } from '../notification/enum/notification-what.enum';
-import { NotificationReferenceType } from '../notification/enum/notification-reference-type.enum';
 import { Notification } from '../notification/notification.entity';
 import { NotificationSourceType } from '../notification/enum/notification-source-type.enum';
+import { NotificationType } from '../notification/enum/notification-type.enum';
+import { StringService } from '../common/services/string.service';
+import { wrap } from '@mikro-orm/core';
 
 @Injectable()
 export class CommentService {
@@ -25,8 +24,7 @@ export class CommentService {
     private paginationService: PaginationService<Comment>,
     private queryService: QueryService<Comment>,
     private notificationService: NotificationService,
-    private forestService: ForestService,
-    private storyService: StoryService,
+    private stringService: StringService,
   ) {}
 
   async findOne(filter?: FilterCommentInput): Promise<Comment | null> {
@@ -42,31 +40,45 @@ export class CommentService {
   }
 
   async sendSubmitCommentNotification(comment: Comment): Promise<Notification> {
+    await wrap(comment.user).init();
+
     if (comment.forest) {
-      const forest = await this.forestService.findById(comment.forest.id);
+      await wrap(comment.forest).init();
       return this.notificationService.create({
-        what: NotificationWhat.COMMENT_FOREST,
-        who: comment.user.id,
-        referenceId: forest.id,
-        referenceType: NotificationReferenceType.FOREST,
+        type: NotificationType.COMMENT,
+        actor: comment.user.id,
         sourceId: comment.id,
         sourceType: NotificationSourceType.COMMENT,
-        user: forest.founder.id,
+        user: comment.forest.founder.id,
+        content: `${
+          comment.user.username
+        } commented "${this.stringService.createExcerpt(
+          comment.content,
+          20,
+        )}" on your forest "${this.stringService.createExcerpt(
+          comment.forest.name,
+          20,
+        )}"`,
       });
     }
 
     if (comment.story) {
-      const story = await this.storyService.findById(comment.story.id);
+      await wrap(comment.story).init();
       return this.notificationService.create({
-        what: story.parent
-          ? NotificationWhat.COMMENT_CHAPTER
-          : NotificationWhat.COMMENT_STORY,
-        who: comment.user.id,
-        referenceId: story.id,
-        referenceType: NotificationReferenceType.STORY,
+        type: NotificationType.COMMENT,
+        actor: comment.user.id,
         sourceId: comment.id,
         sourceType: NotificationSourceType.COMMENT,
-        user: story.author.id,
+        user: comment.story.author.id,
+        content: `${
+          comment.user.username
+        } commented "${this.stringService.createExcerpt(
+          comment.content,
+          20,
+        )}" on your forest "${this.stringService.createExcerpt(
+          comment.story.title,
+          20,
+        )}"`,
       });
     }
   }

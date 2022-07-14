@@ -7,8 +7,6 @@ import { QueryModule } from '../query/query.module';
 import { Comment } from './comment.entity';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { NotificationModule } from '../notification/notification.module';
-import { ForestModule } from '../forest/forest.module';
-import { StoryModule } from '../story/story.module';
 
 @Module({
   imports: [
@@ -16,8 +14,6 @@ import { StoryModule } from '../story/story.module';
     PaginationModule,
     QueryModule,
     NotificationModule,
-    ForestModule,
-    StoryModule,
   ],
   providers: [CommentService, CommentResolver, CommentDataloader],
   exports: [CommentService, CommentDataloader],

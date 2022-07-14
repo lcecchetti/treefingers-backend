@@ -1,9 +1,6 @@
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
-import { ForestService } from '../forest/forest.service';
-import { NotificationReferenceType } from '../notification/enum/notification-reference-type.enum';
-import { NotificationWhat } from '../notification/enum/notification-what.enum';
 import { NotificationService } from '../notification/notification.service';
 import { QueryService } from '../query/query.service';
 import { FilterMembershipInput } from './inputs/filter-membership.input';
@@ -12,6 +9,9 @@ import { LeaveInput } from './inputs/leave.input';
 import { Membership } from './membership.entity';
 import { Notification } from '../notification/notification.entity';
 import { NotificationSourceType } from '../notification/enum/notification-source-type.enum';
+import { StringService } from '../common/services/string.service';
+import { wrap } from '@mikro-orm/core';
+import { NotificationType } from '../notification/enum/notification-type.enum';
 
 @Injectable()
 export class MembershipService {
@@ -19,8 +19,8 @@ export class MembershipService {
     @InjectRepository(Membership)
     private membershipRepository: EntityRepository<Membership>,
     private notificationService: NotificationService,
-    private forestService: ForestService,
     private queryService: QueryService<Membership>,
+    private stringService: StringService,
   ) {}
 
   async findOne(filter?: FilterMembershipInput): Promise<Membership | null> {
@@ -36,16 +36,21 @@ export class MembershipService {
   }
 
   async sendJoinNotification(membership: Membership): Promise<Notification> {
-    const forest = await this.forestService.findById(membership.forest.id);
+    await wrap(membership.forest).init();
+    await wrap(membership.member).init();
     return this.notificationService.create(
       {
-        what: NotificationWhat.JOIN,
-        who: membership.member.id,
-        referenceId: membership.forest.id,
-        referenceType: NotificationReferenceType.FOREST,
+        type: NotificationType.JOIN,
+        actor: membership.member.id,
         sourceId: membership.id,
         sourceType: NotificationSourceType.MEMBERSHIP,
-        user: forest.founder.id,
+        user: membership.forest.founder.id,
+        content: `${
+          membership.member.username
+        } joined your forest "${this.stringService.createExcerpt(
+          membership.forest.name,
+          20,
+        )}"`,
       },
       true,
     );

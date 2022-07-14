@@ -17,8 +17,8 @@ export class FilterNotificationInput extends FilterInput {
   read?: FilterBooleanInput;
 
   user?: FilterIdInput;
-  who?: FilterIdInput;
-  what?: FilterStringInput;
+  actor?: FilterIdInput;
+  type?: FilterStringInput;
   referenceId?: FilterIdInput;
   referenceType?: FilterStringInput;
 }

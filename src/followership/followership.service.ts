@@ -1,9 +1,9 @@
+import { wrap } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
-import { NotificationReferenceType } from '../notification/enum/notification-reference-type.enum';
 import { NotificationSourceType } from '../notification/enum/notification-source-type.enum';
-import { NotificationWhat } from '../notification/enum/notification-what.enum';
+import { NotificationType } from '../notification/enum/notification-type.enum';
 import { NotificationService } from '../notification/notification.service';
 import { QueryService } from '../query/query.service';
 import { Followership } from './followership.entity';
@@ -38,15 +38,16 @@ export class FollowershipService {
     const followership = await this.followershipRepository.create(input);
     await this.followershipRepository.persistAndFlush(followership);
 
+    await wrap(followership.follower).init();
+
     await this.notificationService.create(
       {
-        what: NotificationWhat.FOLLOW,
-        who: followership.follower.id,
-        referenceId: followership.follower.id,
-        referenceType: NotificationReferenceType.USER,
+        type: NotificationType.FOLLOW,
+        actor: followership.follower.id,
         sourceId: followership.id,
         sourceType: NotificationSourceType.FOLLOWERSHIP,
         user: followership.followed.id,
+        content: `${followership.follower.username} started following you`,
       },
       true,
     );
