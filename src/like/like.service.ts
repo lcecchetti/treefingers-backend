@@ -42,6 +42,7 @@ export class LikeService {
     await wrap(like.user).init();
     if (like.comment) {
       await wrap(like.comment).init();
+      await wrap(like.comment.forest).init();
       const commentExcerpt = this.stringService.createExcerpt(
         like.comment.content,
         20,
