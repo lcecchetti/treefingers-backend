@@ -46,14 +46,11 @@ export class UserResolver {
     return this.userService.findOne(filter);
   }
 
-  @Query(() => User, { nullable: true })
+  @Query(() => CurrentUser, { nullable: true })
   async currentUser(
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<CurrentUser | null> {
-    if (!currentUser) {
-      return null;
-    }
-    return this.userService.findById(currentUser.id);
+    return currentUser;
   }
 
   @UseGuards(IsAuthenticatedGuard)
