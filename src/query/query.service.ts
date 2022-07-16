@@ -44,6 +44,10 @@ export class QueryService<Entity> {
   prepareSort(sort: SortInput): QBQueryOrderMap<Entity> {
     const orderBy = {};
 
+    if (!sort) {
+      return orderBy;
+    }
+
     Object.entries(sort).map(([key, value]) => {
       orderBy[key] = value;
     });

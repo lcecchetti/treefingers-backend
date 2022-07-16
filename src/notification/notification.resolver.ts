@@ -32,9 +32,7 @@ export class NotificationResolver {
     args: NotificationConnectionArgs = new NotificationConnectionArgs(),
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<NotificationConnection> {
-    args.filter.user = { eq: currentUser.id };
-
-    return this.notificationService.paginate(args);
+    return this.notificationService.paginate(args, currentUser);
   }
 
   @ResolveField()

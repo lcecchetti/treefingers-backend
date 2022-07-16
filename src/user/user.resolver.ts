@@ -50,6 +50,10 @@ export class UserResolver {
   async currentUser(
     @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<CurrentUser | null> {
+    if (!currentUser) {
+      return null;
+    }
+
     return currentUser;
   }
 

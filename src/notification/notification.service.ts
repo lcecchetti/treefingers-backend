@@ -83,24 +83,55 @@ export class NotificationService {
     return result.affectedRows;
   }
 
+  async count(
+    filter?: FilterNotificationInput,
+    currentUser?: CurrentUser,
+  ): Promise<number> {
+    return this.prepareQueryBuilder(filter, null, currentUser).getCount();
+  }
+
+  async getUnreadCount(currentUser: CurrentUser): Promise<number> {
+    if (!currentUser) {
+      return 0;
+    }
+
+    return this.count(
+      {
+        read: { eq: false },
+      },
+      currentUser,
+    );
+  }
+
   async paginate(
     {
       filter,
       sort,
       ...connectionArgs
     }: NotificationConnectionArgs = new NotificationConnectionArgs(),
+    currentUser?: CurrentUser,
   ): Promise<NotificationConnection> {
-    return this.paginationService.paginate(
-      this.prepareQueryBuilder(filter, sort),
+    const result = await this.paginationService.paginate(
+      this.prepareQueryBuilder(filter, sort, currentUser),
       sort,
       connectionArgs,
     );
+
+    return {
+      ...result,
+      unreadCount: await this.getUnreadCount(currentUser),
+    };
   }
 
   prepareQueryBuilder(
     filter: FilterNotificationInput = new FilterNotificationInput(),
     sort: SortNotificationInput = new SortNotificationInput(),
+    currentUser?: CurrentUser,
   ) {
+    if (currentUser) {
+      filter.user = { eq: currentUser.id };
+    }
+
     return this.queryService.prepareQueryBuilder(
       this.notificationRepository.createQueryBuilder(),
       filter,
