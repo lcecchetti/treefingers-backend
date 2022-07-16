@@ -8,12 +8,10 @@ import { JoinInput } from './inputs/join.input';
 import { LeaveInput } from './inputs/leave.input';
 import { Membership } from './membership.entity';
 import { Notification } from '../notification/notification.entity';
-import { NotificationSourceType } from '../notification/enum/notification-source-type.enum';
 import { StringService } from '../common/services/string.service';
 import { wrap } from '@mikro-orm/core';
 import { NotificationType } from '../notification/enum/notification-type.enum';
 import { UrlService } from '../common/services/url.service';
-import { NotificationTargetType } from '../notification/enum/notification-target-type.enum';
 
 @Injectable()
 export class MembershipService {
@@ -50,9 +48,7 @@ export class MembershipService {
         type: NotificationType.JOIN,
         actor: membership.member.id,
         targetId: membership.forest.id,
-        targetType: NotificationTargetType.FOREST,
         sourceId: membership.id,
-        sourceType: NotificationSourceType.MEMBERSHIP,
         user: membership.forest.founder.id,
         link: this.urlService.getForestUrl(membership.forest),
         content: `${membership.member.username} joined your forest "${forestExcerpt}"`,

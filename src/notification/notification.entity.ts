@@ -9,13 +9,11 @@ import {
   Property,
 } from '@mikro-orm/core';
 import { EncodedID } from '../common/scalars/encoded-id.scalar';
-import { NotificationSourceType } from './enum/notification-source-type.enum';
 import { NotificationType } from './enum/notification-type.enum';
-import { NotificationTargetType } from './enum/notification-target-type.enum';
 
 @Entity()
 @Index({
-  properties: ['actor', 'type', 'targetType', 'targetId', 'read'],
+  properties: ['actor', 'type', 'referenceId', 'read'],
 })
 @ObjectType()
 export class Notification {
@@ -48,17 +46,9 @@ export class Notification {
   @Field(() => EncodedID, { nullable: true })
   sourceId?: number;
 
-  @Enum({ items: () => NotificationSourceType, nullable: true })
-  @Field(() => NotificationSourceType, { nullable: true })
-  sourceType?: NotificationSourceType;
-
   @Property({ nullable: true })
   @Field(() => EncodedID, { nullable: true })
   targetId?: number;
-
-  @Enum({ items: () => NotificationTargetType, nullable: true })
-  @Field(() => NotificationTargetType, { nullable: true })
-  targetType?: NotificationTargetType;
 
   @ManyToOne(() => User, { onDelete: 'cascade' })
   @Index()

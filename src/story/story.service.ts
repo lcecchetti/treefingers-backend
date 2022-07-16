@@ -11,11 +11,9 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { CurrentUser } from '../auth/dto/current-user.dto';
 import { NotificationService } from '../notification/notification.service';
-import { NotificationSourceType } from '../notification/enum/notification-source-type.enum';
 import { StringService } from '../common/services/string.service';
 import { wrap } from '@mikro-orm/core';
 import { NotificationType } from '../notification/enum/notification-type.enum';
-import { NotificationTargetType } from '../notification/enum/notification-target-type.enum';
 import { UrlService } from '../common/services/url.service';
 
 @Injectable()
@@ -50,12 +48,10 @@ export class StoryService {
         20,
       );
       await this.notificationService.create({
-        type: NotificationType.STORY_CREATE,
+        type: NotificationType.STORY_CONTINUE,
         actor: story.author.id,
-        targetId: story.id,
-        targetType: NotificationTargetType.STORY,
+        targetId: story.root.id,
         sourceId: story.id,
-        sourceType: NotificationSourceType.STORY,
         user: story.root.author.id,
         link: this.urlService.getStoryUrl(story),
         content: `${story.author.username} continued your story "${rootExcerpt}"`,
@@ -69,12 +65,10 @@ export class StoryService {
         20,
       );
       await this.notificationService.create({
-        type: NotificationType.STORY_CREATE,
+        type: NotificationType.CHAPTER_CONTINUE,
         actor: story.author.id,
-        targetId: story.id,
-        targetType: NotificationTargetType.STORY,
+        targetId: story.parent.id,
         sourceId: story.id,
-        sourceType: NotificationSourceType.STORY,
         user: story.parent.author.id,
         link: this.urlService.getStoryUrl(story),
         content: `${story.author.username} continued your chapter "${parentExcerpt}"`,
@@ -89,12 +83,10 @@ export class StoryService {
         20,
       );
       await this.notificationService.create({
-        type: NotificationType.STORY_CREATE,
+        type: NotificationType.FOREST_CONTINUE,
         actor: story.author.id,
-        targetId: story.id,
-        targetType: NotificationTargetType.STORY,
+        targetId: story.forest.id,
         sourceId: story.id,
-        sourceType: NotificationSourceType.STORY,
         user: story.forest.founder.id,
         link: this.urlService.getStoryUrl(story),
         content: `${story.author.username} planted a story "${storyExcerpt}" on your forest "${forestExcerpt}"`,

@@ -9,11 +9,9 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { NotificationService } from '../notification/notification.service';
 import { Notification } from '../notification/notification.entity';
-import { NotificationSourceType } from '../notification/enum/notification-source-type.enum';
 import { NotificationType } from '../notification/enum/notification-type.enum';
 import { wrap } from '@mikro-orm/core';
 import { StringService } from '../common/services/string.service';
-import { NotificationTargetType } from '../notification/enum/notification-target-type.enum';
 import { UrlService } from '../common/services/url.service';
 
 @Injectable()
@@ -42,6 +40,7 @@ export class LikeService {
     await wrap(like.user).init();
     if (like.comment) {
       await wrap(like.comment).init();
+      await wrap(like.comment.story).init();
       await wrap(like.comment.forest).init();
       const commentExcerpt = this.stringService.createExcerpt(
         like.comment.content,
@@ -49,14 +48,12 @@ export class LikeService {
       );
       return this.notificationService.create(
         {
-          type: NotificationType.LIKE,
+          type: like.comment.story
+            ? NotificationType.LIKE_COMMENT_STORY
+            : NotificationType.LIKE_COMMENT_FOREST,
           actor: like.user.id,
           targetId: like.comment.story?.id || like.comment.forest?.id,
-          targetType: like.comment.story
-            ? NotificationTargetType.STORY
-            : NotificationTargetType.FOREST,
           sourceId: like.id,
-          sourceType: NotificationSourceType.LIKE,
           user: like.comment.user.id,
           link: like.comment.story
             ? this.urlService.getStoryUrl(like.comment.story)
@@ -76,12 +73,10 @@ export class LikeService {
       const storyType = like.story.parent ? 'chapter' : 'story';
       return this.notificationService.create(
         {
-          type: NotificationType.LIKE,
+          type: NotificationType.LIKE_STORY,
           actor: like.user.id,
           targetId: like.story.id,
-          targetType: NotificationTargetType.STORY,
           sourceId: like.id,
-          sourceType: NotificationSourceType.LIKE,
           user: like.story.author.id,
           link: this.urlService.getStoryUrl(like.story),
           content: `${like.user.username} likes your ${storyType} "${storyExcerpt}"`,

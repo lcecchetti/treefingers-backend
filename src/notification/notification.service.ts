@@ -49,7 +49,6 @@ export class NotificationService {
         actor: { eq: data.actor },
         type: { eq: data.type },
         targetId: { eq: data.targetId },
-        targetType: { eq: data.targetType },
       });
 
       if (existingNotification) {

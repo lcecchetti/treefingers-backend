@@ -20,5 +20,4 @@ export class FilterNotificationInput extends FilterInput {
   actor?: FilterIdInput;
   type?: FilterStringInput;
   targetId?: FilterIdInput;
-  targetType?: FilterStringInput;
 }

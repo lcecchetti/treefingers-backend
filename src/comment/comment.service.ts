@@ -11,11 +11,9 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { NotificationService } from '../notification/notification.service';
 import { Notification } from '../notification/notification.entity';
-import { NotificationSourceType } from '../notification/enum/notification-source-type.enum';
 import { NotificationType } from '../notification/enum/notification-type.enum';
 import { StringService } from '../common/services/string.service';
 import { wrap } from '@mikro-orm/core';
-import { NotificationTargetType } from '../notification/enum/notification-target-type.enum';
 import { UrlService } from '../common/services/url.service';
 
 @Injectable()
@@ -56,12 +54,10 @@ export class CommentService {
         20,
       );
       return this.notificationService.create({
-        type: NotificationType.COMMENT,
+        type: NotificationType.COMMENT_FOREST,
         actor: comment.user.id,
         targetId: comment.forest.id,
-        targetType: NotificationTargetType.FOREST,
         sourceId: comment.id,
-        sourceType: NotificationSourceType.COMMENT,
         user: comment.forest.founder.id,
         link: this.urlService.getForestUrl(comment.forest),
         content: `${comment.user.username} commented "${commentExcerpt}" on your forest "${forestExcerpt}"`,
@@ -75,12 +71,10 @@ export class CommentService {
         20,
       );
       return this.notificationService.create({
-        type: NotificationType.COMMENT,
+        type: NotificationType.COMMENT_STORY,
         actor: comment.user.id,
         targetId: comment.story.id,
-        targetType: NotificationTargetType.STORY,
         sourceId: comment.id,
-        sourceType: NotificationSourceType.COMMENT,
         user: comment.story.author.id,
         link: this.urlService.getStoryUrl(comment.story),
         content: `${comment.user.username} commented "${commentExcerpt}" on your forest "${storyExcerpt}"`,
