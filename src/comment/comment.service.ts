@@ -77,7 +77,7 @@ export class CommentService {
         sourceId: comment.id,
         user: comment.story.author.id,
         link: this.urlService.getStoryUrl(comment.story),
-        content: `${comment.user.username} commented "${commentExcerpt}" on your forest "${storyExcerpt}"`,
+        content: `${comment.user.username} commented "${commentExcerpt}" on your story "${storyExcerpt}"`,
       });
     }
   }

@@ -49,7 +49,10 @@ export class NotificationResolver {
   async actor(
     @Parent() notification: Notification,
     @Loader(UserDataloader) userDataloader,
-  ): Promise<User> {
+  ): Promise<User | null> {
+    if (!notification.actor) {
+      return null;
+    }
     return userDataloader.load(notification.actor.id);
   }
 

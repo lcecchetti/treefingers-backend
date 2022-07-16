@@ -1,6 +1,7 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum NotificationType {
+  ACTIVATE_ACCOUNT = 'activate_account',
   LIKE_COMMENT_FOREST = 'like_comment_forest',
   LIKE_COMMENT_STORY = 'like_comment_story',
   LIKE_STORY = 'like_story',

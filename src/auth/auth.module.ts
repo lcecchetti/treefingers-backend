@@ -8,10 +8,12 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthResolver } from './auth.resolver';
 import { ConfigService } from '@nestjs/config';
 import { IsAuthenticatedGuard } from './guards/is-authenticated.guard';
+import { NotificationModule } from '../notification/notification.module';
 
 @Module({
   imports: [
     UserModule,
+    NotificationModule,
     PassportModule,
     JwtModule.registerAsync({
       useFactory: async (configService: ConfigService) => ({

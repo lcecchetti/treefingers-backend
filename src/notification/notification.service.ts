@@ -46,9 +46,9 @@ export class NotificationService {
     // avoid sending notification twice
     if (once) {
       const existingNotification = await this.findOne({
-        actor: { eq: data.actor },
         type: { eq: data.type },
-        targetId: { eq: data.targetId },
+        actor: data.actor ? { eq: data.actor } : null,
+        targetId: data.targetId ? { eq: data.targetId } : null,
       });
 
       if (existingNotification) {

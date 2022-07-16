@@ -20,6 +20,9 @@ import { ChangePasswordInput } from './inputs/change-password.input';
 import { ForgotPasswordPayload } from './payloads/forgot-password.payload';
 import { ActivateAccountInput } from './inputs/activate-account.input';
 import { ActivateAccountPayload } from './payloads/activate-account.payload';
+import { NotificationService } from '../notification/notification.service';
+import { NotificationType } from '../notification/enum/notification-type.enum';
+import { UrlService } from '../common/services/url.service';
 
 @Injectable()
 export class AuthService {
@@ -28,6 +31,8 @@ export class AuthService {
     private configService: ConfigService,
     private jwtService: JwtService,
     private mailerService: MailerService,
+    private notificationService: NotificationService,
+    private urlService: UrlService,
   ) {}
 
   async validateUser(email: string, password: string): Promise<User | null> {
@@ -191,6 +196,16 @@ export class AuthService {
     await this.userService.edit(decodedToken.sub, {
       isActive: true,
     });
+
+    await this.notificationService.create(
+      {
+        type: NotificationType.ACTIVATE_ACCOUNT,
+        user: user.id,
+        link: this.urlService.getStoryNewUrl(),
+        content: `Welcome ${user.username}! We can't wait to see the stories you have to tell!`,
+      },
+      true,
+    );
 
     return {
       result: true,

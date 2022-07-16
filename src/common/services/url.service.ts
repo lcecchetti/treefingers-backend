@@ -16,6 +16,10 @@ export class UrlService {
     return value && (this.hashids.decode(value)[0] as number);
   }
 
+  getStoryNewUrl(): string {
+    return `/story/new`;
+  }
+
   getStoryUrl(story: Story): string {
     return `/story/${this.encodeId(story.id)}`;
   }

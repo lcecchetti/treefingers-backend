@@ -40,24 +40,31 @@ export class LikeService {
     await wrap(like.user).init();
     if (like.comment) {
       await wrap(like.comment).init();
-      await wrap(like.comment.story).init();
-      await wrap(like.comment.forest).init();
+      let type, targetId, link;
+      if (like.comment.forest) {
+        await wrap(like.comment.forest).init();
+        type = NotificationType.LIKE_COMMENT_FOREST;
+        targetId = like.comment.forest.id;
+        link = this.urlService.getForestUrl(like.comment.forest);
+      }
+      if (like.comment.story) {
+        await wrap(like.comment.story).init();
+        type = NotificationType.LIKE_COMMENT_STORY;
+        targetId = like.comment.story.id;
+        link = this.urlService.getStoryUrl(like.comment.story);
+      }
       const commentExcerpt = this.stringService.createExcerpt(
         like.comment.content,
         20,
       );
       return this.notificationService.create(
         {
-          type: like.comment.story
-            ? NotificationType.LIKE_COMMENT_STORY
-            : NotificationType.LIKE_COMMENT_FOREST,
+          type,
+          targetId,
+          link,
           actor: like.user.id,
-          targetId: like.comment.story?.id || like.comment.forest?.id,
           sourceId: like.id,
           user: like.comment.user.id,
-          link: like.comment.story
-            ? this.urlService.getStoryUrl(like.comment.story)
-            : this.urlService.getForestUrl(like.comment.forest),
           content: `${like.user.username} likes your comment "${commentExcerpt}"`,
         },
         true,
