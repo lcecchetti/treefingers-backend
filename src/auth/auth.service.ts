@@ -23,6 +23,7 @@ import { ActivateAccountPayload } from './payloads/activate-account.payload';
 import { NotificationService } from '../notification/notification.service';
 import { NotificationType } from '../notification/enum/notification-type.enum';
 import { UrlService } from '../common/services/url.service';
+import { ResendActivateAccountPayload } from './payloads/resend-activate-account.payload';
 
 @Injectable()
 export class AuthService {
@@ -76,35 +77,11 @@ export class AuthService {
   }
 
   async register(data: RegisterDataInput): Promise<RegisterPayload> {
-    // create user
-    const user = await this.userService.create(data);
-
-    // activate account token
-    const token = this.jwtService.sign(
-      { sub: user.id },
-      { expiresIn: '1 day' },
-    );
-
-    // send activate account email
-    try {
-      await this.mailerService.sendMail({
-        to: data.email,
-        subject: 'Activate your account',
-        template: 'activate-account',
-        context: {
-          activateLink:
-            this.configService.get<string>('frontend.webUrl') +
-            `/auth/activate-account/${token}/`,
-        },
-      });
-    } catch (e) {
-      throw new InternalServerErrorException(
-        'An error occurred while sending email',
-      );
-    }
+    await this.userService.create(data);
+    const result = await this.sendActivateAccountEmail(data.email);
 
     return {
-      result: true,
+      result,
     };
   }
 
@@ -169,6 +146,50 @@ export class AuthService {
       password: password,
     });
 
+    return {
+      result: true,
+    };
+  }
+
+  async sendActivateAccountEmail(email: string): Promise<boolean> {
+    const user = await this.userService.findOne({ email: { eq: email } });
+
+    if (!user || user.isActive) {
+      return false;
+    }
+
+    // activate account token
+    const token = this.jwtService.sign(
+      { sub: user.id },
+      { expiresIn: '1 day' },
+    );
+
+    // send activate account email
+    try {
+      await this.mailerService.sendMail({
+        to: email,
+        subject: 'Activate your account',
+        template: 'activate-account',
+        context: {
+          activateLink:
+            this.configService.get<string>('frontend.webUrl') +
+            `/auth/activate-account/${token}/`,
+        },
+      });
+    } catch (e) {
+      throw new InternalServerErrorException(
+        'An error occurred while sending email',
+      );
+    }
+
+    return true;
+  }
+
+  async resendActivateAccount({
+    email,
+  }): Promise<ResendActivateAccountPayload> {
+    // always return true to not return any info about email
+    await this.sendActivateAccountEmail(email);
     return {
       result: true,
     };

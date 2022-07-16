@@ -14,6 +14,8 @@ import { ChangePasswordInput } from './inputs/change-password.input';
 import { ActivateAccountPayload } from './payloads/activate-account.payload';
 import { ActivateAccountInput } from './inputs/activate-account.input';
 import { User } from '../user/user.entity';
+import { ResendActivateAccountPayload } from './payloads/resend-activate-account.payload';
+import { ResendActivateAccountInput } from './inputs/resend-activate-account.input';
 
 @Resolver()
 export class AuthResolver {
@@ -47,6 +49,13 @@ export class AuthResolver {
     @Args('input') input: ActivateAccountInput,
   ): Promise<ActivateAccountPayload> {
     return this.authService.activateAccount(input);
+  }
+
+  @Mutation(() => ResendActivateAccountPayload)
+  async resendActivateAccount(
+    @Args('input') input: ResendActivateAccountInput,
+  ): Promise<ResendActivateAccountPayload> {
+    return this.authService.resendActivateAccount(input);
   }
 
   @Mutation(() => RegisterPayload)
