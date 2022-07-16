@@ -47,6 +47,7 @@ export class NotificationService {
     if (once) {
       const existingNotification = await this.findOne({
         type: { eq: data.type },
+        user: { eq: data.user },
         actor: data.actor ? { eq: data.actor } : null,
         targetId: data.targetId ? { eq: data.targetId } : null,
       });
