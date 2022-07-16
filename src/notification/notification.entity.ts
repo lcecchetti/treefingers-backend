@@ -13,7 +13,7 @@ import { NotificationType } from './enum/notification-type.enum';
 
 @Entity()
 @Index({
-  properties: ['actor', 'type', 'referenceId', 'read'],
+  properties: ['actor', 'type', 'targetId', 'read'],
 })
 @ObjectType()
 export class Notification {
