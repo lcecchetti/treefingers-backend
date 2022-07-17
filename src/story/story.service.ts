@@ -89,7 +89,7 @@ export class StoryService {
         sourceId: story.id,
         user: story.forest.founder.id,
         link: this.urlService.getStoryUrl(story),
-        content: `${story.author.username} planted a story "${storyExcerpt}" on your forest "${forestExcerpt}"`,
+        content: `${story.author.username} planted a story "${storyExcerpt}" in your forest "${forestExcerpt}"`,
       });
     }
   }
