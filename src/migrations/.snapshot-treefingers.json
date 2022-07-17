@@ -274,9 +274,21 @@
           "unique": false
         },
         {
-          "keyName": "notification_actor_id_type_target_id_read_index",
+          "keyName": "notification_user_id_type_actor_id_target_id_index",
           "columnNames": [
+            "user_id",
+            "type",
             "actor_id",
+            "target_id"
+          ],
+          "composite": true,
+          "primary": false,
+          "unique": false
+        },
+        {
+          "keyName": "notification_user_id_type_target_id_read_index",
+          "columnNames": [
+            "user_id",
             "type",
             "target_id",
             "read"
