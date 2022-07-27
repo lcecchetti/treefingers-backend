@@ -16,9 +16,8 @@ import { Comment } from '../comment/comment.entity';
 @Check({
   expression: () => `story_id IS NOT NULL OR comment_id IS NOT NULL`,
 })
-@Unique({ properties: ['user', 'story', 'comment'] })
-@Index({ properties: ['user', 'comment'] })
-@Index({ properties: ['user', 'story'] })
+@Unique({ properties: ['user', 'comment'] })
+@Unique({ properties: ['user', 'story'] })
 @ObjectType()
 export class Like {
   @PrimaryKey()

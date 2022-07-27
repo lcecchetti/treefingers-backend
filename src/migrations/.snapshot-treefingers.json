@@ -1195,30 +1195,19 @@
           "unique": false
         },
         {
-          "keyName": "like_user_id_story_id_index",
+          "keyName": "like_user_id_story_id_unique",
           "columnNames": [
             "user_id",
             "story_id"
           ],
           "composite": true,
           "primary": false,
-          "unique": false
+          "unique": true
         },
         {
-          "keyName": "like_user_id_comment_id_index",
+          "keyName": "like_user_id_comment_id_unique",
           "columnNames": [
             "user_id",
-            "comment_id"
-          ],
-          "composite": true,
-          "primary": false,
-          "unique": false
-        },
-        {
-          "keyName": "like_user_id_story_id_comment_id_unique",
-          "columnNames": [
-            "user_id",
-            "story_id",
             "comment_id"
           ],
           "composite": true,
