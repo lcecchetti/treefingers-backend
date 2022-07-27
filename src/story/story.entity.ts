@@ -96,6 +96,9 @@ export class Story implements Likeable, Commentable {
   @Field(() => Like, { nullable: true })
   currentUserLike: Like;
 
+  @Field(() => Boolean, { defaultValue: false })
+  isEditable: boolean;
+
   @Property({ onCreate: () => new Date() })
   @Field(() => GraphQLISODateTime)
   createdAt: Date = new Date();

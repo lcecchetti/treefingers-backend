@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Story } from './story.entity';
 import { StoryConnectionArgs } from './args/story-connection.args';
 import { CreateStoryDataInput } from './inputs/create-story.input';
@@ -15,6 +20,7 @@ import { StringService } from '../common/services/string.service';
 import { wrap } from '@mikro-orm/core';
 import { NotificationType } from '../notification/enum/notification-type.enum';
 import { UrlService } from '../common/services/url.service';
+import { EditStoryDataInput } from './inputs/edit-story.input';
 
 @Injectable()
 export class StoryService {
@@ -33,6 +39,10 @@ export class StoryService {
 
   async findMany(filter?: FilterStoryInput): Promise<Story[]> {
     return this.prepareQueryBuilder(filter).getResult();
+  }
+
+  async count(filter?: FilterStoryInput): Promise<number> {
+    return this.prepareQueryBuilder(filter).getCount();
   }
 
   async findById(id: number): Promise<Story | null> {
@@ -111,6 +121,35 @@ export class StoryService {
 
     await this.sendCreateStoryNotifications(story);
 
+    return story;
+  }
+
+  async isEditable(story: Story): Promise<boolean> {
+    const outherAuthorChaptersCount = await this.count({
+      author: { ne: story.author.id },
+      parent: { eq: story.id },
+    });
+
+    return !outherAuthorChaptersCount;
+  }
+
+  async edit(id: number, data: EditStoryDataInput): Promise<Story> {
+    const story = await this.findById(id);
+
+    if (!story) {
+      throw new NotFoundException(
+        'The story you are trying to edit does not exist.',
+      );
+    }
+
+    if (!(await this.isEditable(story))) {
+      throw new UnauthorizedException(
+        'You cannot edit a story which has been continued.',
+      );
+    }
+
+    wrap(story).assign(data);
+    await this.storyRepository.persistAndFlush(story);
     return story;
   }
 
