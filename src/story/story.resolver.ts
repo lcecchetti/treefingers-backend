@@ -99,10 +99,7 @@ export class StoryResolver {
     @GetCurrentUser() currentUser: CurrentUser,
     @Parent() story: Story,
   ): Promise<boolean> {
-    if (!currentUser) {
-      return false;
-    }
-    return await this.storyService.isEditable(story, currentUser);
+    return this.storyService.isEditable(story, currentUser);
   }
 
   @ResolveField(() => String)

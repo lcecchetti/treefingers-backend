@@ -125,7 +125,7 @@ export class StoryService {
   }
 
   async isEditable(story: Story, currentUser: CurrentUser): Promise<boolean> {
-    if (currentUser?.id !== story.author.id) {
+    if (!currentUser || currentUser.id !== story.author.id) {
       return false;
     }
 
