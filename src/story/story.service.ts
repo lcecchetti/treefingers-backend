@@ -124,7 +124,11 @@ export class StoryService {
     return story;
   }
 
-  async isEditable(story: Story): Promise<boolean> {
+  async isEditable(story: Story, currentUser: CurrentUser): Promise<boolean> {
+    if (currentUser?.id !== story.author.id) {
+      return false;
+    }
+
     const outherAuthorChaptersCount = await this.count({
       author: { ne: story.author.id },
       parent: { eq: story.id },
@@ -133,7 +137,11 @@ export class StoryService {
     return !outherAuthorChaptersCount;
   }
 
-  async edit(id: number, data: EditStoryDataInput): Promise<Story> {
+  async edit(
+    id: number,
+    data: EditStoryDataInput,
+    currentUser: CurrentUser,
+  ): Promise<Story> {
     const story = await this.findById(id);
 
     if (!story) {
@@ -142,9 +150,9 @@ export class StoryService {
       );
     }
 
-    if (!(await this.isEditable(story))) {
+    if (!(await this.isEditable(story, currentUser))) {
       throw new UnauthorizedException(
-        'You cannot edit a story which has been continued.',
+        'You cannot edit a story which has been continued by others or not yours.',
       );
     }
 

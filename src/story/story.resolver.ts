@@ -28,7 +28,6 @@ import { ForestDataloader } from '../forest/dataloaders/forest.dataloader';
 import { LikeDataloader } from '../like/dataloaders/like.dataloader';
 import { EditStoryPayload } from './payloads/edit-story.payload';
 import { EditStoryInput } from './inputs/edit-story.input';
-import { IsAuthorGuard } from './guards/is-author.guard';
 
 @Resolver(() => Story)
 export class StoryResolver {
@@ -69,13 +68,13 @@ export class StoryResolver {
   }
 
   @UseGuards(IsAuthenticatedGuard)
-  @UseGuards(IsAuthorGuard)
   @Mutation(() => EditStoryPayload)
   async editStory(
     @Args('input') { id, data }: EditStoryInput,
+    @GetCurrentUser() currentUser: CurrentUser,
   ): Promise<CreateStoryPayload> {
     return {
-      story: await this.storyService.edit(id, data),
+      story: await this.storyService.edit(id, data, currentUser),
     };
   }
 
@@ -103,8 +102,7 @@ export class StoryResolver {
     if (!currentUser) {
       return false;
     }
-
-    return await this.storyService.isEditable(story);
+    return await this.storyService.isEditable(story, currentUser);
   }
 
   @ResolveField(() => String)
