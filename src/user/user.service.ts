@@ -109,11 +109,9 @@ export class UserService {
     }
 
     if (followed) {
-      queryBuilder
-        .andWhere({
-          followershipsAsFollowed: { follower: currentUser.id },
-        })
-        .groupBy('u0.id');
+      queryBuilder.select('*', true).andWhere({
+        followershipsAsFollowed: { follower: currentUser.id },
+      });
     }
 
     return queryBuilder;
