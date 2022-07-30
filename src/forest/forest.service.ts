@@ -81,9 +81,11 @@ export class ForestService {
     }
 
     if (joined) {
-      queryBuilder.andWhere({
-        memberships: { member: currentUser.id },
-      });
+      queryBuilder
+        .andWhere({
+          memberships: { member: currentUser.id },
+        })
+        .groupBy('f0.id');
     }
 
     return queryBuilder;

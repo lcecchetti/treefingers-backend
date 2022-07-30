@@ -52,6 +52,9 @@ export class User {
   @OneToMany(() => Followership, (followership) => followership.follower)
   followershipsAsFollower = new Collection<Followership>(this);
 
+  @OneToMany(() => Followership, (followership) => followership.followed)
+  followershipsAsFollowed = new Collection<Followership>(this);
+
   @Formula(
     '(select count(distinct f.id) as cnt from followership as f where f.followed_id = u0.id)',
   )

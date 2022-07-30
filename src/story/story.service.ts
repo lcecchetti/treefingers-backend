@@ -198,9 +198,11 @@ export class StoryService {
     }
 
     if (liked) {
-      queryBuilder.andWhere({
-        likes: { user: currentUser.id },
-      });
+      queryBuilder
+        .andWhere({
+          likes: { user: currentUser.id },
+        })
+        .groupBy('s0.id');
     }
 
     return queryBuilder;
