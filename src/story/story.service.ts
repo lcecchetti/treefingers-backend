@@ -51,24 +51,9 @@ export class StoryService {
 
   async sendCreateStoryNotifications(story: Story) {
     await wrap(story.author).init();
-    if (story.root) {
-      await wrap(story.root).init();
-      const rootExcerpt = this.stringService.createExcerpt(
-        story.root.title,
-        20,
-      );
-      await this.notificationService.create({
-        type: NotificationType.STORY_CONTINUE,
-        actor: story.author.id,
-        targetId: story.root.id,
-        sourceId: story.id,
-        user: story.root.author.id,
-        link: this.urlService.getStoryUrl(story),
-        content: `${story.author.username} continued your story "${rootExcerpt}"`,
-      });
-    }
+    const storyExcerpt = this.stringService.createExcerpt(story.title, 20);
 
-    if (story.parent && story.parent.id !== story.root.id) {
+    if (story.parent) {
       await wrap(story.parent).init();
       const parentExcerpt = this.stringService.createExcerpt(
         story.parent.title,
@@ -81,13 +66,29 @@ export class StoryService {
         sourceId: story.id,
         user: story.parent.author.id,
         link: this.urlService.getStoryUrl(story),
-        content: `${story.author.username} continued your chapter "${parentExcerpt}"`,
+        content: `${story.author.username} wrote a chapter "${storyExcerpt}" continuing your "${parentExcerpt}"`,
+      });
+    }
+
+    if (story.root && story.parent.id !== story.root.id) {
+      await wrap(story.root).init();
+      const rootExcerpt = this.stringService.createExcerpt(
+        story.root.title,
+        20,
+      );
+      await this.notificationService.create({
+        type: NotificationType.STORY_CONTINUE,
+        actor: story.author.id,
+        targetId: story.root.id,
+        sourceId: story.id,
+        user: story.root.author.id,
+        link: this.urlService.getStoryUrl(story),
+        content: `${story.author.username} wrote a chapter "${storyExcerpt}" on your story "${rootExcerpt}"`,
       });
     }
 
     if (story.forest) {
       await wrap(story.forest).init();
-      const storyExcerpt = this.stringService.createExcerpt(story.title, 20);
       const forestExcerpt = this.stringService.createExcerpt(
         story.forest.name,
         20,
