@@ -130,7 +130,7 @@ export class StoryService {
     }
 
     const outherAuthorChaptersCount = await this.count({
-      author: { ne: story.author.id },
+      author: { neq: story.author.id },
       parent: { eq: story.id },
     });
 

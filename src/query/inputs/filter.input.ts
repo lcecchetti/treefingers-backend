@@ -7,7 +7,7 @@ export class FilterStringInput {
   eq?: string;
 
   @Field(() => String, { nullable: true })
-  ne?: string;
+  neq?: string;
 
   @Field(() => [String], { nullable: true })
   in?: string[];
@@ -28,7 +28,7 @@ export class FilterBooleanInput {
   eq?: boolean;
 
   @Field(() => Boolean, { nullable: true })
-  ne?: boolean;
+  neq?: boolean;
 }
 
 @InputType()
@@ -37,7 +37,7 @@ export class FilterIdInput {
   eq?: number;
 
   @Field(() => EncodedID, { nullable: true })
-  ne?: number;
+  neq?: number;
 
   @Field(() => [EncodedID], { nullable: true })
   in?: number[];
@@ -52,7 +52,7 @@ export class FilterIntInput {
   eq?: number;
 
   @Field(() => Int, { nullable: true })
-  ne?: number;
+  neq?: number;
 
   @Field(() => Int, { nullable: true })
   gt?: number;
