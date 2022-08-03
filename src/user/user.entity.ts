@@ -44,7 +44,7 @@ export class User {
   isActive: boolean;
 
   @Formula(
-    '(select count(distinct s.id) as cnt from story as s where s.author_id = u0.id)',
+    '(select count(distinct s.id) as cnt from story as s where s.author_id = u0.id and s.parent_id is null)',
   )
   @Field(() => Int, { defaultValue: 0 })
   storiesCount: number;
