@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { User } from './user.entity';
 import { UserConnectionArgs } from './args/user-connection.args';
 import { UserConnection } from './dto/user-connection.dto';
@@ -60,13 +64,20 @@ export class UserService {
   }
 
   async edit(userId: number, data: EditUserDataInput): Promise<User> {
+    const user = await this.findById(userId);
+
+    if (!user) {
+      throw new NotFoundException(
+        'The user you are trying to edit does not exist.',
+      );
+    }
+
     if (data.password) {
       data.password = await this.encryptPassword(data.password);
     } else {
       delete data.password;
     }
 
-    const user = await this.findById(userId);
     wrap(user).assign(data);
     await this.userRepository.persistAndFlush(user);
     return user;

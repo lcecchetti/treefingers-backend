@@ -40,7 +40,7 @@ export class AuthService {
     const user = await this.userService.findOne({ email: { eq: email } });
 
     // user not found
-    if (!user) {
+    if (!user || user.isBanned) {
       throw new NotFoundException('User or password are not valid.');
     }
 
@@ -57,9 +57,6 @@ export class AuthService {
       throw new UnauthorizedException('User or password are not valid.');
     }
 
-    // strip out password
-    user.password = undefined;
-
     return user;
   }
 
@@ -69,6 +66,8 @@ export class AuthService {
       sub: user.id,
       username: user.username,
     };
+
+    await this.userService.edit(user.id, { lastLogin: new Date() });
 
     return {
       token: this.jwtService.sign(payload),
@@ -91,7 +90,7 @@ export class AuthService {
     // get user
     const user = await this.userService.findOne({ email: { eq: email } });
 
-    if (user) {
+    if (user && !user.isBanned) {
       // change password token
       const token = this.jwtService.sign(
         { sub: user.id, password: user.password },

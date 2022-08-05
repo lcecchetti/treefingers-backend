@@ -19,6 +19,8 @@ export class EditUserDataInput {
   bio?: string;
 
   isActive?: boolean;
+  lastLogin?: Date;
+  banned?: boolean;
 }
 
 @InputType()

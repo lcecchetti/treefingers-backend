@@ -43,6 +43,10 @@ export class User {
   @Field({ defaultValue: false })
   isActive: boolean;
 
+  @Property({ default: false })
+  @Index()
+  isBanned: boolean;
+
   @Formula(
     '(select count(distinct s.id) as cnt from story as s where s.author_id = u0.id and s.parent_id is null)',
   )
@@ -60,6 +64,10 @@ export class User {
   )
   @Field(() => Int, { defaultValue: 0 })
   followersCount: number;
+
+  @Property({ nullable: true })
+  @Field(() => GraphQLISODateTime, { nullable: true })
+  lastLogin?: Date;
 
   @Property({ onCreate: () => new Date() })
   @Field(() => GraphQLISODateTime)
