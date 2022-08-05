@@ -23,6 +23,8 @@ import { Loader } from '@tracworx/nestjs-dataloader';
 import { ForestDataloader } from './dataloaders/forest.dataloader';
 import { Membership } from '../membership/membership.entity';
 import { MembershipDataloader } from '../membership/dataloaders/membership.dataloader';
+import { EditForestPayload } from './payloads/edit-forest.payload';
+import { EditForestInput } from './inputs/edit-forest.input';
 
 @Resolver(() => Forest)
 export class ForestResolver {
@@ -60,6 +62,25 @@ export class ForestResolver {
         founder: currentUser.id,
       }),
     };
+  }
+
+  @UseGuards(IsAuthenticatedGuard)
+  @Mutation(() => EditForestPayload)
+  async editForest(
+    @Args('input') { id, data }: EditForestInput,
+    @GetCurrentUser() currentUser: CurrentUser,
+  ): Promise<EditForestPayload> {
+    return {
+      forest: await this.forestService.edit(id, data, currentUser),
+    };
+  }
+
+  @ResolveField(() => Boolean, { defaultValue: false })
+  async isEditable(
+    @GetCurrentUser() currentUser: CurrentUser,
+    @Parent() forest: Forest,
+  ): Promise<boolean> {
+    return this.forestService.isEditable(forest, currentUser);
   }
 
   @ResolveField(() => String)

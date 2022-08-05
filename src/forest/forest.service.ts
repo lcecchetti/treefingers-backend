@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { Forest } from './forest.entity';
 import { ForestConnectionArgs } from './args/forest-connection.args';
 import { CreateForestDataInput } from './inputs/create-forest.input';
@@ -10,6 +10,8 @@ import { SortForestInput } from './inputs/sort-forest.input';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { CurrentUser } from '../auth/dto/current-user.dto';
+import { EditForestDataInput } from './inputs/edit-forest.input';
+import { wrap } from '@mikro-orm/core';
 
 @Injectable()
 export class ForestService {
@@ -41,6 +43,34 @@ export class ForestService {
     }
 
     const forest = await this.forestRepository.create(data);
+    await this.forestRepository.persistAndFlush(forest);
+    return forest;
+  }
+
+  isEditable(forest: Forest, currentUser: CurrentUser): boolean {
+    return currentUser && currentUser.id === forest.founder.id;
+  }
+
+  async edit(
+    id: number,
+    data: EditForestDataInput,
+    currentUser: CurrentUser,
+  ): Promise<Forest> {
+    const forest = await this.findById(id);
+
+    if (!forest) {
+      throw new NotFoundException(
+        'The forest you are trying to edit does not exist.',
+      );
+    }
+
+    if (!this.isEditable(forest, currentUser)) {
+      throw new UnauthorizedException(
+        'You are not the founder of this forest.',
+      );
+    }
+
+    wrap(forest).assign(data);
     await this.forestRepository.persistAndFlush(forest);
     return forest;
   }
