@@ -66,25 +66,27 @@ export class StoryService {
         sourceId: story.id,
         user: story.parent.author.id,
         link: this.urlService.getStoryUrl(story),
-        content: `${story.author.username} wrote a chapter "${storyExcerpt}" continuing your "${parentExcerpt}"`,
+        content: `${story.author.username} wrote a chapter "${storyExcerpt}" continuing "${parentExcerpt}"`,
       });
     }
 
-    if (story.root && story.parent.id !== story.root.id) {
+    if (story.root) {
       await wrap(story.root).init();
-      const rootExcerpt = this.stringService.createExcerpt(
-        story.root.title,
-        20,
-      );
-      await this.notificationService.create({
-        type: NotificationType.STORY_CONTINUE,
-        actor: story.author.id,
-        targetId: story.root.id,
-        sourceId: story.id,
-        user: story.root.author.id,
-        link: this.urlService.getStoryUrl(story),
-        content: `${story.author.username} wrote a chapter "${storyExcerpt}" on your story "${rootExcerpt}"`,
-      });
+      if (story.parent.author.id !== story.root.author.id) {
+        const rootExcerpt = this.stringService.createExcerpt(
+          story.root.title,
+          20,
+        );
+        await this.notificationService.create({
+          type: NotificationType.STORY_CONTINUE,
+          actor: story.author.id,
+          targetId: story.root.id,
+          sourceId: story.id,
+          user: story.root.author.id,
+          link: this.urlService.getStoryUrl(story),
+          content: `${story.author.username} wrote a chapter "${storyExcerpt}" on your story "${rootExcerpt}"`,
+        });
+      }
     }
 
     if (story.forest) {
@@ -132,7 +134,7 @@ export class StoryService {
 
     const outherAuthorChaptersCount = await this.count({
       author: { neq: story.author.id },
-      parent: { eq: story.id },
+      path: { contains: [story.id] },
     });
 
     return !outherAuthorChaptersCount;

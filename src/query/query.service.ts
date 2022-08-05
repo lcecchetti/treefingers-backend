@@ -18,6 +18,7 @@ const operatorsMap = {
   and: '$and',
   or: '$or',
   not: '$not',
+  contains: '$contains',
 };
 
 @Injectable()

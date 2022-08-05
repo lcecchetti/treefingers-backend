@@ -47,6 +47,12 @@ export class FilterIdInput {
 }
 
 @InputType()
+export class FilterIdArrayInput {
+  @Field(() => [EncodedID], { nullable: true })
+  contains?: number[];
+}
+
+@InputType()
 export class FilterIntInput {
   @Field(() => Int, { nullable: true })
   eq?: number;
