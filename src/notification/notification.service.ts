@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Notification } from './notification.entity';
 import { NotificationConnectionArgs } from './args/notification-connection.args';
 import { NotificationConnection } from './dto/notification-connection.dto';
@@ -64,6 +68,10 @@ export class NotificationService {
 
   async read(id: number, currentUser: CurrentUser): Promise<Notification> {
     const notification = await this.findById(id);
+
+    if (!notification) {
+      throw new NotFoundException('This notification does not exist.');
+    }
 
     if (notification.user.id !== currentUser.id) {
       throw new UnauthorizedException(
