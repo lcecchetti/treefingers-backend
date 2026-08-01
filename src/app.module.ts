@@ -23,6 +23,7 @@ import { StoryModule } from './story/story.module';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { CommonModule } from './common/common.module';
 import { NotificationModule } from './notification/notification.module';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -82,6 +83,10 @@ import { NotificationModule } from './notification/notification.module';
           },
         },
       }),
+    }),
+    ThrottlerModule.forRoot({
+      ttl: 60,
+      limit: 10,
     }),
     CommonModule,
     DataloaderModule,

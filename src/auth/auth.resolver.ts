@@ -1,5 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Mutation, Args } from '@nestjs/graphql';
+import { Throttle } from '@nestjs/throttler';
+import { GqlThrottlerGuard } from '../common/guards/gql-throttler.guard';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { GetCurrentUser } from './decorators/get-current-user.decorator';
@@ -22,7 +24,8 @@ export class AuthResolver {
   constructor(private authService: AuthService) {}
 
   @Mutation(() => LoginPayload)
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(GqlThrottlerGuard, LocalAuthGuard)
+  @Throttle(10, 60)
   async login(
     @GetCurrentUser() user: User,
     @Args('input') input: LoginInput,
@@ -31,6 +34,8 @@ export class AuthResolver {
   }
 
   @Mutation(() => ForgotPasswordPayload)
+  @UseGuards(GqlThrottlerGuard)
+  @Throttle(5, 60)
   async forgotPassword(
     @Args('input') input: ForgotPasswordInput,
   ): Promise<ForgotPasswordPayload> {
@@ -52,6 +57,8 @@ export class AuthResolver {
   }
 
   @Mutation(() => ResendActivateAccountPayload)
+  @UseGuards(GqlThrottlerGuard)
+  @Throttle(5, 60)
   async resendActivateAccount(
     @Args('input') input: ResendActivateAccountInput,
   ): Promise<ResendActivateAccountPayload> {
@@ -59,6 +66,8 @@ export class AuthResolver {
   }
 
   @Mutation(() => RegisterPayload)
+  @UseGuards(GqlThrottlerGuard)
+  @Throttle(5, 60)
   async register(
     @Args('input') { data }: RegisterInput,
   ): Promise<RegisterPayload> {
