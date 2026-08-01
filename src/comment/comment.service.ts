@@ -90,7 +90,7 @@ export class CommentService {
     const comment = await this.commentRepository.create(
       data as RequiredEntityData<Comment>,
     );
-    await this.commentRepository.persistAndFlush(comment);
+    await this.commentRepository.getEntityManager().persist(comment).flush();
     await this.sendSubmitCommentNotification(comment);
     return comment;
   }

@@ -17,7 +17,8 @@ import { UrlService } from '../common/services/url.service';
 @Injectable()
 export class LikeService {
   constructor(
-    @InjectRepository(Like) private likeRepository: EntityRepository<Like>,
+    @InjectRepository(Like)
+    private likeRepository: EntityRepository<Like>,
     private notificationService: NotificationService,
     private queryService: QueryService<Like>,
     private stringService: StringService,
@@ -99,7 +100,7 @@ export class LikeService {
     const like = await this.likeRepository.create(
       input as RequiredEntityData<Like>,
     );
-    await this.likeRepository.persistAndFlush(like);
+    await this.likeRepository.getEntityManager().persist(like).flush();
     await this.sendLikeNotification(like);
     return like;
   }
@@ -115,7 +116,7 @@ export class LikeService {
       return null;
     }
 
-    await this.likeRepository.removeAndFlush(like);
+    await this.likeRepository.getEntityManager().remove(like).flush();
     return like;
   }
 

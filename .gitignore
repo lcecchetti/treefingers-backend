@@ -37,3 +37,6 @@ lerna-debug.log*
 
 # local env files
 .env
+
+# agent workspace scratch (never committed)
+/.superpowers

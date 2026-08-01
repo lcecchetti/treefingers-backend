@@ -63,7 +63,10 @@ export class MembershipService {
     const membership = await this.membershipRepository.create(
       input as RequiredEntityData<Membership>,
     );
-    await this.membershipRepository.persistAndFlush(membership);
+    await this.membershipRepository
+      .getEntityManager()
+      .persist(membership)
+      .flush();
     await this.sendJoinNotification(membership);
     return membership;
   }
@@ -78,7 +81,10 @@ export class MembershipService {
       return null;
     }
 
-    await this.membershipRepository.removeAndFlush(membership);
+    await this.membershipRepository
+      .getEntityManager()
+      .remove(membership)
+      .flush();
 
     return membership;
   }

@@ -22,7 +22,8 @@ import { CurrentUser } from '../auth/dto/current-user.dto';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private userRepository: EntityRepository<User>,
+    @InjectRepository(User)
+    private userRepository: EntityRepository<User>,
     private paginationService: PaginationService<User>,
     private queryService: QueryService<User>,
   ) {}
@@ -60,7 +61,7 @@ export class UserService {
       password: await this.encryptPassword(data.password),
     } as RequiredEntityData<User>);
 
-    await this.userRepository.persistAndFlush(user);
+    await this.userRepository.getEntityManager().persist(user).flush();
     return user;
   }
 
@@ -81,7 +82,7 @@ export class UserService {
     }
 
     wrap(user).assign(data);
-    await this.userRepository.persistAndFlush(user);
+    await this.userRepository.getEntityManager().persist(user).flush();
     return user;
   }
 

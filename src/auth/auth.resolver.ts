@@ -32,7 +32,7 @@ export class AuthResolver {
 
   @Mutation(() => LoginPayload)
   @UseGuards(GqlThrottlerGuard, LocalAuthGuard)
-  @Throttle(10, 60)
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
   async login(
     @GetCurrentUser() user: User,
     @Args('input') input: LoginInput,
@@ -64,7 +64,7 @@ export class AuthResolver {
 
   @Mutation(() => ForgotPasswordPayload)
   @UseGuards(GqlThrottlerGuard)
-  @Throttle(5, 60)
+  @Throttle({ default: { limit: 5, ttl: 60_000 } })
   async forgotPassword(
     @Args('input') input: ForgotPasswordInput,
   ): Promise<ForgotPasswordPayload> {
@@ -87,7 +87,7 @@ export class AuthResolver {
 
   @Mutation(() => ResendActivateAccountPayload)
   @UseGuards(GqlThrottlerGuard)
-  @Throttle(5, 60)
+  @Throttle({ default: { limit: 5, ttl: 60_000 } })
   async resendActivateAccount(
     @Args('input') input: ResendActivateAccountInput,
   ): Promise<ResendActivateAccountPayload> {
@@ -96,7 +96,7 @@ export class AuthResolver {
 
   @Mutation(() => RegisterPayload)
   @UseGuards(GqlThrottlerGuard)
-  @Throttle(5, 60)
+  @Throttle({ default: { limit: 5, ttl: 60_000 } })
   async register(
     @Args('input') { data }: RegisterInput,
   ): Promise<RegisterPayload> {

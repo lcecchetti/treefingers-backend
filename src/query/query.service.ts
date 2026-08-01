@@ -1,4 +1,4 @@
-import { QBFilterQuery, QBQueryOrderMap } from '@mikro-orm/core';
+import { AnyEntity, FilterQuery, QueryOrderMap } from '@mikro-orm/core';
 import { QueryBuilder } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 import { FilterInput } from './inputs/filter.input';
@@ -22,8 +22,8 @@ const operatorsMap = {
 };
 
 @Injectable()
-export class QueryService<Entity> {
-  prepareFilter(filter: FilterInput): QBFilterQuery<Entity> {
+export class QueryService<Entity extends AnyEntity<Entity>> {
+  prepareFilter(filter: FilterInput): FilterQuery<Entity> {
     if (!filter) {
       return {};
     }
@@ -42,7 +42,7 @@ export class QueryService<Entity> {
     return JSON.parse(filterString);
   }
 
-  prepareSort(sort: SortInput): QBQueryOrderMap<Entity> {
+  prepareSort(sort: SortInput): QueryOrderMap<Entity> {
     const orderBy = {};
 
     if (!sort) {
@@ -61,8 +61,11 @@ export class QueryService<Entity> {
     filter: FilterInput,
     sort: SortInput = new SortInput(),
   ): QueryBuilder<Entity> {
-    queryBuilder.andWhere(this.prepareFilter(filter));
-    queryBuilder.orderBy(this.prepareSort(sort));
+    // QueryBuilder<Entity> tracks join-alias generics that this generic,
+    // entity-agnostic service has no way to know; the filter/sort objects
+    // built above only ever reference direct columns, never aliases.
+    queryBuilder.andWhere(this.prepareFilter(filter) as never);
+    queryBuilder.orderBy(this.prepareSort(sort) as never);
     return queryBuilder;
   }
 }

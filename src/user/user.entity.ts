@@ -1,7 +1,7 @@
 import { Field, GraphQLISODateTime, Int, ObjectType } from '@nestjs/graphql';
 import { isPrivateMiddleware } from './middleware/is-private.middleware';
+import { Collection } from '@mikro-orm/core';
 import {
-  Collection,
   Entity,
   Formula,
   Index,
@@ -9,7 +9,7 @@ import {
   PrimaryKey,
   Property,
   Unique,
-} from '@mikro-orm/core';
+} from '@mikro-orm/decorators/legacy';
 import { EncodedID } from '../common/scalars/encoded-id.scalar';
 import { Followership } from '../followership/followership.entity';
 
@@ -50,10 +50,10 @@ export class User {
   // bumped whenever the password changes, to invalidate outstanding
   // forgot-password links without embedding the password hash in them
   @Property({ default: 0 })
-  tokenVersion = 0;
+  tokenVersion: number = 0;
 
   @Formula(
-    '(select count(distinct s.id) as cnt from story as s where s.author_id = u0.id and s.parent_id is null)',
+    '(select count(distinct s.id)::int as cnt from story as s where s.author_id = u0.id and s.parent_id is null)',
   )
   @Field(() => Int, { defaultValue: 0 })
   storiesCount: number;
@@ -65,20 +65,20 @@ export class User {
   followershipsAsFollowed = new Collection<Followership>(this);
 
   @Formula(
-    '(select count(distinct f.id) as cnt from followership as f where f.followed_id = u0.id)',
+    '(select count(distinct f.id)::int as cnt from followership as f where f.followed_id = u0.id)',
   )
   @Field(() => Int, { defaultValue: 0 })
   followersCount: number;
 
-  @Property({ nullable: true })
+  @Property({ nullable: true, length: 0 })
   @Field(() => GraphQLISODateTime, { nullable: true })
   lastLogin?: Date;
 
-  @Property({ onCreate: () => new Date() })
+  @Property({ onCreate: () => new Date(), length: 0 })
   @Field(() => GraphQLISODateTime)
   createdAt: Date = new Date();
 
-  @Property({ onUpdate: () => new Date() })
+  @Property({ onUpdate: () => new Date(), length: 0 })
   @Field(() => GraphQLISODateTime)
   updatedAt: Date = new Date();
 }

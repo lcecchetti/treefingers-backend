@@ -3,8 +3,8 @@ import { User } from '../user/user.entity';
 import { Commentable } from '../comment/interfaces/commentable.interface';
 import { Membership } from '../membership/membership.entity';
 import { Story } from '../story/story.entity';
+import { Collection } from '@mikro-orm/core';
 import {
-  Collection,
   Entity,
   Formula,
   Index,
@@ -13,7 +13,7 @@ import {
   PrimaryKey,
   Property,
   Unique,
-} from '@mikro-orm/core';
+} from '@mikro-orm/decorators/legacy';
 import { EncodedID } from '../common/scalars/encoded-id.scalar';
 
 @Entity()
@@ -41,19 +41,19 @@ export class Forest implements Commentable {
   founder: User;
 
   @Formula(
-    '(select count(distinct c.id) as cnt from comment as c where c.forest_id = f0.id)',
+    '(select count(distinct c.id)::int as cnt from comment as c where c.forest_id = f0.id)',
   )
   @Field(() => Int, { defaultValue: 0 })
   commentsCount: number;
 
   @Formula(
-    '(select count(distinct m.id) as cnt from membership as m where m.forest_id = f0.id)',
+    '(select count(distinct m.id)::int as cnt from membership as m where m.forest_id = f0.id)',
   )
   @Field(() => Int, { defaultValue: 0 })
   membersCount: number;
 
   @Formula(
-    '(select count(distinct s.id) as cnt from story as s where s.forest_id = f0.id)',
+    '(select count(distinct s.id)::int as cnt from story as s where s.forest_id = f0.id)',
   )
   @Field(() => Int, { defaultValue: 0 })
   storiesCount: number;
@@ -64,11 +64,11 @@ export class Forest implements Commentable {
   @OneToMany(() => Story, (story) => story.forest)
   stories = new Collection<Story>(this);
 
-  @Property({ onCreate: () => new Date() })
+  @Property({ onCreate: () => new Date(), length: 0 })
   @Field(() => GraphQLISODateTime)
   createdAt: Date = new Date();
 
-  @Property({ onUpdate: () => new Date() })
+  @Property({ onUpdate: () => new Date(), length: 0 })
   @Field(() => GraphQLISODateTime)
   updatedAt: Date = new Date();
 }

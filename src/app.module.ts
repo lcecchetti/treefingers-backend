@@ -10,7 +10,7 @@ import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { ComplexityPlugin } from './graphql/complexity.plugin';
 import { DataloaderModule } from '@tracworx/nestjs-dataloader';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/adapters/handlebars.adapter';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import config from './app.config';
 import { QueryModule } from './query/query.module';
@@ -21,6 +21,10 @@ import { LikeModule } from './like/like.module';
 import { MembershipModule } from './membership/membership.module';
 import { StoryModule } from './story/story.module';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { PostgreSqlDriver } from '@mikro-orm/postgresql';
+import { Migrator } from '@mikro-orm/migrations';
+import { ReflectMetadataProvider } from '@mikro-orm/decorators/legacy';
+import type { Constructor, IDatabaseDriver } from '@mikro-orm/core';
 import { CommonModule } from './common/common.module';
 import { NotificationModule } from './notification/notification.module';
 import { ThrottlerModule } from '@nestjs/throttler';
@@ -52,7 +56,6 @@ import { ThrottlerModule } from '@nestjs/throttler';
             origin: webUrl,
             credentials: true,
           },
-          bodyParserConfig: false,
           // res is needed to set/clear the auth cookie from the login/logout resolvers
           context: ({ req, res }) => ({ req, res }),
         };
@@ -61,14 +64,30 @@ import { ThrottlerModule } from '@nestjs/throttler';
     MikroOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
+      // Typed as the base driver interface rather than letting `D` narrow to
+      // `PostgreSqlDriver`: pinning `D` there trips a structural mismatch
+      // between `PostgreSqlDriver` and `IDatabaseDriver` deep in
+      // `@mikro-orm/nestjs`'s generic (its schema generator getter isn't
+      // assignable to `ISchemaGenerator` under strict structural typing).
+      // The class itself is unaffected — this only changes what TS infers
+      // `D` as. Still required at runtime: without it, `@mikro-orm/nestjs`
+      // can't synchronously register the driver-specific EntityManager
+      // subclass DI token (it needs the driver class before the async
+      // `useFactory`, which depends on injected providers, has resolved).
+      driver: PostgreSqlDriver as unknown as Constructor<IDatabaseDriver>,
       useFactory: (configService: ConfigService) => ({
-        type: 'postgresql',
+        driver: PostgreSqlDriver,
         clientUrl: configService.get<string>('database.url'),
         debug: configService.get<boolean>('env.isDev'),
         autoLoadEntities: true,
+        metadataProvider: ReflectMetadataProvider,
         driverOptions: {
-          connection: { ssl: !configService.get<boolean>('env.isDev') },
+          ssl: !configService.get<boolean>('env.isDev'),
         },
+        schemaGenerator: {
+          defaultUpdateRule: 'cascade',
+        },
+        extensions: [Migrator],
         migrations: {
           pathTs: 'src/migrations',
           path: 'dist/migrations',
@@ -99,8 +118,14 @@ import { ThrottlerModule } from '@nestjs/throttler';
       }),
     }),
     ThrottlerModule.forRoot({
-      ttl: 60,
-      limit: 10,
+      throttlers: [
+        {
+          // ttl is in milliseconds since v3; 60_000ms / 10 requests preserves
+          // the pre-upgrade 60s-window / 10-request policy
+          ttl: 60_000,
+          limit: 10,
+        },
+      ],
     }),
     CommonModule,
     DataloaderModule,

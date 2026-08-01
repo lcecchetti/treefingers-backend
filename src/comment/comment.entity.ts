@@ -9,7 +9,7 @@ import {
   ManyToOne,
   PrimaryKey,
   Property,
-} from '@mikro-orm/core';
+} from '@mikro-orm/decorators/legacy';
 import { EncodedID } from '../common/scalars/encoded-id.scalar';
 import { Likeable } from '../like/interfaces/likeable.interface';
 import { Story } from '../story/story.entity';
@@ -35,18 +35,18 @@ export class Comment implements Likeable {
   @Field(() => User)
   user: User;
 
-  @ManyToOne(() => Story, { nullable: true, onDelete: 'cascade' })
+  @ManyToOne(() => Story, { nullable: true, deleteRule: 'cascade' })
   @Index()
   @Field(() => Story, { nullable: true })
   story?: Story;
 
-  @ManyToOne(() => Forest, { nullable: true, onDelete: 'cascade' })
+  @ManyToOne(() => Forest, { nullable: true, deleteRule: 'cascade' })
   @Index()
   @Field(() => Forest, { nullable: true })
   forest?: Forest;
 
   @Formula(
-    '(select count(distinct l.id) as cnt from "like" as l where l.comment_id = c0.id)',
+    '(select count(distinct l.id)::int as cnt from "like" as l where l.comment_id = c0.id)',
   )
   @Field(() => Int, { defaultValue: 0 })
   likesCount: number;
@@ -54,11 +54,11 @@ export class Comment implements Likeable {
   @Field(() => Like, { nullable: true })
   currentUserLike: Like;
 
-  @Property({ onCreate: () => new Date() })
+  @Property({ onCreate: () => new Date(), length: 0 })
   @Field(() => GraphQLISODateTime)
   createdAt: Date = new Date();
 
-  @Property({ onUpdate: () => new Date() })
+  @Property({ onUpdate: () => new Date(), length: 0 })
   @Field(() => GraphQLISODateTime)
   updatedAt: Date = new Date();
 }

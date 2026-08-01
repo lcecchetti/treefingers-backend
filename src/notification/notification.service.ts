@@ -65,7 +65,10 @@ export class NotificationService {
     const notification = await this.notificationRepository.create(
       data as RequiredEntityData<Notification>,
     );
-    await this.notificationRepository.persistAndFlush(notification);
+    await this.notificationRepository
+      .getEntityManager()
+      .persist(notification)
+      .flush();
     return notification;
   }
 
@@ -83,7 +86,10 @@ export class NotificationService {
     }
 
     notification.read = true;
-    await this.notificationRepository.persistAndFlush(notification);
+    await this.notificationRepository
+      .getEntityManager()
+      .persist(notification)
+      .flush();
     return notification;
   }
 
@@ -91,7 +97,8 @@ export class NotificationService {
     const result = await this.notificationRepository
       .createQueryBuilder()
       .update({ read: true })
-      .where({ user, read: false });
+      .where({ user, read: false })
+      .execute();
     return result.affectedRows;
   }
 

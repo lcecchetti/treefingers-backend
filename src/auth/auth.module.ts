@@ -9,6 +9,7 @@ import { AuthResolver } from './auth.resolver';
 import { ConfigService } from '@nestjs/config';
 import { IsAuthenticatedGuard } from './guards/is-authenticated.guard';
 import { NotificationModule } from '../notification/notification.module';
+import type { StringValue } from 'ms';
 
 @Module({
   imports: [
@@ -18,7 +19,9 @@ import { NotificationModule } from '../notification/notification.module';
     JwtModule.registerAsync({
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('jwt.secret'),
-        signOptions: { expiresIn: configService.get<string>('jwt.expiration') },
+        signOptions: {
+          expiresIn: configService.get<StringValue>('jwt.expiration'),
+        },
       }),
       inject: [ConfigService],
     }),

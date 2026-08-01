@@ -6,7 +6,7 @@ import {
   PrimaryKey,
   Property,
   Unique,
-} from '@mikro-orm/core';
+} from '@mikro-orm/decorators/legacy';
 import { Field, GraphQLISODateTime, ObjectType } from '@nestjs/graphql';
 import { EncodedID } from '../common/scalars/encoded-id.scalar';
 import { Story } from '../story/story.entity';
@@ -24,12 +24,12 @@ export class Like {
   @Field(() => EncodedID)
   id: number;
 
-  @ManyToOne(() => Story, { nullable: true, onDelete: 'cascade' })
+  @ManyToOne(() => Story, { nullable: true, deleteRule: 'cascade' })
   @Index()
   @Field(() => Story, { nullable: true })
   story?: Story;
 
-  @ManyToOne(() => Comment, { nullable: true, onDelete: 'cascade' })
+  @ManyToOne(() => Comment, { nullable: true, deleteRule: 'cascade' })
   @Index()
   @Field(() => Comment, { nullable: true })
   comment?: Comment;
@@ -39,11 +39,11 @@ export class Like {
   @Field(() => User)
   user: User;
 
-  @Property({ onCreate: () => new Date() })
+  @Property({ onCreate: () => new Date(), length: 0 })
   @Field(() => GraphQLISODateTime)
   createdAt: Date = new Date();
 
-  @Property({ onUpdate: () => new Date() })
+  @Property({ onUpdate: () => new Date(), length: 0 })
   @Field(() => GraphQLISODateTime)
   updatedAt: Date = new Date();
 }

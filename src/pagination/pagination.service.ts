@@ -1,9 +1,10 @@
+import { AnyEntity } from '@mikro-orm/core';
 import { QueryBuilder } from '@mikro-orm/postgresql';
 import { BadRequestException } from '@nestjs/common';
 import { SortInput, SortDirection } from '../query/inputs/sort.input';
 import { ConnectionArgs } from './args/connection.args';
 import { IConnection } from './dto/pagination.dto';
-export class PaginationService<Entity> {
+export class PaginationService<Entity extends AnyEntity<Entity>> {
   encodeCursor(node: any, sort: SortInput): string {
     if (!node) {
       return '';
@@ -112,12 +113,14 @@ export class PaginationService<Entity> {
     }
 
     // get total query count
-    const totalCount = await queryBuilder.getCount();
+    // cloned because getCount() finalizes the query builder (MikroORM v6),
+    // and we still need to mutate the original below
+    const totalCount = await queryBuilder.clone().getCount();
 
     // prepare cursor filter
     this.addCursorFilter(queryBuilder, sort, { after, before });
 
-    const remainingCount = await queryBuilder.getCount();
+    const remainingCount = await queryBuilder.clone().getCount();
 
     // prepare query options
     const limit = first || last || 10;

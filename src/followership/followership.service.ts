@@ -39,7 +39,10 @@ export class FollowershipService {
     const followership = await this.followershipRepository.create(
       input as RequiredEntityData<Followership>,
     );
-    await this.followershipRepository.persistAndFlush(followership);
+    await this.followershipRepository
+      .getEntityManager()
+      .persist(followership)
+      .flush();
 
     await wrap(followership.follower).init();
 
@@ -72,7 +75,10 @@ export class FollowershipService {
       return null;
     }
 
-    await this.followershipRepository.removeAndFlush(followership);
+    await this.followershipRepository
+      .getEntityManager()
+      .remove(followership)
+      .flush();
 
     return followership;
   }

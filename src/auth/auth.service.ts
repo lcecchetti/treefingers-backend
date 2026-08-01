@@ -119,7 +119,7 @@ export class AuthService {
               `/auth/change-password/${token}/`,
           },
         });
-      } catch (e) {
+      } catch {
         throw new InternalServerErrorException(
           'An error occurred while sending email',
         );
@@ -139,7 +139,7 @@ export class AuthService {
     let decodedToken;
     try {
       decodedToken = this.jwtService.verify(token);
-    } catch (e) {
+    } catch {
       throw new UnauthorizedException('This link has expired');
     }
 
@@ -223,7 +223,7 @@ export class AuthService {
     let decodedToken;
     try {
       decodedToken = this.jwtService.verify(token);
-    } catch (e) {
+    } catch {
       throw new UnauthorizedException('This link has expired');
     }
 

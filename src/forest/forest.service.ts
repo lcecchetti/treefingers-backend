@@ -51,7 +51,7 @@ export class ForestService {
     const forest = await this.forestRepository.create(
       data as RequiredEntityData<Forest>,
     );
-    await this.forestRepository.persistAndFlush(forest);
+    await this.forestRepository.getEntityManager().persist(forest).flush();
     return forest;
   }
 
@@ -79,7 +79,7 @@ export class ForestService {
     }
 
     wrap(forest).assign(data);
-    await this.forestRepository.persistAndFlush(forest);
+    await this.forestRepository.getEntityManager().persist(forest).flush();
     return forest;
   }
 

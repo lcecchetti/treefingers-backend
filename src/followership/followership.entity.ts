@@ -5,7 +5,7 @@ import {
   PrimaryKey,
   Property,
   Unique,
-} from '@mikro-orm/core';
+} from '@mikro-orm/decorators/legacy';
 import { Field, GraphQLISODateTime, ObjectType } from '@nestjs/graphql';
 import { EncodedID } from '../common/scalars/encoded-id.scalar';
 import { User } from '../user/user.entity';
@@ -18,21 +18,21 @@ export class Followership {
   @Field(() => EncodedID)
   id: number;
 
-  @ManyToOne(() => User, { onDelete: 'cascade' })
+  @ManyToOne(() => User, { deleteRule: 'cascade' })
   @Index()
   @Field(() => User)
   followed: User;
 
-  @ManyToOne(() => User, { onDelete: 'cascade' })
+  @ManyToOne(() => User, { deleteRule: 'cascade' })
   @Index()
   @Field(() => User)
   follower: User;
 
-  @Property({ onCreate: () => new Date() })
+  @Property({ onCreate: () => new Date(), length: 0 })
   @Field(() => GraphQLISODateTime)
   createdAt: Date = new Date();
 
-  @Property({ onUpdate: () => new Date() })
+  @Property({ onUpdate: () => new Date(), length: 0 })
   @Field(() => GraphQLISODateTime)
   updatedAt: Date = new Date();
 }

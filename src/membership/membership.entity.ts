@@ -8,7 +8,7 @@ import {
   PrimaryKey,
   Property,
   Unique,
-} from '@mikro-orm/core';
+} from '@mikro-orm/decorators/legacy';
 import { EncodedID } from '../common/scalars/encoded-id.scalar';
 
 @Entity()
@@ -19,21 +19,21 @@ export class Membership {
   @Field(() => EncodedID)
   id: number;
 
-  @ManyToOne(() => Forest, { onDelete: 'cascade' })
+  @ManyToOne(() => Forest, { deleteRule: 'cascade' })
   @Index()
   @Field(() => Forest)
   forest: Forest;
 
-  @ManyToOne(() => User, { onDelete: 'cascade' })
+  @ManyToOne(() => User, { deleteRule: 'cascade' })
   @Index()
   @Field(() => User)
   member: User;
 
-  @Property({ onCreate: () => new Date() })
+  @Property({ onCreate: () => new Date(), length: 0 })
   @Field(() => GraphQLISODateTime)
   createdAt: Date = new Date();
 
-  @Property({ onUpdate: () => new Date() })
+  @Property({ onUpdate: () => new Date(), length: 0 })
   @Field(() => GraphQLISODateTime)
   updatedAt: Date = new Date();
 }

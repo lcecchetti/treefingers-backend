@@ -3,8 +3,8 @@ import { User } from '../user/user.entity';
 import { Forest } from '../forest/forest.entity';
 import { Like } from '../like/like.entity';
 import { Commentable } from '../comment/interfaces/commentable.interface';
+import { Collection } from '@mikro-orm/core';
 import {
-  Collection,
   Entity,
   Formula,
   Index,
@@ -12,7 +12,7 @@ import {
   OneToMany,
   PrimaryKey,
   Property,
-} from '@mikro-orm/core';
+} from '@mikro-orm/decorators/legacy';
 import { EncodedID } from '../common/scalars/encoded-id.scalar';
 import { Likeable } from '../like/interfaces/likeable.interface';
 
@@ -39,11 +39,11 @@ export class Story implements Likeable, Commentable {
   @Index()
   author: User;
 
-  @ManyToOne(() => Story, { nullable: true, onDelete: 'cascade' })
+  @ManyToOne(() => Story, { nullable: true, deleteRule: 'cascade' })
   @Index()
   parent?: Story;
 
-  @ManyToOne(() => Story, { nullable: true, onDelete: 'cascade' })
+  @ManyToOne(() => Story, { nullable: true, deleteRule: 'cascade' })
   @Index()
   root?: Story;
 
@@ -70,25 +70,25 @@ export class Story implements Likeable, Commentable {
   likes = new Collection<Like>(this);
 
   @Formula(
-    '(select count(distinct c.id) as cnt from comment as c where c.story_id = s0.id)',
+    '(select count(distinct c.id)::int as cnt from comment as c where c.story_id = s0.id)',
   )
   @Field(() => Int, { defaultValue: 0 })
   commentsCount: number;
 
   @Formula(
-    `(select count(distinct l.id) as cnt from "like" as l where l.story_id = s0.id)`,
+    `(select count(distinct l.id)::int as cnt from "like" as l where l.story_id = s0.id)`,
   )
   @Field(() => Int, { defaultValue: 0 })
   likesCount: number;
 
   @Formula(
-    '(select count(distinct d.id) as cnt from story as d where d.root_id = s0.id)',
+    '(select count(distinct d.id)::int as cnt from story as d where d.root_id = s0.id)',
   )
   @Field(() => Int, { defaultValue: 0 })
   descendentsCount: number;
 
   @Formula(
-    '(select count(distinct c.id) as cnt from story as c where c.parent_id = s0.id)',
+    '(select count(distinct c.id)::int as cnt from story as c where c.parent_id = s0.id)',
   )
   @Field(() => Int, { defaultValue: 0 })
   childrenCount: number;
@@ -99,11 +99,11 @@ export class Story implements Likeable, Commentable {
   @Field(() => Boolean, { defaultValue: false })
   isEditable: boolean;
 
-  @Property({ onCreate: () => new Date() })
+  @Property({ onCreate: () => new Date(), length: 0 })
   @Field(() => GraphQLISODateTime)
   createdAt: Date = new Date();
 
-  @Property({ onUpdate: () => new Date() })
+  @Property({ onUpdate: () => new Date(), length: 0 })
   @Field(() => GraphQLISODateTime)
   updatedAt: Date = new Date();
 }

@@ -1,9 +1,6 @@
 import { GraphQLSchemaHost } from '@nestjs/graphql';
 import { Plugin } from '@nestjs/apollo';
-import {
-  ApolloServerPlugin,
-  GraphQLRequestListener,
-} from 'apollo-server-plugin-base';
+import { ApolloServerPlugin, GraphQLRequestListener } from '@apollo/server';
 import { GraphQLError } from 'graphql';
 import {
   fieldExtensionsEstimator,
@@ -15,7 +12,7 @@ import {
 export class ComplexityPlugin implements ApolloServerPlugin {
   constructor(private gqlSchemaHost: GraphQLSchemaHost) {}
 
-  async requestDidStart(): Promise<GraphQLRequestListener> {
+  async requestDidStart(): Promise<GraphQLRequestListener<any>> {
     // connection queries are now weighted by page size (see
     // connectionComplexity), so this budget is calibrated against the
     // heaviest real frontend queries at max page size (first/last: 20):

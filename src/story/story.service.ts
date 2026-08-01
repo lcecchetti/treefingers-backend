@@ -5,7 +5,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { RequiredEntityData } from '@mikro-orm/core';
+import { RequiredEntityData, raw } from '@mikro-orm/core';
 import { Story } from './story.entity';
 import { StoryConnectionArgs } from './args/story-connection.args';
 import { CreateStoryDataInput } from './inputs/create-story.input';
@@ -27,7 +27,8 @@ import { EditStoryDataInput } from './inputs/edit-story.input';
 @Injectable()
 export class StoryService {
   constructor(
-    @InjectRepository(Story) private storyRepository: EntityRepository<Story>,
+    @InjectRepository(Story)
+    private storyRepository: EntityRepository<Story>,
     private paginationService: PaginationService<Story>,
     private notificationService: NotificationService,
     private queryService: QueryService<Story>,
@@ -129,7 +130,7 @@ export class StoryService {
     const story = await this.storyRepository.create(
       data as RequiredEntityData<Story>,
     );
-    await this.storyRepository.persistAndFlush(story);
+    await this.storyRepository.getEntityManager().persist(story).flush();
 
     await this.sendCreateStoryNotifications(story);
 
@@ -169,7 +170,7 @@ export class StoryService {
     }
 
     wrap(story).assign(data);
-    await this.storyRepository.persistAndFlush(story);
+    await this.storyRepository.getEntityManager().persist(story).flush();
     return story;
   }
 
@@ -204,7 +205,7 @@ export class StoryService {
         $or: [
           { title: { $ilike: `%${query}%` } },
           { content: { $ilike: `%${query}%` } },
-          { 'tags::text': { $ilike: `%${query}%` } },
+          { [raw('tags::text')]: { $ilike: `%${query}%` } },
         ],
       });
     }

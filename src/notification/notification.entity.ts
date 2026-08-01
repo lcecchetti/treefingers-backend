@@ -7,7 +7,7 @@ import {
   ManyToOne,
   PrimaryKey,
   Property,
-} from '@mikro-orm/core';
+} from '@mikro-orm/decorators/legacy';
 import { EncodedID } from '../common/scalars/encoded-id.scalar';
 import { NotificationType } from './enum/notification-type.enum';
 
@@ -41,7 +41,7 @@ export class Notification {
   @Field(() => NotificationType)
   type: NotificationType;
 
-  @ManyToOne(() => User, { onDelete: 'cascade', nullable: true })
+  @ManyToOne(() => User, { deleteRule: 'cascade', nullable: true })
   @Field(() => User, { nullable: true })
   actor?: User;
 
@@ -53,7 +53,7 @@ export class Notification {
   @Field(() => EncodedID, { nullable: true })
   targetId?: number;
 
-  @ManyToOne(() => User, { onDelete: 'cascade' })
+  @ManyToOne(() => User, { deleteRule: 'cascade' })
   @Index()
   @Field(() => User)
   user: User;
@@ -61,11 +61,11 @@ export class Notification {
   @Field(() => Int, { defaultValue: 0 })
   count: number;
 
-  @Property({ onCreate: () => new Date() })
+  @Property({ onCreate: () => new Date(), length: 0 })
   @Field(() => GraphQLISODateTime)
   createdAt: Date = new Date();
 
-  @Property({ onUpdate: () => new Date() })
+  @Property({ onUpdate: () => new Date(), length: 0 })
   @Field(() => GraphQLISODateTime)
   updatedAt: Date = new Date();
 }
