@@ -47,6 +47,11 @@ export class User {
   @Index()
   isBanned: boolean;
 
+  // bumped whenever the password changes, to invalidate outstanding
+  // forgot-password links without embedding the password hash in them
+  @Property({ default: 0 })
+  tokenVersion = 0;
+
   @Formula(
     '(select count(distinct s.id) as cnt from story as s where s.author_id = u0.id and s.parent_id is null)',
   )

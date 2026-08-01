@@ -94,7 +94,7 @@ export class AuthService {
     if (user && !user.isBanned) {
       // change password token
       const token = this.jwtService.sign(
-        { sub: user.id, password: user.password, type: 'reset' },
+        { sub: user.id, tokenVersion: user.tokenVersion, type: 'reset' },
         { expiresIn: 60 * 15 },
       );
 
@@ -141,7 +141,7 @@ export class AuthService {
     const user = await this.userService.findById(decodedToken.sub);
 
     // if password has changed already, link is expired
-    if (user.password !== decodedToken.password) {
+    if (user.tokenVersion !== decodedToken.tokenVersion) {
       throw new UnauthorizedException('This link has expired');
     }
 

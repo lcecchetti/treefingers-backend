@@ -74,6 +74,7 @@ export class UserService {
 
     if (data.password) {
       data.password = await this.encryptPassword(data.password);
+      user.tokenVersion += 1;
     } else {
       delete data.password;
     }
