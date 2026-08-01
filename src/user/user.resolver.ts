@@ -21,6 +21,7 @@ import { EditUserInput } from './inputs/edit-user.input';
 import { Followership } from '../followership/followership.entity';
 import { FollowershipDataloader } from '../followership/dataloaders/followership.dataloader';
 import { Loader } from '@tracworx/nestjs-dataloader';
+import { connectionComplexity } from '../graphql/connection-complexity';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -29,7 +30,7 @@ export class UserResolver {
     private userService: UserService,
   ) {}
 
-  @Query(() => UserConnection)
+  @Query(() => UserConnection, { complexity: connectionComplexity })
   async users(
     @Args()
     args: UserConnectionArgs = new UserConnectionArgs(),

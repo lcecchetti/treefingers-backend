@@ -25,12 +25,13 @@ import { LikeDataloader } from '../like/dataloaders/like.dataloader';
 import { StoryDataloader } from '../story/dataloaders/story.dataloader';
 import { Story } from '../story/story.entity';
 import { Forest } from '../forest/forest.entity';
+import { connectionComplexity } from '../graphql/connection-complexity';
 
 @Resolver(() => Comment)
 export class CommentResolver {
   constructor(private commentService: CommentService) {}
 
-  @Query(() => CommentConnection)
+  @Query(() => CommentConnection, { complexity: connectionComplexity })
   async comments(
     @Args()
     args: CommentConnectionArgs = new CommentConnectionArgs(),

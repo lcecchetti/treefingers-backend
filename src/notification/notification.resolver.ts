@@ -20,13 +20,14 @@ import { IsAuthenticatedGuard } from '../auth/guards/is-authenticated.guard';
 import { ReadNotificationPayload } from './payloads/read-notification.payload';
 import { ReadNotificationInput } from './inputs/read-notification.input';
 import { ReadAllNotificationsPayload } from './payloads/read-all-notifications.payload';
+import { connectionComplexity } from '../graphql/connection-complexity';
 
 @Resolver(() => Notification)
 export class NotificationResolver {
   constructor(private notificationService: NotificationService) {}
 
   @UseGuards(IsAuthenticatedGuard)
-  @Query(() => NotificationConnection)
+  @Query(() => NotificationConnection, { complexity: connectionComplexity })
   async notifications(
     @Args()
     args: NotificationConnectionArgs = new NotificationConnectionArgs(),

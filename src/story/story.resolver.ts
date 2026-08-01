@@ -28,6 +28,7 @@ import { ForestDataloader } from '../forest/dataloaders/forest.dataloader';
 import { LikeDataloader } from '../like/dataloaders/like.dataloader';
 import { EditStoryPayload } from './payloads/edit-story.payload';
 import { EditStoryInput } from './inputs/edit-story.input';
+import { connectionComplexity } from '../graphql/connection-complexity';
 
 @Resolver(() => Story)
 export class StoryResolver {
@@ -36,7 +37,7 @@ export class StoryResolver {
     private storyService: StoryService,
   ) {}
 
-  @Query(() => StoryConnection)
+  @Query(() => StoryConnection, { complexity: connectionComplexity })
   async stories(
     @Args({ nullable: true })
     args: StoryConnectionArgs = new StoryConnectionArgs(),

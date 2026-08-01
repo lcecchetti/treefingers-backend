@@ -16,7 +16,12 @@ export class ComplexityPlugin implements ApolloServerPlugin {
   constructor(private gqlSchemaHost: GraphQLSchemaHost) {}
 
   async requestDidStart(): Promise<GraphQLRequestListener> {
-    const maxComplexity = 50;
+    // connection queries are now weighted by page size (see
+    // connectionComplexity), so this budget is calibrated against the
+    // heaviest real frontend queries at max page size (first/last: 20):
+    // stories ~480, comments ~420. 1000 leaves ~2x headroom for those while
+    // still rejecting alias-amplified or excessively wide requests.
+    const maxComplexity = 1000;
     const { schema } = this.gqlSchemaHost;
 
     return {

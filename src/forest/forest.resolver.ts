@@ -25,6 +25,7 @@ import { Membership } from '../membership/membership.entity';
 import { MembershipDataloader } from '../membership/dataloaders/membership.dataloader';
 import { EditForestPayload } from './payloads/edit-forest.payload';
 import { EditForestInput } from './inputs/edit-forest.input';
+import { connectionComplexity } from '../graphql/connection-complexity';
 
 @Resolver(() => Forest)
 export class ForestResolver {
@@ -33,7 +34,7 @@ export class ForestResolver {
     private forestService: ForestService,
   ) {}
 
-  @Query(() => ForestConnection)
+  @Query(() => ForestConnection, { complexity: connectionComplexity })
   async forests(
     @Args()
     args: ForestConnectionArgs = new ForestConnectionArgs(),
