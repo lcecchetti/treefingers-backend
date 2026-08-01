@@ -1,7 +1,7 @@
 import {
+  ForbiddenException,
   Injectable,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { Notification } from './notification.entity';
 import { NotificationConnectionArgs } from './args/notification-connection.args';
@@ -77,7 +77,7 @@ export class NotificationService {
     }
 
     if (notification.user.id !== currentUser.id) {
-      throw new UnauthorizedException(
+      throw new ForbiddenException(
         'You are not allowed to read this notification!',
       );
     }

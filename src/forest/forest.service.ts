@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -72,7 +73,7 @@ export class ForestService {
     }
 
     if (!this.isEditable(forest, currentUser)) {
-      throw new UnauthorizedException(
+      throw new ForbiddenException(
         'You are not the founder of this forest.',
       );
     }

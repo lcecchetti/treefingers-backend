@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -162,7 +163,7 @@ export class StoryService {
     }
 
     if (!(await this.isEditable(story, currentUser))) {
-      throw new UnauthorizedException(
+      throw new ForbiddenException(
         'You cannot edit a story which has been continued by others or not yours.',
       );
     }
