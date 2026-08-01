@@ -20,7 +20,7 @@ import { CurrentUser } from '../auth/dto/current-user.dto';
 import { UseGuards } from '@nestjs/common';
 import { IsAuthenticatedGuard } from '../auth/guards/is-authenticated.guard';
 import { Loader } from '@tracworx/nestjs-dataloader';
-import { ForestDataloader } from './dataloaders/forest.dataloader';
+import { UserDataloader } from '../user/dataloaders/user.dataloader';
 import { Membership } from '../membership/membership.entity';
 import { MembershipDataloader } from '../membership/dataloaders/membership.dataloader';
 import { EditForestPayload } from './payloads/edit-forest.payload';
@@ -46,7 +46,7 @@ export class ForestResolver {
   async forest(
     @Args('filter', { nullable: true })
     filter: FilterForestInput,
-  ): Promise<Forest> {
+  ): Promise<Forest | null> {
     return this.forestService.findOne(filter);
   }
 
@@ -91,9 +91,9 @@ export class ForestResolver {
   @ResolveField(() => User)
   async founder(
     @Parent() forest: Forest,
-    @Loader(ForestDataloader) forestDataloader,
+    @Loader(UserDataloader) userDataloader,
   ): Promise<User> {
-    return forestDataloader.load(forest.founder.id);
+    return userDataloader.load(forest.founder.id);
   }
 
   @ResolveField(() => Membership, { nullable: true })

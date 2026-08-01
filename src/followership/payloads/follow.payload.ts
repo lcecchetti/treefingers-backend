@@ -4,5 +4,5 @@ import { Followership } from '../followership.entity';
 @ObjectType()
 export class FollowPayload {
   @Field(() => Followership, { nullable: true })
-  readonly followership?: Followership;
+  readonly followership?: Followership | null;
 }

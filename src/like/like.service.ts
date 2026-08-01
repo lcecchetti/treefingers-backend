@@ -10,7 +10,7 @@ import { EntityRepository } from '@mikro-orm/postgresql';
 import { NotificationService } from '../notification/notification.service';
 import { Notification } from '../notification/notification.entity';
 import { NotificationType } from '../notification/enum/notification-type.enum';
-import { wrap } from '@mikro-orm/core';
+import { RequiredEntityData, wrap } from '@mikro-orm/core';
 import { StringService } from '../common/services/string.service';
 import { UrlService } from '../common/services/url.service';
 
@@ -36,7 +36,7 @@ export class LikeService {
     return this.findOne({ id: { eq: id } });
   }
 
-  async sendLikeNotification(like: Like): Promise<Notification> {
+  async sendLikeNotification(like: Like): Promise<Notification | null> {
     await wrap(like.user).init();
     if (like.comment) {
       await wrap(like.comment).init();
@@ -91,10 +91,14 @@ export class LikeService {
         true,
       );
     }
+
+    return null;
   }
 
   async like(input: LikeInput): Promise<Like> {
-    const like = await this.likeRepository.create(input);
+    const like = await this.likeRepository.create(
+      input as RequiredEntityData<Like>,
+    );
     await this.likeRepository.persistAndFlush(like);
     await this.sendLikeNotification(like);
     return like;
@@ -102,8 +106,8 @@ export class LikeService {
 
   async dislike({ comment, story, user }: DislikeInput): Promise<Like | null> {
     const like = await this.findOne({
-      comment: comment ? { eq: comment } : null,
-      story: story ? { eq: story } : null,
+      comment: comment ? { eq: comment } : undefined,
+      story: story ? { eq: story } : undefined,
       user: { eq: user },
     });
 

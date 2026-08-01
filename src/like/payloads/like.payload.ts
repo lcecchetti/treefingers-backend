@@ -4,5 +4,5 @@ import { Like } from '../like.entity';
 @ObjectType()
 export class LikePayload {
   @Field(() => Like, { nullable: true })
-  readonly like?: Like;
+  readonly like?: Like | null;
 }

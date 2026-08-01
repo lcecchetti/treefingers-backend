@@ -20,7 +20,7 @@ export class PaginationService<Entity> {
     return Buffer.from(JSON.stringify(cursor)).toString('base64');
   }
 
-  decodeCursor(cursor: string): any | null {
+  decodeCursor(cursor?: string): any | null {
     if (!cursor) {
       return null;
     }
@@ -36,7 +36,11 @@ export class PaginationService<Entity> {
     const filter: any = {};
 
     // current sort field
-    const [field, direction] = sortArray.shift();
+    if (!sortArray.length) {
+      return filter;
+    }
+    // safe: length just checked above
+    const [field, direction] = sortArray.shift()!;
 
     // comparison operator
     const comparison =

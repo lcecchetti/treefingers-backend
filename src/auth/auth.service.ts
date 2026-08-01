@@ -44,7 +44,7 @@ export class AuthService {
     private urlService: UrlService,
   ) {}
 
-  async validateUser(email: string, password: string): Promise<User | null> {
+  async validateUser(email: string, password: string): Promise<User> {
     const user = await this.userService.findOne({ email: { eq: email } });
 
     // always run bcrypt.compare, even if there's no user to compare against,
@@ -148,6 +148,10 @@ export class AuthService {
     }
 
     const user = await this.userService.findById(decodedToken.sub);
+
+    if (!user) {
+      throw new UnauthorizedException('This link has expired');
+    }
 
     // if password has changed already, link is expired
     if (user.tokenVersion !== decodedToken.tokenVersion) {

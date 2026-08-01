@@ -12,6 +12,7 @@ import { QueryService } from '../query/query.service';
 import { SortNotificationInput } from './inputs/sort-notification.input';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
+import { RequiredEntityData } from '@mikro-orm/core';
 import { NotificationDataInput } from './inputs/notification.input';
 import { CurrentUser } from '../auth/dto/current-user.dto';
 
@@ -52,8 +53,8 @@ export class NotificationService {
       const existingNotification = await this.findOne({
         type: { eq: data.type },
         user: { eq: data.user },
-        actor: data.actor ? { eq: data.actor } : null,
-        targetId: data.targetId ? { eq: data.targetId } : null,
+        actor: data.actor ? { eq: data.actor } : undefined,
+        targetId: data.targetId ? { eq: data.targetId } : undefined,
       });
 
       if (existingNotification) {
@@ -61,7 +62,9 @@ export class NotificationService {
       }
     }
 
-    const notification = await this.notificationRepository.create(data);
+    const notification = await this.notificationRepository.create(
+      data as RequiredEntityData<Notification>,
+    );
     await this.notificationRepository.persistAndFlush(notification);
     return notification;
   }
@@ -96,10 +99,10 @@ export class NotificationService {
     filter?: FilterNotificationInput,
     currentUser?: CurrentUser,
   ): Promise<number> {
-    return this.prepareQueryBuilder(filter, null, currentUser).getCount();
+    return this.prepareQueryBuilder(filter, undefined, currentUser).getCount();
   }
 
-  async getUnreadCount(currentUser: CurrentUser): Promise<number> {
+  async getUnreadCount(currentUser?: CurrentUser): Promise<number> {
     if (!currentUser) {
       return 0;
     }
@@ -115,7 +118,7 @@ export class NotificationService {
   async paginate(
     {
       filter,
-      sort,
+      sort = new SortNotificationInput(),
       ...connectionArgs
     }: NotificationConnectionArgs = new NotificationConnectionArgs(),
     currentUser?: CurrentUser,

@@ -8,7 +8,7 @@ export class NotificationDataloader {
   constructor(private readonly notificationService: NotificationService) {}
 
   createDataloader() {
-    return new DataLoader<number, Notification>(async (ids) => {
+    return new DataLoader<number, Notification | undefined>(async (ids) => {
       const notifications = await this.notificationService.findMany({
         id: { in: [...ids] },
       });

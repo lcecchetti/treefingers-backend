@@ -8,7 +8,7 @@ export class StoryDataloader {
   constructor(private readonly storyService: StoryService) {}
 
   createDataloader() {
-    return new DataLoader<number, Story>(async (ids) => {
+    return new DataLoader<number, Story | undefined>(async (ids) => {
       const stories = await this.storyService.findMany({
         id: { in: [...ids] },
       });

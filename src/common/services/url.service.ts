@@ -13,7 +13,7 @@ export class UrlService {
   }
 
   decodeId(value: string): number {
-    return value && (this.hashids.decode(value)[0] as number);
+    return value ? (this.hashids.decode(value)[0] as number) : NaN;
   }
 
   getStoryNewUrl(): string {

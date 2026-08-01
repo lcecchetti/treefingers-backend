@@ -8,7 +8,7 @@ export class CommentDataloader {
   constructor(private readonly commentService: CommentService) {}
 
   createDataloader() {
-    return new DataLoader<number, Comment>(async (ids) => {
+    return new DataLoader<number, Comment | undefined>(async (ids) => {
       const comments = await this.commentService.findMany({
         id: { in: [...ids] },
       });

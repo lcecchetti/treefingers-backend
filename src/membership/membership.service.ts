@@ -9,7 +9,7 @@ import { LeaveInput } from './inputs/leave.input';
 import { Membership } from './membership.entity';
 import { Notification } from '../notification/notification.entity';
 import { StringService } from '../common/services/string.service';
-import { wrap } from '@mikro-orm/core';
+import { RequiredEntityData, wrap } from '@mikro-orm/core';
 import { NotificationType } from '../notification/enum/notification-type.enum';
 import { UrlService } from '../common/services/url.service';
 
@@ -36,7 +36,9 @@ export class MembershipService {
     return this.findOne({ id: { eq: id } });
   }
 
-  async sendJoinNotification(membership: Membership): Promise<Notification> {
+  async sendJoinNotification(
+    membership: Membership,
+  ): Promise<Notification | null> {
     await wrap(membership.forest).init();
     await wrap(membership.member).init();
     const forestExcerpt = this.stringService.createExcerpt(
@@ -58,7 +60,9 @@ export class MembershipService {
   }
 
   async join(input: JoinInput): Promise<Membership> {
-    const membership = await this.membershipRepository.create(input);
+    const membership = await this.membershipRepository.create(
+      input as RequiredEntityData<Membership>,
+    );
     await this.membershipRepository.persistAndFlush(membership);
     await this.sendJoinNotification(membership);
     return membership;

@@ -4,6 +4,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { RequiredEntityData } from '@mikro-orm/core';
 import { Story } from './story.entity';
 import { StoryConnectionArgs } from './args/story-connection.args';
 import { CreateStoryDataInput } from './inputs/create-story.input';
@@ -70,7 +71,7 @@ export class StoryService {
       });
     }
 
-    if (story.root) {
+    if (story.root && story.parent) {
       await wrap(story.root).init();
       if (story.parent.author.id !== story.root.author.id) {
         const rootExcerpt = this.stringService.createExcerpt(
@@ -107,19 +108,26 @@ export class StoryService {
     }
   }
 
-  async create(data: CreateStoryDataInput): Promise<Story | null> {
+  async create(data: CreateStoryDataInput): Promise<Story> {
     if (!data.forest && !data.parent) {
       throw new BadRequestException('Forest is required on root stories');
     }
 
     if (data.parent) {
       const parent = await this.findById(data.parent);
+      if (!parent) {
+        throw new NotFoundException(
+          'The story you are trying to continue does not exist.',
+        );
+      }
       data.forest = undefined;
       data.path = [...parent.path, parent.id];
       data.root = parent.root ? parent.root.id : parent.id;
     }
 
-    const story = await this.storyRepository.create(data);
+    const story = await this.storyRepository.create(
+      data as RequiredEntityData<Story>,
+    );
     await this.storyRepository.persistAndFlush(story);
 
     await this.sendCreateStoryNotifications(story);
@@ -167,7 +175,7 @@ export class StoryService {
   async paginate(
     {
       filter,
-      sort,
+      sort = new SortStoryInput(),
       ...connectionArgs
     }: StoryConnectionArgs = new StoryConnectionArgs(),
     currentUser?: CurrentUser,
@@ -201,6 +209,11 @@ export class StoryService {
     }
 
     if (liked) {
+      if (!currentUser) {
+        throw new UnauthorizedException(
+          'You must be logged in to filter by liked stories.',
+        );
+      }
       queryBuilder.select('*', true).andWhere({
         likes: { user: currentUser.id },
       });

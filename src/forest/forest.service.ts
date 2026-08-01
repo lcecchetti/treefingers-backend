@@ -1,4 +1,9 @@
-import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Forest } from './forest.entity';
 import { ForestConnectionArgs } from './args/forest-connection.args';
 import { CreateForestDataInput } from './inputs/create-forest.input';
@@ -11,7 +16,7 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { CurrentUser } from '../auth/dto/current-user.dto';
 import { EditForestDataInput } from './inputs/edit-forest.input';
-import { wrap } from '@mikro-orm/core';
+import { RequiredEntityData, wrap } from '@mikro-orm/core';
 
 @Injectable()
 export class ForestService {
@@ -42,7 +47,9 @@ export class ForestService {
       throw new ConflictException('Forest with same name already exists');
     }
 
-    const forest = await this.forestRepository.create(data);
+    const forest = await this.forestRepository.create(
+      data as RequiredEntityData<Forest>,
+    );
     await this.forestRepository.persistAndFlush(forest);
     return forest;
   }
@@ -78,7 +85,7 @@ export class ForestService {
   async paginate(
     {
       filter,
-      sort,
+      sort = new SortForestInput(),
       ...connectionArgs
     }: ForestConnectionArgs = new ForestConnectionArgs(),
     currentUser?: CurrentUser,
@@ -111,6 +118,11 @@ export class ForestService {
     }
 
     if (joined) {
+      if (!currentUser) {
+        throw new UnauthorizedException(
+          'You must be logged in to filter by joined forests.',
+        );
+      }
       queryBuilder.select('*', true).andWhere({
         memberships: { member: currentUser.id },
       });

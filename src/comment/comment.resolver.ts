@@ -80,7 +80,7 @@ export class CommentResolver {
   async story(
     @Parent() comment: Comment,
     @Loader(StoryDataloader) storyDataloader,
-  ): Promise<Story> {
+  ): Promise<Story | null> {
     if (!comment.story) {
       return null;
     }
@@ -91,7 +91,7 @@ export class CommentResolver {
   async forest(
     @Parent() comment: Comment,
     @Loader(ForestDataloader) forestDataloader,
-  ): Promise<Story> {
+  ): Promise<Story | null> {
     if (!comment.forest) {
       return null;
     }

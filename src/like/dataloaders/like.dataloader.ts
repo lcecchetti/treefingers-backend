@@ -10,15 +10,15 @@ export class LikeDataloader {
   createDataloader() {
     return new DataLoader<
       { comment?: number; story?: number; user: number },
-      Like,
+      Like | undefined,
       string
     >(
       async (keys) => {
         // get likes
         const result = await this.likeService.findMany({
           or: keys.map(({ comment, story, user }) => ({
-            comment: comment ? { eq: comment } : null,
-            story: story ? { eq: story } : null,
+            comment: comment ? { eq: comment } : undefined,
+            story: story ? { eq: story } : undefined,
             user: { eq: user },
           })),
         });

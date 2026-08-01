@@ -13,7 +13,7 @@ import { NotificationService } from '../notification/notification.service';
 import { Notification } from '../notification/notification.entity';
 import { NotificationType } from '../notification/enum/notification-type.enum';
 import { StringService } from '../common/services/string.service';
-import { wrap } from '@mikro-orm/core';
+import { RequiredEntityData, wrap } from '@mikro-orm/core';
 import { UrlService } from '../common/services/url.service';
 
 @Injectable()
@@ -40,7 +40,9 @@ export class CommentService {
     return this.findOne({ id: { eq: id } });
   }
 
-  async sendSubmitCommentNotification(comment: Comment): Promise<Notification> {
+  async sendSubmitCommentNotification(
+    comment: Comment,
+  ): Promise<Notification | null> {
     await wrap(comment.user).init();
     const commentExcerpt = this.stringService.createExcerpt(
       comment.content,
@@ -80,10 +82,14 @@ export class CommentService {
         content: `${comment.user.username} commented "${commentExcerpt}" on your story "${storyExcerpt}"`,
       });
     }
+
+    return null;
   }
 
   async create(data: CommentDataInput): Promise<Comment> {
-    const comment = await this.commentRepository.create(data);
+    const comment = await this.commentRepository.create(
+      data as RequiredEntityData<Comment>,
+    );
     await this.commentRepository.persistAndFlush(comment);
     await this.sendSubmitCommentNotification(comment);
     return comment;
@@ -92,7 +98,7 @@ export class CommentService {
   async paginate(
     {
       filter,
-      sort,
+      sort = new SortCommentInput(),
       ...connectionArgs
     }: CommentConnectionArgs = new CommentConnectionArgs(),
   ): Promise<CommentConnection> {

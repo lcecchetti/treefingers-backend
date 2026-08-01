@@ -8,7 +8,7 @@ export class ForestDataloader {
   constructor(private readonly forestService: ForestService) {}
 
   createDataloader() {
-    return new DataLoader<number, Forest>(async (ids) => {
+    return new DataLoader<number, Forest | undefined>(async (ids) => {
       const forests = await this.forestService.findMany({
         id: { in: [...ids] },
       });

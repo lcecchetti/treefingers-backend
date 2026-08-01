@@ -1,4 +1,4 @@
-import { wrap } from '@mikro-orm/core';
+import { RequiredEntityData, wrap } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
@@ -36,7 +36,9 @@ export class FollowershipService {
   }
 
   async follow(input: FollowInput): Promise<Followership> {
-    const followership = await this.followershipRepository.create(input);
+    const followership = await this.followershipRepository.create(
+      input as RequiredEntityData<Followership>,
+    );
     await this.followershipRepository.persistAndFlush(followership);
 
     await wrap(followership.follower).init();

@@ -66,7 +66,7 @@ export class LikeResolver {
   async story(
     @Parent() like: Like,
     @Loader(StoryDataloader) storyDataloader,
-  ): Promise<Story> {
+  ): Promise<Story | null> {
     if (!like.story) {
       return null;
     }
@@ -77,7 +77,7 @@ export class LikeResolver {
   async comment(
     @Parent() like: Like,
     @Loader(CommentDataloader) commentDataloader,
-  ): Promise<Comment> {
+  ): Promise<Comment | null> {
     if (!like.comment) {
       return null;
     }

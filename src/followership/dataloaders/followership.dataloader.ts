@@ -10,7 +10,7 @@ export class FollowershipDataloader {
   createDataloader() {
     return new DataLoader<
       { followed: number; follower: number },
-      Followership,
+      Followership | undefined,
       string
     >(
       async (keys) => {

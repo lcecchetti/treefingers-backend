@@ -10,7 +10,7 @@ export class MembershipDataloader {
   createDataloader() {
     return new DataLoader<
       { forest: number; member: number },
-      Membership,
+      Membership | undefined,
       string
     >(
       async (keys) => {

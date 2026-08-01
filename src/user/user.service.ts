@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { User } from './user.entity';
 import { UserConnectionArgs } from './args/user-connection.args';
@@ -15,7 +16,7 @@ import { QueryService } from '../query/query.service';
 import { SortUserInput } from './inputs/sort-user.input';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
-import { wrap } from '@mikro-orm/core';
+import { RequiredEntityData, wrap } from '@mikro-orm/core';
 import { CurrentUser } from '../auth/dto/current-user.dto';
 
 @Injectable()
@@ -57,7 +58,7 @@ export class UserService {
     const user = await this.userRepository.create({
       ...data,
       password: await this.encryptPassword(data.password),
-    });
+    } as RequiredEntityData<User>);
 
     await this.userRepository.persistAndFlush(user);
     return user;
@@ -88,7 +89,11 @@ export class UserService {
   // able to see inactive/banned users, so the default lives here rather than
   // in prepareQueryBuilder
   async paginate(
-    { filter, sort, ...connectionArgs }: UserConnectionArgs,
+    {
+      filter,
+      sort = new SortUserInput(),
+      ...connectionArgs
+    }: UserConnectionArgs,
     currentUser?: CurrentUser,
   ): Promise<UserConnection> {
     const publicFilter: FilterUserInput = {
@@ -125,6 +130,11 @@ export class UserService {
     }
 
     if (followed) {
+      if (!currentUser) {
+        throw new UnauthorizedException(
+          'You must be logged in to filter by followed users.',
+        );
+      }
       queryBuilder.select('*', true).andWhere({
         followershipsAsFollowed: { follower: currentUser.id },
       });

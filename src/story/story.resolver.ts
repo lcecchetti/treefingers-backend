@@ -49,7 +49,7 @@ export class StoryResolver {
   async story(
     @Args('filter', { nullable: true })
     filter: FilterStoryInput,
-  ): Promise<Story> {
+  ): Promise<Story | null> {
     return this.storyService.findOne(filter);
   }
 
