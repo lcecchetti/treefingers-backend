@@ -1,6 +1,7 @@
 import {
   Injectable,
   InternalServerErrorException,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -32,6 +33,8 @@ const DUMMY_PASSWORD_HASH = bcrypt.hashSync('not-a-real-password', 10);
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private userService: UserService,
     private configService: ConfigService,
@@ -187,9 +190,14 @@ export class AuthService {
         },
       });
     } catch (e) {
-      throw new InternalServerErrorException(
-        'An error occurred while sending email',
+      // the account already exists at this point (register() persists it
+      // before calling this); don't fail the whole request over a mail
+      // hiccup, since the user can still ask for the email to be resent
+      this.logger.error(
+        `Failed to send activate-account email to ${email}`,
+        e,
       );
+      return false;
     }
 
     return true;
