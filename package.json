@@ -98,6 +98,12 @@
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
+    "moduleNameMapper": {
+      "^@mikro-orm/core$": "<rootDir>/testing/mocks/mikro-orm-core.ts",
+      "^@mikro-orm/decorators/legacy$": "<rootDir>/testing/mocks/mikro-orm-decorators-legacy.ts",
+      "^@mikro-orm/nestjs$": "<rootDir>/testing/mocks/mikro-orm-nestjs.ts",
+      "^@mikro-orm/postgresql$": "<rootDir>/testing/mocks/mikro-orm-postgresql.ts"
+    },
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],
