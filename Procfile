@@ -1,1 +1,1 @@
-web: yarn mikro-orm migration:up && yarn start:prod
+web: pnpm mikro-orm migration:up && pnpm start:prod
