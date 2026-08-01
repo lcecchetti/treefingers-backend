@@ -1,6 +1,6 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CurrentUser } from '../dto/current-user.dto';
 import { JwtPayload } from '../payloads/jwt.payload';
@@ -16,6 +16,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: JwtPayload): Promise<CurrentUser> {
+    // reject activate-account/forgot-password tokens: they are signed with
+    // the same secret but must not be usable as API access tokens
+    if (payload.type !== 'access') {
+      throw new UnauthorizedException('Invalid token');
+    }
+
     return {
       id: payload.sub,
       email: payload.email,

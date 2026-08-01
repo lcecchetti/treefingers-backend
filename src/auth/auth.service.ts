@@ -65,6 +65,7 @@ export class AuthService {
       email: user.email,
       sub: user.id,
       username: user.username,
+      type: 'access',
     };
 
     await this.userService.edit(user.id, { lastLogin: new Date() });
@@ -93,7 +94,7 @@ export class AuthService {
     if (user && !user.isBanned) {
       // change password token
       const token = this.jwtService.sign(
-        { sub: user.id, password: user.password },
+        { sub: user.id, password: user.password, type: 'reset' },
         { expiresIn: 60 * 15 },
       );
 
@@ -133,6 +134,10 @@ export class AuthService {
       throw new UnauthorizedException('This link has expired');
     }
 
+    if (decodedToken.type !== 'reset') {
+      throw new UnauthorizedException('This link has expired');
+    }
+
     const user = await this.userService.findById(decodedToken.sub);
 
     // if password has changed already, link is expired
@@ -159,7 +164,7 @@ export class AuthService {
 
     // activate account token
     const token = this.jwtService.sign(
-      { sub: user.id },
+      { sub: user.id, type: 'activate' },
       { expiresIn: '1 day' },
     );
 
@@ -201,6 +206,10 @@ export class AuthService {
     try {
       decodedToken = this.jwtService.verify(token);
     } catch (e) {
+      throw new UnauthorizedException('This link has expired');
+    }
+
+    if (decodedToken.type !== 'activate') {
       throw new UnauthorizedException('This link has expired');
     }
 
