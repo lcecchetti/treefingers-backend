@@ -92,7 +92,7 @@ export class CommentResolver {
   async forest(
     @Parent() comment: Comment,
     @Loader(ForestDataloader) forestDataloader,
-  ): Promise<Story | null> {
+  ): Promise<Forest | null> {
     if (!comment.forest) {
       return null;
     }

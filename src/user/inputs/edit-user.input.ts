@@ -20,7 +20,7 @@ export class EditUserDataInput {
 
   isActive?: boolean;
   lastLogin?: Date;
-  banned?: boolean;
+  isBanned?: boolean;
 }
 
 @InputType()
