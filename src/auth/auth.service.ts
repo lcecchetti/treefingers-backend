@@ -25,6 +25,11 @@ import { NotificationType } from '../notification/enum/notification-type.enum';
 import { UrlService } from '../common/services/url.service';
 import { ResendActivateAccountPayload } from './payloads/resend-activate-account.payload';
 
+// a valid-looking hash with no matching password, so bcrypt.compare takes the
+// same time whether or not the email actually exists (avoids leaking account
+// existence through response timing)
+const DUMMY_PASSWORD_HASH = bcrypt.hashSync('not-a-real-password', 10);
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -39,22 +44,23 @@ export class AuthService {
   async validateUser(email: string, password: string): Promise<User | null> {
     const user = await this.userService.findOne({ email: { eq: email } });
 
-    // user not found
-    if (!user || user.isBanned) {
-      throw new NotFoundException('User or password are not valid.');
+    // always run bcrypt.compare, even if there's no user to compare against,
+    // so response time doesn't reveal whether the email exists
+    const isPasswordMatching = await bcrypt.compare(
+      password,
+      user?.password ?? DUMMY_PASSWORD_HASH,
+    );
+
+    // no such user, wrong password, or banned: identical response either way
+    if (!user || !isPasswordMatching || user.isBanned) {
+      throw new UnauthorizedException('User or password are not valid.');
     }
 
-    // user not active
-    if (user && !user.isActive) {
+    // only reveal "not active yet" once the password is confirmed correct
+    if (!user.isActive) {
       throw new UnauthorizedException(
         'Your account is not active yet, check your emails.',
       );
-    }
-
-    // wrong password
-    const isPasswordMatching = await bcrypt.compare(password, user.password);
-    if (!isPasswordMatching) {
-      throw new UnauthorizedException('User or password are not valid.');
     }
 
     return user;
