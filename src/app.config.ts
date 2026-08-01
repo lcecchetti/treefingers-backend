@@ -12,6 +12,8 @@ export default () => ({
   jwt: {
     secret: process.env.JWT_SECRET,
     expiration: '1 day',
+    // must match jwt.expiration above; kept separate since cookie maxAge needs milliseconds
+    cookieMaxAge: 24 * 60 * 60 * 1000,
   },
   frontend: {
     webUrl: process.env.FRONTEND_WEBURL,

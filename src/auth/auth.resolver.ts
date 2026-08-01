@@ -1,6 +1,8 @@
 import { UseGuards } from '@nestjs/common';
-import { Resolver, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
 import { Throttle } from '@nestjs/throttler';
+import { ConfigService } from '@nestjs/config';
+import { Response } from 'express';
 import { GqlThrottlerGuard } from '../common/guards/gql-throttler.guard';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -18,10 +20,15 @@ import { ActivateAccountInput } from './inputs/activate-account.input';
 import { User } from '../user/user.entity';
 import { ResendActivateAccountPayload } from './payloads/resend-activate-account.payload';
 import { ResendActivateAccountInput } from './inputs/resend-activate-account.input';
+import { LogoutPayload } from './payloads/logout.payload';
+import { AUTH_COOKIE_NAME, getAuthCookieOptions } from './auth.constants';
 
 @Resolver()
 export class AuthResolver {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private configService: ConfigService,
+  ) {}
 
   @Mutation(() => LoginPayload)
   @UseGuards(GqlThrottlerGuard, LocalAuthGuard)
@@ -29,8 +36,30 @@ export class AuthResolver {
   async login(
     @GetCurrentUser() user: User,
     @Args('input') input: LoginInput,
+    @Context('res') res: Response,
   ): Promise<LoginPayload> {
-    return this.authService.login(user);
+    const payload = await this.authService.login(user);
+
+    res.cookie(
+      AUTH_COOKIE_NAME,
+      payload.token,
+      getAuthCookieOptions(
+        this.configService.get<boolean>('env.isDev', false),
+        this.configService.get<number>('jwt.cookieMaxAge'),
+      ),
+    );
+
+    return payload;
+  }
+
+  @Mutation(() => LogoutPayload)
+  async logout(@Context('res') res: Response): Promise<LogoutPayload> {
+    res.clearCookie(
+      AUTH_COOKIE_NAME,
+      getAuthCookieOptions(this.configService.get<boolean>('env.isDev', false)),
+    );
+
+    return { result: true };
   }
 
   @Mutation(() => ForgotPasswordPayload)

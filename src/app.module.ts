@@ -42,6 +42,8 @@ import { ThrottlerModule } from '@nestjs/throttler';
           credentials: true,
         },
         bodyParserConfig: false,
+        // res is needed to set/clear the auth cookie from the login/logout resolvers
+        context: ({ req, res }) => ({ req, res }),
       }),
     }),
     MikroOrmModule.forRootAsync({
