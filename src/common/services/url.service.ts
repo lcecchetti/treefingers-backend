@@ -6,6 +6,11 @@ import { User } from '../../user/user.entity';
 
 @Injectable()
 export class UrlService {
+  // Hashids only obfuscates sequential IDs, it does not encrypt or sign them:
+  // anyone with this salt (e.g. anyone with repo access) can decode/encode
+  // any ID. Never rely on an encoded ID being "unguessable" as an access
+  // control mechanism — every resolver that returns entity data must still
+  // enforce its own authorization checks.
   hashids = new Hashids('Treefingers', 10);
 
   encodeId(value: number): string {
