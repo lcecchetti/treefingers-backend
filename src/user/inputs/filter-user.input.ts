@@ -29,4 +29,5 @@ export class FilterUserInput extends FilterInput {
   followed?: boolean;
 
   isActive?: boolean;
+  isBanned?: boolean;
 }

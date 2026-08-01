@@ -84,12 +84,21 @@ export class UserService {
     return user;
   }
 
+  // for public listing only: internal lookups (auth, dataloaders) must be
+  // able to see inactive/banned users, so the default lives here rather than
+  // in prepareQueryBuilder
   async paginate(
     { filter, sort, ...connectionArgs }: UserConnectionArgs,
     currentUser?: CurrentUser,
   ): Promise<UserConnection> {
+    const publicFilter: FilterUserInput = {
+      ...filter,
+      isActive: filter?.isActive ?? true,
+      isBanned: filter?.isBanned ?? false,
+    };
+
     return this.paginationService.paginate(
-      this.prepareQueryBuilder(filter, sort, currentUser),
+      this.prepareQueryBuilder(publicFilter, sort, currentUser),
       sort,
       connectionArgs,
     );
@@ -100,11 +109,6 @@ export class UserService {
     sort: SortUserInput = new SortUserInput(),
     currentUser?: CurrentUser,
   ) {
-    // add isActive filter
-    if (!filter.isActive === false) {
-      filter.isActive = true;
-    }
-
     const queryBuilder = this.queryService.prepareQueryBuilder(
       this.userRepository.createQueryBuilder(),
       filter,

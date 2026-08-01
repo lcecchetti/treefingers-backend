@@ -43,7 +43,12 @@ export class UserResolver {
     @Args('filter', { nullable: true })
     filter: FilterUserInput = new FilterUserInput(),
   ): Promise<User> {
-    return this.userService.findOne(filter);
+    // public lookup: hide inactive/banned accounts unless asked for explicitly
+    return this.userService.findOne({
+      ...filter,
+      isActive: filter.isActive ?? true,
+      isBanned: filter.isBanned ?? false,
+    });
   }
 
   @Query(() => CurrentUser, { nullable: true })
