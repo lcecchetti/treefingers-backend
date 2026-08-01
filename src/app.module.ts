@@ -35,16 +35,28 @@ import { ThrottlerModule } from '@nestjs/throttler';
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        autoSchemaFile: configService.get<string>('graphql.schema'),
-        cors: {
-          origin: configService.get<string>('frontend.webUrl'),
-          credentials: true,
-        },
-        bodyParserConfig: false,
-        // res is needed to set/clear the auth cookie from the login/logout resolvers
-        context: ({ req, res }) => ({ req, res }),
-      }),
+      useFactory: async (configService: ConfigService) => {
+        const webUrl = configService.get<string>('frontend.webUrl');
+        if (!webUrl) {
+          // an unset CORS origin can silently fall back to permissive
+          // behavior in some setups; with credentials: true that's a real
+          // cross-origin credential leak risk, so refuse to boot instead
+          throw new Error(
+            'FRONTEND_WEBURL must be set — it is required as the CORS origin allowlist.',
+          );
+        }
+
+        return {
+          autoSchemaFile: configService.get<string>('graphql.schema'),
+          cors: {
+            origin: webUrl,
+            credentials: true,
+          },
+          bodyParserConfig: false,
+          // res is needed to set/clear the auth cookie from the login/logout resolvers
+          context: ({ req, res }) => ({ req, res }),
+        };
+      },
     }),
     MikroOrmModule.forRootAsync({
       imports: [ConfigModule],
