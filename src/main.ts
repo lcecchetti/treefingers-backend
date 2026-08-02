@@ -13,6 +13,7 @@ async function bootstrap() {
   app.use(cookieParser());
   app.enableShutdownHooks();
   const configService = app.get(ConfigService);
+  app.enableCors({ origin: configService.get<string>('frontend.webUrl'), credentials: true });
   await app.listen(configService.get<number>('env.port', 3000));
 }
 bootstrap();
