@@ -136,7 +136,10 @@ export class UserService {
           'You must be logged in to filter by followed users.',
         );
       }
-      queryBuilder.select('*', true).andWhere({
+      // no DISTINCT: it conflicts with the default sort's ORDER BY once the
+      // followershipsAsFollowed join is added (Postgres rejects SELECT
+      // DISTINCT * combined with an ORDER BY on a joined column)
+      queryBuilder.select('*').andWhere({
         followershipsAsFollowed: { follower: currentUser.id },
       });
     }
