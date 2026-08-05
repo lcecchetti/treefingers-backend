@@ -85,7 +85,7 @@ export class Story implements Likeable, Commentable {
     '(select count(distinct d.id)::int as cnt from story as d where d.root_id = s0.id)',
   )
   @Field(() => Int, { defaultValue: 0 })
-  descendentsCount: number;
+  descendantsCount: number;
 
   @Formula(
     '(select count(distinct c.id)::int as cnt from story as c where c.parent_id = s0.id)',
