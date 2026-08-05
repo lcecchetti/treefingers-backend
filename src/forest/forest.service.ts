@@ -124,7 +124,10 @@ export class ForestService {
           'You must be logged in to filter by joined forests.',
         );
       }
-      queryBuilder.select('*', true).andWhere({
+      // no DISTINCT: it conflicts with the default sort's ORDER BY once the
+      // memberships join is added (Postgres rejects SELECT DISTINCT *
+      // combined with an ORDER BY on a joined column)
+      queryBuilder.select('*').andWhere({
         memberships: { member: currentUser.id },
       });
     }

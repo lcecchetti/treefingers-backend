@@ -212,7 +212,7 @@ describe('UserService', () => {
         currentUser,
       );
 
-      expect(queryBuilder.select).toHaveBeenCalledWith('*', true);
+      expect(queryBuilder.select).toHaveBeenCalledWith('*');
       expect(queryBuilder.andWhere).toHaveBeenCalledWith({
         followershipsAsFollowed: { follower: 7 },
       });

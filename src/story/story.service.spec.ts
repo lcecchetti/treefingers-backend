@@ -310,7 +310,7 @@ describe('StoryService', () => {
         currentUser,
       );
 
-      expect(queryBuilder.select).toHaveBeenCalledWith('*', true);
+      expect(queryBuilder.select).toHaveBeenCalledWith('*');
       expect(queryBuilder.andWhere).toHaveBeenCalledWith({
         likes: { user: 4 },
       });

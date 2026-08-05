@@ -216,7 +216,10 @@ export class StoryService {
           'You must be logged in to filter by liked stories.',
         );
       }
-      queryBuilder.select('*', true).andWhere({
+      // no DISTINCT: it conflicts with the default sort's ORDER BY once the
+      // likes join is added (Postgres rejects SELECT DISTINCT * combined
+      // with an ORDER BY on a joined column)
+      queryBuilder.select('*').andWhere({
         likes: { user: currentUser.id },
       });
     }
